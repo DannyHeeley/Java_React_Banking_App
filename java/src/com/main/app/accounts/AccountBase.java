@@ -15,7 +15,7 @@ public abstract class AccountBase implements HandleDateTime {
     private final String dateAccountCreated;
     private String dateAccountLastUpdated;
     private String accountPasswordHash;
-    private final TransactionHistory transactionHistory;
+    private final TransactionHistory accountTransactionHistory;
 
     AccountBase(String userName, Float balance) {
         this.bankName = "CashMoney Banking Services";
@@ -25,11 +25,10 @@ public abstract class AccountBase implements HandleDateTime {
         this.dateAccountCreated = getDateTimeNowAsString();
         this.accountPasswordHash = null;
         this.dateAccountLastUpdated = null;
-        this.transactionHistory = new TransactionHistory();
+        this.accountTransactionHistory = new TransactionHistory();
     }
 
     abstract void deposit(Float amount);
-
     public void withdraw( Float amount) {
         if (amount >= 0) {
             if (amount <= getBalance()) {
@@ -37,13 +36,24 @@ public abstract class AccountBase implements HandleDateTime {
                 System.out.println("Withdrawal of " + amount + " Successful, your balance is: " + getBalance());
                 setAccountUpdatedTo(getDateTimeNowAsString());
             } else {
-                throw new RuntimeException("Withdrawal unsuccessful, your do not have enough balance to cover the requested withdrawal amount");
+                throw new IllegalArgumentException("Withdrawal unsuccessful, your do not have enough balance to cover the requested withdrawal amount");
             }
         } else {
-            throw new RuntimeException("Withdrawal amount must be a positive number");
+            throw new IllegalArgumentException("Withdrawal amount must be a positive number");
         }
     }
 
+    public Float getBalance() {
+        return balance;
+    }
+    public void addToAccountBalance(Float amount) {
+        this.balance += amount;
+        accountTransactionHistory.addTransaction(DEPOSIT, amount, balance);
+    }
+    public void subtractFromAccountBalance(Float amount) {
+        this.balance -= amount;
+        accountTransactionHistory.addTransaction(WITHDRAWAL, amount, balance);
+    }
 
     public String getAccountPasswordHash() {
         return accountPasswordHash;
@@ -59,27 +69,6 @@ public abstract class AccountBase implements HandleDateTime {
         this.dateAccountLastUpdated = accountUpdated;
     }
 
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public String getDateAccountCreated() {
-        return dateAccountCreated;
-    }
-
-    public Float getBalance() {
-        return balance;
-    }
-    public void addToAccountBalance(Float amount) {
-        this.balance += amount;
-        TransactionHistory.addTransaction(DEPOSIT, amount, balance);
-    }
-    public void subtractFromAccountBalance(Float amount) {
-        this.balance -= amount;
-        TransactionHistory.addTransaction(WITHDRAWAL, amount, balance);
-    }
-
     public int getAccountNumber() {return accountNumber; }
     private int generateAccountNumber() {
         ArrayList<AccountBase> bankAccounts = AccountManager.getBankAccounts();
@@ -90,8 +79,14 @@ public abstract class AccountBase implements HandleDateTime {
         }
     }
 
-    public TransactionHistory getTransactionHistory() {
-        return transactionHistory;
+    public String getUserName() {
+        return userName;
+    }
+    public String getDateAccountCreated() {
+        return dateAccountCreated;
+    }
+    public TransactionHistory getAccountTransactionHistory() {
+        return accountTransactionHistory;
     }
 
     public void printAccountInfo() {
@@ -102,8 +97,6 @@ public abstract class AccountBase implements HandleDateTime {
         System.out.println("Account created: " + getDateTimeNowAsString());
         System.out.println("Your Balance Is: " + getBalance());
         System.out.println("Balance last updated: " + getDateAccountLastUpdated());
-        System.out.println(getTransactionHistory().toString());
+        System.out.println(getAccountTransactionHistory().toString());
     }
-
-
 }

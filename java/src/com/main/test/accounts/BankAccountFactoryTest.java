@@ -2,6 +2,7 @@ package com.main.test.accounts;
 
 import com.main.app.Bank;
 import com.main.app.accounts.AccountBase;
+import com.main.app.accounts.AccountManager;
 import com.main.app.accounts.BankAccountFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,7 +11,6 @@ import static com.main.app.accounts.AccountType.ADULT;
 import static com.main.app.accounts.AccountType.STUDENT;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class BankAccountFactoryTest {
     Bank bank;
@@ -19,7 +19,6 @@ public class BankAccountFactoryTest {
         bank = Bank.getInstance();
         bank.resetBank();
     }
-
 
     // Test cases for update to bank:
     @Test
@@ -40,7 +39,6 @@ public class BankAccountFactoryTest {
         BankAccountFactory.createAccount(ADULT, "Foo Bar", "password",  1000f);
         assertThat(bank.getBankBalance()).isEqualTo(0f);
     }
-
 
     // Test cases for createNewAdultAccount:
     @Test
@@ -70,17 +68,22 @@ public class BankAccountFactoryTest {
     }
 
     @Test
-    void throwsExceptionIfAdultAccountExistsWithSameUserName() {
+    void exceptionHandledIfAdultAccountExistsWithSameUserName() {
         BankAccountFactory.createAccount(ADULT, "An Adult", "password", 0f);
-        assertThrows(BankAccountFactory.AccountCreationException.class, () -> BankAccountFactory.createAccount(ADULT, "An Adult", "password", 0f));
+        assertDoesNotThrow(() -> BankAccountFactory.createAccount(ADULT, "An Adult", "password", 0f));
     }
 
+    @Test
+    void doesNotAllowDuplicateAdultAccount() {
+        AccountBase account1 = BankAccountFactory.createAccount(ADULT, "An Adult", "password", 0f);
+        BankAccountFactory.createAccount(ADULT, "An Adult", "password", 0f);
+        assertThat(AccountManager.getBankAccounts()).containsOnlyOnce(account1);
+    }
     @Test
     void doesNotThrowExceptionIfAdultAccountsHaveUniqueUserNames() {
         assertDoesNotThrow(() -> BankAccountFactory.createAccount(ADULT, "An Adult", "password", 0f));
         assertDoesNotThrow(() -> BankAccountFactory.createAccount(ADULT, "Another Adult", "password", 0f));
     }
-
 
     // Test cases for createNewStudentAccount:
     @Test
@@ -111,9 +114,15 @@ public class BankAccountFactoryTest {
     }
 
     @Test
-    void throwsExceptionIfStudentAccountExistsWithSameUserName() {
+    void exceptionHandledIfStudentAccountExistsWithSameUserName() {
         BankAccountFactory.createAccount(STUDENT, "A Student", "password", 0f);
-        assertThrows(BankAccountFactory.AccountCreationException.class, () -> BankAccountFactory.createAccount(STUDENT, "A Student", "password", 0f));
+        assertDoesNotThrow(() -> BankAccountFactory.createAccount(STUDENT, "A Student", "password", 0f));
+    }
+    @Test
+    void doesNotAllowDuplicateStudentAccount() {
+        AccountBase account1 = BankAccountFactory.createAccount(STUDENT, "A Student", "password", 0f);
+        BankAccountFactory.createAccount(STUDENT, "A Student", "password", 0f);
+        assertThat(AccountManager.getBankAccounts()).containsOnlyOnce(account1);
     }
 
     @Test

@@ -15,7 +15,7 @@ public class AdultAccount extends AccountBase {
             Bank.getInstance().updateBalanceDeposit(amount);
             System.out.println("Deposit of " + amount + " was successful! Your new balance is " + getBalance());
         }else {
-            throw new RuntimeException("Deposit amount must be a positive number");
+            throw new IllegalArgumentException("Deposit amount must be a positive number");
         }
     }
 }
