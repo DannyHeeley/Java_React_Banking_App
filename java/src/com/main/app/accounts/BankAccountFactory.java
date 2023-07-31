@@ -14,7 +14,7 @@ public class BankAccountFactory {
 
     public static AccountBase createAccount(AccountType accountType, String userName, String password, Float initialDeposit) {
         try {
-            acc = handleAccountType(accountType, userName, password, initialDeposit);
+            acc = handleAccountType(accountType, userName, initialDeposit);
             setAccountPassword(acc, password);
             Bank.getInstance().updateBalanceDeposit(initialDeposit);
             AccountManager.addAccount(acc);
@@ -26,26 +26,21 @@ public class BankAccountFactory {
 
     private static AdultAccount createNewAdultAccount(String userName, Float initialDeposit)
             throws AccountCreationException {
-        if (initialDeposit < 0f) {
-            throw new AccountCreationException("Cannot create account with a negative deposit");
-        } else if (AccountManager.accountExists(userName)) {
-            throw new AccountCreationException("Account already exists");
-        }
+        throwErrorIfAccountCannotBeCreated(userName, initialDeposit);
         return new AdultAccount(userName, initialDeposit);
     }
 
-
     private static StudentAccount createNewStudentAccount(String userName, Float initialDeposit)
             throws AccountCreationException {
-        if (initialDeposit < 0f) {
-            throw new AccountCreationException("Cannot create account with a negative deposit");
-        } else if (AccountManager.accountExists(userName)) {
-            throw new AccountCreationException("Account already exists");
-        }
+        throwErrorIfAccountCannotBeCreated(userName, initialDeposit);
         return new StudentAccount(userName, initialDeposit);
     }
 
-    private static AccountBase handleAccountType(AccountType accountType, String userName, String password, Float initialDeposit)
+    private static void setAccountPassword(AccountBase account, String password) {
+        PasswordService.setPasswordHashForAccount(account.getAccountNumber(), password);
+    }
+
+    private static AccountBase handleAccountType(AccountType accountType, String userName, Float initialDeposit)
             throws AccountCreationException {
         if (Objects.equals(accountType, STUDENT)) {
             return BankAccountFactory.createNewStudentAccount(userName, initialDeposit);
@@ -55,8 +50,13 @@ public class BankAccountFactory {
         throw new AccountCreationException("Account type must be valid");
     }
 
-    private static void setAccountPassword(AccountBase account, String password) {
-        PasswordService.setPasswordHashForAccount(account.getAccountNumber(), password);
+    private static void throwErrorIfAccountCannotBeCreated(String userName, Float initialDeposit)
+            throws AccountCreationException {
+        if (initialDeposit < 0f) {
+            throw new AccountCreationException("Cannot create account with a negative deposit");
+        } else if (AccountManager.accountExists(userName)) {
+            throw new AccountCreationException("Account already exists");
+        }
     }
 
     public static class AccountCreationException extends Exception {
