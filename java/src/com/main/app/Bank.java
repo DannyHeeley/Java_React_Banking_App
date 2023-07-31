@@ -33,6 +33,7 @@ public class Bank {
             bankTotalBalance -= withdrawal;
     }
 
+
     public void resetBank() {
         AccountManager.resetBankAccounts();
         bankTotalBalance = 0f;

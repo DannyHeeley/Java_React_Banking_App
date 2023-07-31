@@ -11,10 +11,6 @@ class BankTest {
     @BeforeEach
     void setUp() {
         bank = Bank.getInstance();
-    }
-
-    @AfterEach
-    void tearDown() {
         bank.resetBank();
     }
 

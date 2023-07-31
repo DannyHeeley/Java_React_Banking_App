@@ -3,33 +3,58 @@ package com.main.app.accounts;
 import com.main.app.Bank;
 import com.main.app.Login.PasswordService;
 
-import javax.management.InstanceAlreadyExistsException;
+import java.util.Objects;
+
+import static com.main.app.accounts.AccountType.ADULT;
+import static com.main.app.accounts.AccountType.STUDENT;
 
 public class BankAccountFactory {
 
-    public static AdultAccount createNewAdultAccount(String userName, String password, Float initialDeposit) throws Exception {
+    private BankAccountFactory() {}
+
+    public static AccountBase createAccount(AccountType accountType, String userName, String password, Float initialDeposit) {
+        try {
+            if (Objects.equals(accountType, STUDENT)) {
+                Bank.getInstance().updateBalanceDeposit(initialDeposit);
+                AccountBase acc = BankAccountFactory.createNewStudentAccount(userName, password, initialDeposit);
+                AccountManager.addAccount(acc);
+                return acc;
+            } else if (Objects.equals(accountType, ADULT)) {
+                Bank.getInstance().updateBalanceDeposit(initialDeposit);
+                AccountBase acc = BankAccountFactory.createNewAdultAccount(userName, password, initialDeposit);
+                AccountManager.addAccount(acc);
+                return acc;
+            }
+        } catch(AccountCreationException e){
+            System.out.println("Error Creating Acccount: " + e.getMessage());
+        } return null;
+    }
+
+    private static AdultAccount createNewAdultAccount(String userName, String password, Float initialDeposit)
+            throws AccountCreationException {
         if (AccountManager.accountExists(userName)) {
-            throw new InstanceAlreadyExistsException("Account already exists");
+            throw new AccountCreationException("Account already exists");
         }
         AdultAccount adultAccount = new AdultAccount(userName, initialDeposit);
-        updateBank(initialDeposit, adultAccount);
         PasswordService.setPasswordHashForAccount(adultAccount.getAccountNumber(), password);
         return adultAccount;
     }
 
-    public static StudentAccount createNewStudentAccount(String userName, String password, Float initialDeposit) throws Exception {
+    private static StudentAccount createNewStudentAccount(String userName, String password, Float initialDeposit)
+            throws AccountCreationException {
         if (AccountManager.accountExists(userName)) {
-            throw new InstanceAlreadyExistsException("Account already exists");
+            throw new AccountCreationException("Account already exists");
         }
         StudentAccount studentAccount = new StudentAccount(userName, initialDeposit);
-        updateBank(initialDeposit, studentAccount);
+        Bank.getInstance().updateBalanceDeposit(initialDeposit );
         PasswordService.setPasswordHashForAccount(studentAccount.getAccountNumber(), password);
         return studentAccount;
     }
 
-    private static void updateBank(Float initialDeposit, AccountBase account) {
-        AccountManager.getBankAccounts().add(account);
-        Bank.getInstance().updateBalanceDeposit(initialDeposit);
+    public static class AccountCreationException extends Exception {
+        public AccountCreationException(String message) {
+            super(message);
+        }
     }
 
 }

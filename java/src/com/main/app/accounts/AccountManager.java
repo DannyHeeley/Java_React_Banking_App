@@ -31,20 +31,12 @@ public class AccountManager {
                 });
     }
 
-    public static AccountBase createAccount(AccountType accountType, String userName, String password, Float initialDeposit) {
-        try {
-            if (Objects.equals(accountType, STUDENT)) {
-                return BankAccountFactory.createNewStudentAccount(userName, password, initialDeposit);
-            } else if (Objects.equals(accountType, ADULT)) {
-                return BankAccountFactory.createNewAdultAccount(userName, password, initialDeposit);
-            } else {
-                return null;
-            }
-        } catch(Exception e){
-            throw new RuntimeException("Account already exists");
-        }
-    }
 
+
+    static AccountBase addAccount(AccountBase account) {
+        bankAccounts.add(account);
+        return account;
+    }
     private static boolean userNameMatchesAccount(String userName, AccountBase account) {
         return Objects.equals(account.getUserName(), userName);
     }

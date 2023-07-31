@@ -1,10 +1,7 @@
 package com.main.app;
 
 import com.main.app.Login.PasswordService;
-import com.main.app.accounts.AccountBase;
-import com.main.app.accounts.AccountManager;
-import com.main.app.accounts.AdultAccount;
-import com.main.app.accounts.StudentAccount;
+import com.main.app.accounts.*;
 
 import static com.main.app.accounts.AccountType.*;
 
@@ -13,14 +10,14 @@ public class Main {
         Bank bank = Bank.getInstance();
 
         // Demo adult account
-        AdultAccount testAccountAdult = (AdultAccount) AccountManager.createAccount(ADULT,"Foo Bar", "password123", 1000f);
+        AdultAccount testAccountAdult = (AdultAccount) BankAccountFactory.createAccount(ADULT,"Foo Bar", "password123", 1000f);
         testAccountAdult.deposit(500f);
         System.out.println("");
         testAccountAdult.printAccountInfo();
         System.out.println("");
 
         // Demo student account
-        StudentAccount testAccountStudent = (StudentAccount) AccountManager.createAccount(STUDENT,"Fizz Buzz", "password123", 100f);
+        StudentAccount testAccountStudent = (StudentAccount) BankAccountFactory.createAccount(STUDENT,"Fizz Buzz", "password123", 100f);
         testAccountStudent.deposit(100f);
         System.out.println("");
         testAccountStudent.printAccountInfo();

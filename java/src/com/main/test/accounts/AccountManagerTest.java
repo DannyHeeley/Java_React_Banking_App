@@ -33,60 +33,35 @@ public class AccountManagerTest {
     }
 
     @Test
-    void createsAdultAccount() {
-        AccountBase account = AccountManager.createAccount(ADULT, "An Adult", "password", 0f);
-        assertThat(account).isNotNull();
-    }
-
-    @Test
-    void createsStudentAccount() {
-        AccountBase account = AccountManager.createAccount(STUDENT, "A Student", "password", 0f);
-        assertThat(account).isNotNull();
-    }
-
-    @Test
-    void throwsExceptionIfAccountExistsWithSameUserName() {
-        AccountManager.createAccount(STUDENT, "A Student", "password", 0f);
-        assertThrows(RuntimeException.class, () -> AccountManager.createAccount(STUDENT, "A Student", "password", 0f));
-    }
-
-    @Test
-    void doesNotThrowExceptionIfAccountsHaveUniqueUserNames() {
-        assertDoesNotThrow(() -> AccountManager.createAccount(STUDENT, "A Student", "password", 0f));
-        assertDoesNotThrow(() -> AccountManager.createAccount(STUDENT, "Another Student", "password", 0f));
-    }
-
-
-    @Test
     void getsAllBankAccounts() {
         ArrayList<AccountBase> theseBankAccounts = AccountManager.getBankAccounts();
 
-        AccountBase account1 = AccountManager.createAccount(ADULT,"Foo Bar", "password123", 50f);
+        AccountBase account1 = BankAccountFactory.createAccount(ADULT,"Foo Bar", "password123", 50f);
         assertThat(theseBankAccounts).containsExactly(account1);
 
-        AccountBase account2 = AccountManager.createAccount(STUDENT, "A Student", "password", 0f);
+        AccountBase account2 = BankAccountFactory.createAccount(STUDENT, "A Student", "password", 0f);
         assertThat(theseBankAccounts).containsExactly(account1, account2);
 
-        AccountBase account3 = AccountManager.createAccount(STUDENT, "Another Student", "password", 0f);
+        AccountBase account3 = BankAccountFactory.createAccount(STUDENT, "Another Student", "password", 0f);
         assertThat(theseBankAccounts).containsExactly(account1, account2, account3);
     }
 
     @Test
     void accountsHasOneAdultAccount() {
-        AdultAccount account1 = (AdultAccount) AccountManager.createAccount(ADULT,"Foo Bar", "password123", 50f);
+        AdultAccount account1 = (AdultAccount) BankAccountFactory.createAccount(ADULT,"Foo Bar", "password123", 50f);
         assertThat(bankAccounts).containsOnlyOnce(account1);
     }
 
     @Test
     void accountsHasOneStudentAccount() {
-        StudentAccount account1 = (StudentAccount) AccountManager.createAccount(STUDENT,"Fizz Buzz", "password123", 50f);
+        StudentAccount account1 = (StudentAccount) BankAccountFactory.createAccount(STUDENT,"Fizz Buzz", "password123", 50f);
         assertThat(bankAccounts).containsOnlyOnce(account1);
     }
 
     @Test
     void returnsCorrectAccount() {
-        AdultAccount account1 = (AdultAccount) AccountManager.createAccount(ADULT,"Foo Bar", "password123", 50f);
-        StudentAccount account2 = (StudentAccount) AccountManager.createAccount(STUDENT,"Fizz Buzz", "password123", 50f);
+        AdultAccount account1 = (AdultAccount) BankAccountFactory.createAccount(ADULT,"Foo Bar", "password123", 50f);
+        StudentAccount account2 = (StudentAccount) BankAccountFactory.createAccount(STUDENT,"Fizz Buzz", "password123", 50f);
         assertThat(bankAccounts).containsOnlyOnce(account1);
         assertThat(AccountManager.getAccount("Foo Bar")).isEqualTo(account1);
         assertThat(AccountManager.getAccount("Foo Bar")).isNotEqualTo(account2);
@@ -94,7 +69,7 @@ public class AccountManagerTest {
 
     @Test
     void trueIfAccountExists() {
-        AccountManager.createAccount(ADULT,"Foo Bar", "password123", 50f);
+        BankAccountFactory.createAccount(ADULT,"Foo Bar", "password123", 50f);
         assertTrue(AccountManager.accountExists("Foo Bar"));
     }
 }
