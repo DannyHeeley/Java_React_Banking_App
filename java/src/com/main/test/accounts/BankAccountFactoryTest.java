@@ -20,6 +20,7 @@ public class BankAccountFactoryTest {
         bank.resetBank();
     }
 
+
     // Test cases for update to bank:
     @Test
     void increaseBankBalanceWithPositiveInitialDeposit() {
@@ -39,6 +40,7 @@ public class BankAccountFactoryTest {
         BankAccountFactory.createAccount(ADULT, "Foo Bar", "password",  1000f);
         assertThat(bank.getBankBalance()).isEqualTo(0f);
     }
+
 
     // Test cases for createNewAdultAccount:
     @Test
