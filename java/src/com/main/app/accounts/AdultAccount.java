@@ -9,9 +9,13 @@ public class AdultAccount extends AccountBase {
     }
     @Override
     public void deposit(Float amount) {
-        addBalance(amount);
-        Bank.getInstance().updateBalanceDeposit(amount);
-        System.out.println("Deposit of " + amount + " was successful! Your new balance is " + getBalance());
-        setAccountUpdated(getDateTimeNowAsString());
+        if (amount >= 0) {
+            addToAccountBalance(amount);
+            setAccountUpdatedTo(getDateTimeNowAsString());
+            Bank.getInstance().updateBalanceDeposit(amount);
+            System.out.println("Deposit of " + amount + " was successful! Your new balance is " + getBalance());
+        }else {
+            throw new RuntimeException("Deposit amount must be a positive number");
+        }
     }
 }

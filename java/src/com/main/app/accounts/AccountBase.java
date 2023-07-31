@@ -1,5 +1,4 @@
 package com.main.app.accounts;
-import com.main.app.Bank;
 import com.main.app.HandleDateTime;
 import com.main.app.transactions.TransactionHistory;
 
@@ -13,8 +12,8 @@ public abstract class AccountBase implements HandleDateTime {
     private final String bankName;
     private final String userName;
     private final int accountNumber;
-    private final String accountCreated;
-    private String accountUpdated;
+    private final String dateAccountCreated;
+    private String dateAccountLastUpdated;
     private String accountPasswordHash;
     private final TransactionHistory transactionHistory;
 
@@ -23,21 +22,25 @@ public abstract class AccountBase implements HandleDateTime {
         this.userName = userName;
         this.accountNumber = generateAccountNumber();
         this.balance = balance;
-        this.accountCreated = getDateTimeNowAsString();
+        this.dateAccountCreated = getDateTimeNowAsString();
         this.accountPasswordHash = null;
-        this.accountUpdated = null;
+        this.dateAccountLastUpdated = null;
         this.transactionHistory = new TransactionHistory();
     }
 
     abstract void deposit(Float amount);
 
     public void withdraw( Float amount) {
-        if (amount <= getBalance()) {
-            subtractBalance(amount);
-            System.out.println("Withdrawal of " + amount + " Successful, your balance is: " + getBalance());
-            setAccountUpdated(getDateTimeNowAsString());
+        if (amount >= 0) {
+            if (amount <= getBalance()) {
+                subtractFromAccountBalance(amount);
+                System.out.println("Withdrawal of " + amount + " Successful, your balance is: " + getBalance());
+                setAccountUpdatedTo(getDateTimeNowAsString());
+            } else {
+                throw new RuntimeException("Withdrawal unsuccessful, your do not have enough balance to cover the requested withdrawal amount");
+            }
         } else {
-            System.out.println("Withdrawal unsuccessful, your do not have enough balance to cover the requested withdrawal amount");
+            throw new RuntimeException("Withdrawal amount must be a positive number");
         }
     }
 
@@ -49,11 +52,11 @@ public abstract class AccountBase implements HandleDateTime {
         accountPasswordHash = hashedPassword;
     }
 
-    public String getAccountUpdated() {
-        return accountUpdated;
+    public String getDateAccountLastUpdated() {
+        return dateAccountLastUpdated;
     }
-    public void setAccountUpdated(String accountUpdated) {
-        this.accountUpdated = accountUpdated;
+    public void setAccountUpdatedTo(String accountUpdated) {
+        this.dateAccountLastUpdated = accountUpdated;
     }
 
 
@@ -61,19 +64,19 @@ public abstract class AccountBase implements HandleDateTime {
         return userName;
     }
 
-    public String getAccountCreated() {
-        return accountCreated;
+    public String getDateAccountCreated() {
+        return dateAccountCreated;
     }
 
     public Float getBalance() {
         return balance;
     }
-    public void addBalance(Float amount) {
+    public void addToAccountBalance(Float amount) {
         this.balance += amount;
         TransactionHistory.addTransaction(DEPOSIT, amount, balance);
     }
-    public void subtractBalance(Float amount) {
-        this.balance += amount;
+    public void subtractFromAccountBalance(Float amount) {
+        this.balance -= amount;
         TransactionHistory.addTransaction(WITHDRAWAL, amount, balance);
     }
 
@@ -98,7 +101,7 @@ public abstract class AccountBase implements HandleDateTime {
         System.out.println("Your account number is: " + getAccountNumber());
         System.out.println("Account created: " + getDateTimeNowAsString());
         System.out.println("Your Balance Is: " + getBalance());
-        System.out.println("Balance last updated: " + getAccountUpdated());
+        System.out.println("Balance last updated: " + getDateAccountLastUpdated());
         System.out.println(getTransactionHistory().toString());
     }
 

@@ -36,7 +36,7 @@ public class Bank {
     }
 
     public void resetBank() {
-        AccountManager.resetBankAccounts();
+        AccountManager.clearBankAccountList();
         bankTotalBalance = 0f;
     }
 

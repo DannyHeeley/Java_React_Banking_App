@@ -1,13 +1,6 @@
 package com.main.app.accounts;
 
-import com.main.app.Bank;
-
-import javax.management.InstanceAlreadyExistsException;
-import java.lang.reflect.Array;
-import java.time.LocalDateTime;
 import java.util.*;
-
-import static com.main.app.accounts.AccountType.*;
 
 import static java.time.LocalDateTime.now;
 
@@ -48,11 +41,11 @@ public class AccountManager {
     public static void printAccounts() {
         for (AccountBase account : getBankAccounts()) {
             System.out.print("Account: " + account.getUserName());
-            System.out.println(", Created: " + account.getAccountCreated());
+            System.out.println(", Created: " + account.getDateAccountCreated());
         }
     }
 
-    public static void resetBankAccounts() {
+    public static void clearBankAccountList() {
         bankAccounts = new ArrayList<>();
     }
 

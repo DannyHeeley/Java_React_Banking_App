@@ -13,14 +13,17 @@ public class StudentAccount extends AccountBase {
 
     @Override
     public void deposit(Float amount) {
-        if (getBalance() + amount <= accountLimit) {
-            addBalance(amount);
-            setAccountUpdated(getDateTimeNowAsString());
-            Bank.getInstance().updateBalanceDeposit(amount);
-            System.out.println("Deposit of " + amount + " was successful! Your new balance is " + getBalance());
+        if (amount >= 0) {
+            if (getBalance() + amount <= accountLimit) {
+                addToAccountBalance(amount);
+                setAccountUpdatedTo(getDateTimeNowAsString());
+                Bank.getInstance().updateBalanceDeposit(amount);
+                System.out.println("Deposit of " + amount + " was successful! Your new balance is " + getBalance());
+            } else {
+                throw new RuntimeException("Deposit failed. Your deposit of " + amount + " would take you over your account limit of " + accountLimit);
+            }
         } else {
-            System.out.println("Deposit failed. Your deposit of " + amount + " would take you over your account limit of " + accountLimit);
-            System.out.println("Your balance is: " + getBalance());
+            throw new RuntimeException("Deposit amount must be a positive number");
         }
     }
 

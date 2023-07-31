@@ -22,7 +22,7 @@ public class AccountManagerTest {
 
     @AfterEach
     void tearDown() {
-        AccountManager.resetBankAccounts();
+        AccountManager.clearBankAccountList();
     }
 
     @Test
