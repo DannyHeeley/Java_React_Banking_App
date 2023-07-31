@@ -41,8 +41,9 @@ class BankTest {
 
     @Test
     void withdrawalDecreasesBankBalance() {
-        bank.updateBalanceWithdrawal(100f);
-        assertThat(bank.getBankBalance()).isEqualTo(-100f);
+        bank.updateBalanceDeposit(100f);
+        bank.updateBalanceWithdrawal(50f);
+        assertThat(bank.getBankBalance()).isEqualTo(50f);
     }
 
 }

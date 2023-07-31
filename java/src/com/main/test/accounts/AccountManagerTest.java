@@ -53,9 +53,25 @@ public class AccountManagerTest {
     }
 
     @Test
+    void duplicateAdultAccountIsNotAddedToAccounts() {
+        AdultAccount account1 = (AdultAccount) BankAccountFactory.createAccount(ADULT,"Fizz Buzz", "password123", 50f);
+        AdultAccount account2 = (AdultAccount) BankAccountFactory.createAccount(ADULT,"Fizz Buzz", "password123", 50f);
+        assertThat(bankAccounts).containsOnly(account1);
+        assertThat(bankAccounts).containsOnly(account2);
+    }
+
+    @Test
     void accountsHasOneStudentAccount() {
         StudentAccount account1 = (StudentAccount) BankAccountFactory.createAccount(STUDENT,"Fizz Buzz", "password123", 50f);
         assertThat(bankAccounts).containsOnlyOnce(account1);
+    }
+
+    @Test
+    void duplicateStudentAccountIsNotAddedToAccounts() {
+        StudentAccount account1 = (StudentAccount) BankAccountFactory.createAccount(STUDENT,"Fizz Buzz", "password123", 50f);
+        StudentAccount account2 = (StudentAccount) BankAccountFactory.createAccount(STUDENT,"Fizz Buzz", "password123", 50f);
+        assertThat(bankAccounts).containsOnly(account1);
+        assertThat(bankAccounts).containsOnly(account2);
     }
 
     @Test
@@ -71,5 +87,11 @@ public class AccountManagerTest {
     void trueIfAccountExists() {
         BankAccountFactory.createAccount(ADULT,"Foo Bar", "password123", 50f);
         assertTrue(AccountManager.accountExists("Foo Bar"));
+    }
+
+    @Test
+    void falseIfAccountExists() {
+        BankAccountFactory.createAccount(ADULT,"Foo Bar", "password123", 50f);
+        assertFalse(AccountManager.accountExists("Fizz Buzz"));
     }
 }

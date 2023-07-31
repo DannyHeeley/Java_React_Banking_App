@@ -3,7 +3,6 @@ package com.main.test.accounts;
 import com.main.app.Bank;
 import com.main.app.accounts.AccountBase;
 import com.main.app.accounts.BankAccountFactory;
-import com.main.app.accounts.BankAccountFactory.AccountCreationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,11 +20,7 @@ public class BankAccountFactoryTest {
         bank.resetBank();
     }
 
-    // Test cases for updateBank:
-    // 1. Test updating the bank with a positive initial deposit
-    // 2. Test updating the bank with an initial deposit of 0
-    // 3. Test updating the bank with a negative initial deposit (should not change the bank balance)
-    // 4. Test updating the bank with a null account (should not add anything to the bank accounts)
+    // Test cases for update to bank:
     @Test
     void increaseBankBalanceWithPositiveInitialDeposit() {
         BankAccountFactory.createAccount(ADULT, "Foo Bar", "password", 100f);
@@ -39,12 +34,6 @@ public class BankAccountFactoryTest {
     }
 
     @Test
-    void bankBalanceSameWithNegativeInitialDeposit() {
-        BankAccountFactory.createAccount(ADULT, "Foo Bar", "password", 1000f);
-        assertThat(bank.getBankBalance()).isEqualTo(0f);
-    }
-
-    @Test
     void bankBalanceSameWithNullAccount() {
         BankAccountFactory.createAccount(ADULT, "Foo Bar", "password", 0f);
         BankAccountFactory.createAccount(ADULT, "Foo Bar", "password",  1000f);
@@ -52,23 +41,46 @@ public class BankAccountFactoryTest {
     }
 
     // Test cases for createNewAdultAccount:
-    // 1. Test creating a new adult account with a positive initial deposit
-    // 2. Test creating a new adult account with an initial deposit of 0
-    // 3. Test creating a new adult account with a negative initial deposit (should throw an exception)
-    // 4. Test creating a new adult account with an existing username (should throw an exception)
-
-    // Test cases for createNewStudentAccount:
-    // 1. Test creating a new student account with a positive initial deposit
-    // 2. Test creating a new student account with an initial deposit of 0
-    // 3. Test creating a new student account with a negative initial deposit (should throw an exception)
-    // 4. Test creating a new student account with an existing username (should throw an exception)
-
     @Test
     void createsAdultAccount() {
         AccountBase account = BankAccountFactory.createAccount(ADULT, "An Adult", "password", 0f);
         assertThat(account).isNotNull();
     }
+    @Test
+    void adultAccountWithDepositHasBalance() {
+        Float initialDeposit = 100f;
+        AccountBase account = BankAccountFactory.createAccount(ADULT, "An Adult", "password", initialDeposit);
+        assertThat(account.getBalance()).isEqualTo(initialDeposit);
+    }
 
+    @Test
+    void adultAccountWithZeroDepositHasZeroBalance() {
+        Float initialDeposit = 0f;
+        AccountBase account = BankAccountFactory.createAccount(ADULT, "An Adult", "password", initialDeposit);
+        assertThat(account.getBalance()).isEqualTo(initialDeposit);
+    }
+
+    @Test
+    void adultAccountNegativeInitialDepositThrowsException() {
+        Float initialDeposit = -1000f;
+        AccountBase account = BankAccountFactory.createAccount(ADULT, "An Adult", "password", initialDeposit);
+        assertThat(account.getBalance()).isEqualTo(0);
+    }
+
+    @Test
+    void throwsExceptionIfAdultAccountExistsWithSameUserName() {
+        BankAccountFactory.createAccount(ADULT, "An Adult", "password", 0f);
+        assertThrows(BankAccountFactory.AccountCreationException.class, () -> BankAccountFactory.createAccount(ADULT, "An Adult", "password", 0f));
+    }
+
+    @Test
+    void doesNotThrowExceptionIfAdultAccountsHaveUniqueUserNames() {
+        assertDoesNotThrow(() -> BankAccountFactory.createAccount(ADULT, "An Adult", "password", 0f));
+        assertDoesNotThrow(() -> BankAccountFactory.createAccount(ADULT, "Another Adult", "password", 0f));
+    }
+
+
+    // Test cases for createNewStudentAccount:
     @Test
     void createsStudentAccount() {
         AccountBase account = BankAccountFactory.createAccount(STUDENT, "A Student", "password", 0f);
@@ -76,16 +88,35 @@ public class BankAccountFactoryTest {
     }
 
     @Test
-    void throwsExceptionIfAccountExistsWithSameUserName() {
-        BankAccountFactory.createAccount(STUDENT, "A Student", "password", 0f);
-        assertThrows(RuntimeException.class, () -> BankAccountFactory.createAccount(STUDENT, "A Student", "password", 0f));
+    void studentAccountWithDepositHasBalance() {
+        Float initialDeposit = 100f;
+        AccountBase account = BankAccountFactory.createAccount(STUDENT, "A Student", "password", initialDeposit);
+        assertThat(account.getBalance()).isEqualTo(initialDeposit);
     }
 
     @Test
-    void doesNotThrowExceptionIfAccountsHaveUniqueUserNames() {
+    void studentAccountWithZeroDepositHasZeroBalance() {
+        Float initialDeposit = 0f;
+        AccountBase account = BankAccountFactory.createAccount(STUDENT, "A Student", "password", initialDeposit);
+        assertThat(account.getBalance()).isEqualTo(initialDeposit);
+    }
+
+    @Test
+    void studentAccountNegativeInitialDepositThrowsException() {
+        Float initialDeposit = -1000f;
+        AccountBase account = BankAccountFactory.createAccount(STUDENT, "A Student", "password", initialDeposit);
+        assertThat(account.getBalance()).isEqualTo(0);
+    }
+
+    @Test
+    void throwsExceptionIfStudentAccountExistsWithSameUserName() {
+        BankAccountFactory.createAccount(STUDENT, "A Student", "password", 0f);
+        assertThrows(BankAccountFactory.AccountCreationException.class, () -> BankAccountFactory.createAccount(STUDENT, "A Student", "password", 0f));
+    }
+
+    @Test
+    void doesNotThrowExceptionIfStudentAccountsHaveUniqueUserNames() {
         assertDoesNotThrow(() -> BankAccountFactory.createAccount(STUDENT, "A Student", "password", 0f));
         assertDoesNotThrow(() -> BankAccountFactory.createAccount(STUDENT, "Another Student", "password", 0f));
     }
-
-
 }

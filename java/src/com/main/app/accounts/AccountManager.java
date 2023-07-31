@@ -19,6 +19,7 @@ public class AccountManager {
 
 
     // Implement DB for accounts
+
     private static ArrayList<AccountBase> bankAccounts = new ArrayList<>();
 
     public static AccountBase getAccount(String userName) {
@@ -31,30 +32,32 @@ public class AccountManager {
                 });
     }
 
-
-
-    static AccountBase addAccount(AccountBase account) {
+    public static AccountBase addAccount(AccountBase account) {
         bankAccounts.add(account);
         return account;
-    }
-    private static boolean userNameMatchesAccount(String userName, AccountBase account) {
-        return Objects.equals(account.getUserName(), userName);
     }
 
     public static boolean accountExists(String userName) {
         return bankAccounts.stream().anyMatch(account -> Objects.equals(account.getUserName(), userName));
     }
+
     public static ArrayList<AccountBase> getBankAccounts() {
         return bankAccounts;
     }
+
     public static void printAccounts() {
         for (AccountBase account : getBankAccounts()) {
             System.out.print("Account: " + account.getUserName());
             System.out.println(", Created: " + account.getAccountCreated());
         }
     }
+
     public static void resetBankAccounts() {
         bankAccounts = new ArrayList<>();
+    }
+
+    private static boolean userNameMatchesAccount(String userName, AccountBase account) {
+        return Objects.equals(account.getUserName(), userName);
     }
 
 }

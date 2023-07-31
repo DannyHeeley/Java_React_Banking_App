@@ -9,46 +9,54 @@ import static com.main.app.accounts.AccountType.ADULT;
 import static com.main.app.accounts.AccountType.STUDENT;
 
 public class BankAccountFactory {
-
+    static AccountBase acc;
     private BankAccountFactory() {}
 
     public static AccountBase createAccount(AccountType accountType, String userName, String password, Float initialDeposit) {
         try {
-            if (Objects.equals(accountType, STUDENT)) {
-                Bank.getInstance().updateBalanceDeposit(initialDeposit);
-                AccountBase acc = BankAccountFactory.createNewStudentAccount(userName, password, initialDeposit);
-                AccountManager.addAccount(acc);
-                return acc;
-            } else if (Objects.equals(accountType, ADULT)) {
-                Bank.getInstance().updateBalanceDeposit(initialDeposit);
-                AccountBase acc = BankAccountFactory.createNewAdultAccount(userName, password, initialDeposit);
-                AccountManager.addAccount(acc);
-                return acc;
-            }
+            acc = handleAccountType(accountType, userName, password, initialDeposit);
+            setAccountPassword(acc, password);
+            Bank.getInstance().updateBalanceDeposit(initialDeposit);
+            AccountManager.addAccount(acc);
         } catch(AccountCreationException e){
             System.out.println("Error Creating Acccount: " + e.getMessage());
-        } return null;
+        }
+        return acc;
     }
 
-    private static AdultAccount createNewAdultAccount(String userName, String password, Float initialDeposit)
+    private static AdultAccount createNewAdultAccount(String userName, Float initialDeposit)
             throws AccountCreationException {
-        if (AccountManager.accountExists(userName)) {
+        if (initialDeposit < 0f) {
+            throw new AccountCreationException("Cannot create account with a negative deposit");
+        } else if (AccountManager.accountExists(userName)) {
             throw new AccountCreationException("Account already exists");
         }
-        AdultAccount adultAccount = new AdultAccount(userName, initialDeposit);
-        PasswordService.setPasswordHashForAccount(adultAccount.getAccountNumber(), password);
-        return adultAccount;
+        return new AdultAccount(userName, initialDeposit);
     }
 
-    private static StudentAccount createNewStudentAccount(String userName, String password, Float initialDeposit)
+
+    private static StudentAccount createNewStudentAccount(String userName, Float initialDeposit)
             throws AccountCreationException {
-        if (AccountManager.accountExists(userName)) {
+        if (initialDeposit < 0f) {
+            throw new AccountCreationException("Cannot create account with a negative deposit");
+        } else if (AccountManager.accountExists(userName)) {
             throw new AccountCreationException("Account already exists");
         }
-        StudentAccount studentAccount = new StudentAccount(userName, initialDeposit);
-        Bank.getInstance().updateBalanceDeposit(initialDeposit );
-        PasswordService.setPasswordHashForAccount(studentAccount.getAccountNumber(), password);
-        return studentAccount;
+        return new StudentAccount(userName, initialDeposit);
+    }
+
+    private static AccountBase handleAccountType(AccountType accountType, String userName, String password, Float initialDeposit)
+            throws AccountCreationException {
+        if (Objects.equals(accountType, STUDENT)) {
+            return BankAccountFactory.createNewStudentAccount(userName, initialDeposit);
+        } else if (Objects.equals(accountType, ADULT)) {
+            return BankAccountFactory.createNewAdultAccount(userName, initialDeposit);
+        }
+        throw new AccountCreationException("Account type must be valid");
+    }
+
+    private static void setAccountPassword(AccountBase account, String password) {
+        PasswordService.setPasswordHashForAccount(account.getAccountNumber(), password);
     }
 
     public static class AccountCreationException extends Exception {
@@ -56,5 +64,4 @@ public class BankAccountFactory {
             super(message);
         }
     }
-
 }

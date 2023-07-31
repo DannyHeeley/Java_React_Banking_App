@@ -1,10 +1,8 @@
 package com.main.app;
 
-
-import com.main.app.accounts.AccountBase;
 import com.main.app.accounts.AccountManager;
 
-import java.util.ArrayList;
+import java.util.concurrent.RejectedExecutionException;
 
 public class Bank {
     private Float bankTotalBalance;
@@ -30,9 +28,12 @@ public class Bank {
     }
 
     public void updateBalanceWithdrawal(Float withdrawal) {
+        if (bankTotalBalance >= withdrawal) {
             bankTotalBalance -= withdrawal;
+        } else {
+            throw new RejectedExecutionException("Bank balance not enough to cover deposit");
+        }
     }
-
 
     public void resetBank() {
         AccountManager.resetBankAccounts();
