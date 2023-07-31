@@ -2,15 +2,16 @@ package com.main.app.Login;
 
 import com.main.app.Bank;
 import com.main.app.accounts.AccountBase;
+import com.main.app.accounts.AccountManager;
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
 import de.mkammerer.argon2.Argon2Factory.Argon2Types;
 
 public class PasswordService {
 
-    public static boolean authenticateUserPassword(AccountBase account, String userPassword) {
-        if (AccountBase.getAccountPasswordHash() != null) {
-            return verifyPassword(AccountBase.getAccountPasswordHash(), userPassword.toCharArray());
+    public static boolean authenticateUserPassword(String accountPasswordHash, String userPassword) {
+        if (accountPasswordHash != null) {
+            return verifyPassword(accountPasswordHash, userPassword.toCharArray());
         }
         System.out.println("Password Has Not Been Set");
         return false;
@@ -18,7 +19,7 @@ public class PasswordService {
 
     public static void setPasswordHashForAccount(int accountNumber, String password) {
         PasswordService passwordService = new PasswordService();
-        for (AccountBase account: Bank.getInstance().getBankAccounts()) {
+        for (AccountBase account: AccountManager.getBankAccounts()) {
             if (account.getAccountNumber() == accountNumber) {
                 account.setAccountPasswordHash(passwordService.hashPassword(password));
             }

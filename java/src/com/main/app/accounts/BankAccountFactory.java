@@ -3,13 +3,13 @@ package com.main.app.accounts;
 import com.main.app.Bank;
 import com.main.app.Login.PasswordService;
 
+import javax.management.InstanceAlreadyExistsException;
+
 public class BankAccountFactory {
 
-
-    public static AdultAccount createNewAdultAccount(String userName, String password, Float initialDeposit) {
+    public static AdultAccount createNewAdultAccount(String userName, String password, Float initialDeposit) throws Exception {
         if (AccountManager.accountExists(userName)) {
-            System.out.println("Account already exists");
-            return null;
+            throw new InstanceAlreadyExistsException("Account already exists");
         }
         AdultAccount adultAccount = new AdultAccount(userName, initialDeposit);
         updateBank(initialDeposit, adultAccount);
@@ -17,10 +17,9 @@ public class BankAccountFactory {
         return adultAccount;
     }
 
-    public static StudentAccount createNewStudentAccount(String userName, String password, Float initialDeposit) {
+    public static StudentAccount createNewStudentAccount(String userName, String password, Float initialDeposit) throws Exception {
         if (AccountManager.accountExists(userName)) {
-            System.out.println("Account already exists");
-            return null;
+            throw new InstanceAlreadyExistsException("Account already exists");
         }
         StudentAccount studentAccount = new StudentAccount(userName, initialDeposit);
         updateBank(initialDeposit, studentAccount);
@@ -29,9 +28,8 @@ public class BankAccountFactory {
     }
 
     private static void updateBank(Float initialDeposit, AccountBase account) {
-        Bank.getInstance().getBankAccounts().add(account);
+        AccountManager.getBankAccounts().add(account);
         Bank.getInstance().updateBalanceDeposit(initialDeposit);
     }
-
 
 }

@@ -2,18 +2,16 @@ package com.main.app;
 
 
 import com.main.app.accounts.AccountBase;
+import com.main.app.accounts.AccountManager;
 
 import java.util.ArrayList;
 
 public class Bank {
-    private Float bankTotalBalance = 0f;
+    private Float bankTotalBalance;
     private static Bank instance;
 
-    // Implement DB for accounts
-    private ArrayList<AccountBase> bankAccounts = new ArrayList<>();
-
     private Bank() {
-
+        this.bankTotalBalance = 0f;
     }
 
     public static Bank getInstance() {
@@ -32,24 +30,21 @@ public class Bank {
     }
 
     public void updateBalanceWithdrawal(Float withdrawal) {
-            bankTotalBalance += withdrawal;
+            bankTotalBalance -= withdrawal;
     }
 
-    public ArrayList<AccountBase> getBankAccounts() {
-        return bankAccounts;
+    public void resetBank() {
+        AccountManager.resetBankAccounts();
+        bankTotalBalance = 0f;
     }
+
     public void printBankInfo() {
         System.out.println("Registered bank accounts: ");
-        getInstance().printAccounts();
+        AccountManager.printAccounts();
         getInstance().printBankBalance();
     }
     private void printBankBalance() {
         System.out.println("The total balance in the bank is: " + getBankBalance());
     }
-    private void printAccounts() {
-        for (AccountBase account : getBankAccounts()) {
-            System.out.print("Account: " + account.getUserName());
-            System.out.println(", Created: " + account.getAccountCreated());
-        }
-    }
+
 }

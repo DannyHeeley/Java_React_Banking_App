@@ -2,6 +2,8 @@ package com.main.app.accounts;
 
 import com.main.app.Bank;
 
+import javax.management.InstanceAlreadyExistsException;
+import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -15,9 +17,11 @@ public class AccountManager {
     //    such as updating account information, handling transactions,
     //    and managing account state.
 
-    static ArrayList<AccountBase> bankAccounts = Bank.getInstance().getBankAccounts();
 
-    public AccountBase getAccount(String userName) {
+    // Implement DB for accounts
+    private static ArrayList<AccountBase> bankAccounts = new ArrayList<>();
+
+    public static AccountBase getAccount(String userName) {
         return bankAccounts.stream()
                 .filter(account -> userNameMatchesAccount(userName, account))
                 .findFirst()
@@ -27,12 +31,18 @@ public class AccountManager {
                 });
     }
 
-    public AccountBase createAccount(AccountType accountType, String userName, String password, Float initialDeposit) {
-        if (Objects.equals(accountType, STUDENT)) {
-            return BankAccountFactory.createNewStudentAccount(userName, password, 100f);
-        } if (Objects.equals(accountType, ADULT)) {
-            return BankAccountFactory.createNewAdultAccount(userName, password,  initialDeposit);
-        } return null;
+    public static AccountBase createAccount(AccountType accountType, String userName, String password, Float initialDeposit) {
+        try {
+            if (Objects.equals(accountType, STUDENT)) {
+                return BankAccountFactory.createNewStudentAccount(userName, password, initialDeposit);
+            } else if (Objects.equals(accountType, ADULT)) {
+                return BankAccountFactory.createNewAdultAccount(userName, password, initialDeposit);
+            } else {
+                return null;
+            }
+        } catch(Exception e){
+            throw new RuntimeException("Account already exists");
+        }
     }
 
     private static boolean userNameMatchesAccount(String userName, AccountBase account) {
@@ -42,8 +52,17 @@ public class AccountManager {
     public static boolean accountExists(String userName) {
         return bankAccounts.stream().anyMatch(account -> Objects.equals(account.getUserName(), userName));
     }
-
-    public static LocalDateTime getDateTimeNow() {
-        return now();
+    public static ArrayList<AccountBase> getBankAccounts() {
+        return bankAccounts;
     }
+    public static void printAccounts() {
+        for (AccountBase account : getBankAccounts()) {
+            System.out.print("Account: " + account.getUserName());
+            System.out.println(", Created: " + account.getAccountCreated());
+        }
+    }
+    public static void resetBankAccounts() {
+        bankAccounts = new ArrayList<>();
+    }
+
 }

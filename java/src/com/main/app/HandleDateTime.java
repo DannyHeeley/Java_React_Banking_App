@@ -22,4 +22,7 @@ public interface HandleDateTime {
         return dateTimeNow.format(formatter);
     }
 
+    default LocalDateTime getDateTimeNow() {
+        return now();
+    }
 }

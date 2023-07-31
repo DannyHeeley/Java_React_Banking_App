@@ -15,7 +15,7 @@ public abstract class AccountBase implements HandleDateTime {
     private final int accountNumber;
     private final String accountCreated;
     private String accountUpdated;
-    private static String accountPasswordHash;
+    private String accountPasswordHash;
     private final TransactionHistory transactionHistory;
 
     AccountBase(String userName, Float balance) {
@@ -42,11 +42,11 @@ public abstract class AccountBase implements HandleDateTime {
     }
 
 
-    public static String getAccountPasswordHash() {
+    public String getAccountPasswordHash() {
         return accountPasswordHash;
     }
     public void setAccountPasswordHash(String hashedPassword) {
-        this.accountPasswordHash = hashedPassword;
+        accountPasswordHash = hashedPassword;
     }
 
     public String getAccountUpdated() {
@@ -79,7 +79,7 @@ public abstract class AccountBase implements HandleDateTime {
 
     public int getAccountNumber() {return accountNumber; }
     private int generateAccountNumber() {
-        ArrayList<AccountBase> bankAccounts = Bank.getInstance().getBankAccounts();
+        ArrayList<AccountBase> bankAccounts = AccountManager.getBankAccounts();
         if (!bankAccounts.isEmpty()) {
             return bankAccounts.get(bankAccounts.size() - 1).accountNumber + 1;
         } else {
