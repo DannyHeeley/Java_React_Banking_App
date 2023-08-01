@@ -13,14 +13,14 @@ public class Main {
         Bank bank = Bank.getInstance();
 
         // Demo adult account
-        AdultAccount testAccountAdult = (AdultAccount) BankAccountFactory.createAccount(ADULT,"Foo Bar", "password123", 1000f);
+        AdultAccount testAccountAdult = (AdultAccount) BankAccountFactory.createAccount(ADULT,"Foo Bar", "Password123!", 1000f);
         testAccountAdult.deposit(500f);
         System.out.println("");
         testAccountAdult.printAccountInfo();
         System.out.println("");
 
         // Demo student account
-        StudentAccount testAccountStudent = (StudentAccount) BankAccountFactory.createAccount(STUDENT,"Fizz Buzz", "password123", 100f);
+        StudentAccount testAccountStudent = (StudentAccount) BankAccountFactory.createAccount(STUDENT,"Fizz Buzz", "Password123!", 100f);
         testAccountStudent.deposit(100f);
         System.out.println("");
         testAccountStudent.printAccountInfo();
@@ -28,7 +28,7 @@ public class Main {
 
         // Demo for passwords
         System.out.println("---- Getting account password ----");
-        String password = "password_here";
+        String password = "Password123!";
         PasswordService.setPasswordHashForAccount(testAccountAdult, password);
         System.out.println("Hashed password for account " + testAccountAdult.getUserName() + ": " + testAccountAdult.getAccountPasswordHash());
         System.out.println("---- Verifying account password ----");
