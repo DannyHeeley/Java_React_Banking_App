@@ -1,9 +1,12 @@
 package com.main.app;
 
 import com.main.app.Login.PasswordService;
-import com.main.app.accounts.*;
+import com.main.app.accounts.AdultAccount;
+import com.main.app.accounts.BankAccountFactory;
+import com.main.app.accounts.StudentAccount;
 
-import static com.main.app.accounts.AccountType.*;
+import static com.main.app.accounts.AccountType.ADULT;
+import static com.main.app.accounts.AccountType.STUDENT;
 
 public class Main {
     public static void main(String[] args) {
@@ -26,10 +29,10 @@ public class Main {
         // Demo for passwords
         System.out.println("---- Getting account password ----");
         String password = "password_here";
-        PasswordService.setPasswordHashForAccount(testAccountAdult.getAccountNumber(), password);
+        PasswordService.setPasswordHashForAccount(testAccountAdult, password);
         System.out.println("Hashed password for account " + testAccountAdult.getUserName() + ": " + testAccountAdult.getAccountPasswordHash());
         System.out.println("---- Verifying account password ----");
-        boolean isCorrectPassword = PasswordService.authenticateUserPassword(testAccountAdult.getAccountPasswordHash(), password);
+        boolean isCorrectPassword = PasswordService.authenticateUserPassword(testAccountAdult, password);
         System.out.println("Your password is " + isCorrectPassword);
         System.out.println("");
 

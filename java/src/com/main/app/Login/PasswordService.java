@@ -1,32 +1,38 @@
 package com.main.app.Login;
 
-import com.main.app.Bank;
 import com.main.app.accounts.AccountBase;
 import com.main.app.accounts.AccountManager;
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
 import de.mkammerer.argon2.Argon2Factory.Argon2Types;
 
+import java.util.concurrent.RejectedExecutionException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class PasswordService {
 
-    public static boolean authenticateUserPassword(String accountPasswordHash, String userPassword) {
-        if (accountPasswordHash != null) {
-            return verifyPassword(accountPasswordHash, userPassword.toCharArray());
+    static Pattern passwordPattern = Pattern.compile("^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?]).{8,}$");
+
+    public static boolean authenticateUserPassword(AccountBase account, String passwordAttempt) {
+        if (account.getAccountPasswordHash() == null) {
+            throw new NullPointerException("Password Has Not Been Found");
+        } else {
+            enforcePasswordRules(passwordAttempt);
+            return verifyPassword(account.getAccountPasswordHash(), passwordAttempt.toCharArray());
         }
-        System.out.println("Password Has Not Been Set");
-        return false;
     }
 
-    public static void setPasswordHashForAccount(int accountNumber, String password) {
-        PasswordService passwordService = new PasswordService();
+    public static void setPasswordHashForAccount(AccountBase bankAccountToUpdate, String newAccountPassword) {
+        enforcePasswordRules(newAccountPassword);
         for (AccountBase account: AccountManager.getBankAccounts()) {
-            if (account.getAccountNumber() == accountNumber) {
-                account.setAccountPasswordHash(passwordService.hashPassword(password));
+            if (account.getAccountNumber() == bankAccountToUpdate.getAccountNumber()) {
+                bankAccountToUpdate.setAccountPasswordHash(hashPassword(newAccountPassword));
             }
         }
     }
 
-    private String hashPassword(String password) {
+    private static String hashPassword(String password) {
         Argon2 argon2 = Argon2Factory.create(Argon2Types.ARGON2id);
         return argon2.hash(10, 65536, 1, password.toCharArray());
     }
@@ -36,5 +42,18 @@ public class PasswordService {
         return argon2.verify(hashedPassword, inputPassword);
     }
 
+    private static void enforcePasswordRules(String password) {
+        //Minimum of 8 characters
+        //At least one uppercase letter
+        //At least one number
+        //At least one special character
+        if (password == null || password.equals("")) {
+            throw new RejectedExecutionException("Password cannot be null or empty string");
+        }
+        Matcher matchPass = passwordPattern.matcher(password);
+        if (!matchPass.matches()) {
+            throw new RejectedExecutionException("Password must be in the following format: Minimum of 8 characters. At least one uppercase letter. At lease one number. At least one special character");
+        }
+    }
 }
 

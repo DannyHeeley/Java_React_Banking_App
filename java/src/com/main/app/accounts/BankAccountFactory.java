@@ -12,15 +12,15 @@ public class BankAccountFactory {
     static AccountBase acc;
     private BankAccountFactory() {}
 
-    public static AccountBase createAccount(AccountType accountType, String userName, String password, Float initialDeposit) {
+    public static AccountBase createAccount(AccountType accountType, String userName, String newAccountPassword, Float initialDeposit) {
         try {
             acc = createAccountForAccountType(accountType, userName, initialDeposit);
-            setAccountPassword(acc, password);
             Bank.getInstance().updateBalanceDeposit(initialDeposit);
             AccountManager.addAccount(acc);
         } catch(AccountCreationException e){
             System.out.println("Error Creating Acccount: " + e.getMessage());
         }
+        setAccountPassword(acc, newAccountPassword);
         return acc;
     }
 
@@ -46,8 +46,8 @@ public class BankAccountFactory {
         return new StudentAccount(userName, initialDeposit);
     }
 
-    private static void setAccountPassword(AccountBase account, String password) {
-        PasswordService.setPasswordHashForAccount(account.getAccountNumber(), password);
+    private static void setAccountPassword(AccountBase account, String newAccountPassword) {
+        PasswordService.setPasswordHashForAccount(account, newAccountPassword);
     }
 
     private static void throwErrorIfAccountCannotBeCreated(String userName, Float initialDeposit)

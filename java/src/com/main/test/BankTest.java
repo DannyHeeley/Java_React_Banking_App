@@ -1,9 +1,11 @@
 package com.main.test;
 
-import com.main.app.*;
+import com.main.app.Bank;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import org.junit.jupiter.api.*;
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatObject;
 
 class BankTest {
 
@@ -12,6 +14,7 @@ class BankTest {
     void setUp() {
         bank = Bank.getInstance();
         bank.resetBank();
+        assertThat(bank.getBankBalance()).isEqualTo(0f);
     }
 
     @Test

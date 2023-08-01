@@ -1,11 +1,12 @@
 package com.main.app.accounts;
+
 import com.main.app.HandleDateTime;
 import com.main.app.transactions.TransactionHistory;
 
 import java.util.ArrayList;
 
-import static com.main.app.transactions.TransactionType.*;
-import static java.time.LocalDateTime.now;
+import static com.main.app.transactions.TransactionType.DEPOSIT;
+import static com.main.app.transactions.TransactionType.WITHDRAWAL;
 
 public abstract class AccountBase implements HandleDateTime {
     private Float balance;
