@@ -9,10 +9,6 @@ e
 5java/src/com/main/test/accounts/AdultAccountTest.java,1\7\17057c7fdac0e9276d58e24cade4166addd4acba
 _
 /java/src/com/main/app/accounts/AccountType.java,b\9\b9493dd64d88f61728a8845a103cb034d5938faa
-j
-:java/src/com/main/app/transactions/TransactionHistory.java,7\d\7db4051a99546cf998ae1517a58e72e7f7bed566
-g
-7java/src/com/main/app/transactions/TransactionType.java,c\c\ccd1473c4de58f582b140871a1bb53686be7dca9
 _
 /java/src/com/main/app/accounts/AccountBase.java,2\c\2cb953abf41cf3b29dd5603a212248e9f48a3b53
 b
