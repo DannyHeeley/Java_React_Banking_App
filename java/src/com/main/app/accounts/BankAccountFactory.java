@@ -2,7 +2,6 @@ package com.main.app.accounts;
 
 import com.main.app.Bank;
 import com.main.app.Login.PasswordService;
-
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -32,12 +31,12 @@ public class BankAccountFactory {
                     dateOfBirth,
                     email
             );
+            AccountManager.updateDatabaseForAccount(acc.getAccountNumber(), accountType, acc.getBalance(), LocalDate.now());
             Bank.getInstance().updateBalanceDeposit(initialDeposit);
-            AccountManager.addAccount(acc);
+            setAccountPassword(acc, newAccountPassword);
         } catch(AccountCreationException e){
             System.out.println("Error Creating Acccount: " + e.getMessage());
         }
-        setAccountPassword(acc, newAccountPassword);
         return acc;
     }
 
@@ -52,24 +51,36 @@ public class BankAccountFactory {
     )
             throws AccountCreationException {
         if (Objects.equals(accountType, STUDENT)) {
-            return BankAccountFactory.createNewStudentAccount(
-                    userName,
-                    initialDeposit,
-                    firstName,
-                    lastName,
-                    dateOfBirth,
-                    email);
+            return studentAccount(userName, initialDeposit, firstName, lastName, dateOfBirth, email);
         } else if (Objects.equals(accountType, ADULT)) {
-            return BankAccountFactory.createNewAdultAccount(
-                    userName,
-                    initialDeposit,
-                    firstName,
-                    lastName,
-                    dateOfBirth,
-                    email
-            );
+            return adultAccount(userName, initialDeposit, firstName, lastName, dateOfBirth, email);
         }
         throw new AccountCreationException("Account type must be valid");
+    }
+
+    private static AdultAccount adultAccount(
+            String userName, Float initialDeposit, String firstName, String lastName, LocalDate dateOfBirth, String email
+    ) throws AccountCreationException {
+        return BankAccountFactory.createNewAdultAccount(
+                userName,
+                initialDeposit,
+                firstName,
+                lastName,
+                dateOfBirth,
+                email
+        );
+    }
+
+    private static StudentAccount studentAccount(
+            String userName, Float initialDeposit, String firstName, String lastName, LocalDate dateOfBirth, String email
+    ) throws AccountCreationException {
+        return BankAccountFactory.createNewStudentAccount(
+                userName,
+                initialDeposit,
+                firstName,
+                lastName,
+                dateOfBirth,
+                email);
     }
 
     private static AdultAccount createNewAdultAccount(
@@ -80,7 +91,7 @@ public class BankAccountFactory {
             LocalDate dateOfBirth,
             String email
     ) throws AccountCreationException {
-        throwErrorIfAccountCannotBeCreated(userName, initialDeposit);
+        throwsErrorIfAccountExistsOrMinusDeposit(userName, initialDeposit);
         return new AdultAccount(
                 userName,
                 initialDeposit,
@@ -99,7 +110,8 @@ public class BankAccountFactory {
             LocalDate dateOfBirth,
             String email
     ) throws AccountCreationException {
-        throwErrorIfAccountCannotBeCreated(userName, initialDeposit);
+        throwsErrorIfAccountExistsOrMinusDeposit(userName, initialDeposit);
+
         return new StudentAccount(
                 userName,
                 initialDeposit,
@@ -114,7 +126,7 @@ public class BankAccountFactory {
         PasswordService.setPasswordHashForAccount(account, newAccountPassword);
     }
 
-    private static void throwErrorIfAccountCannotBeCreated(String userName, Float initialDeposit)
+    private static void throwsErrorIfAccountExistsOrMinusDeposit(String userName, Float initialDeposit)
             throws AccountCreationException {
         if (initialDeposit < 0f) {
             throw new AccountCreationException("Cannot create account with a negative deposit");

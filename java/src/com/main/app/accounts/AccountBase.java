@@ -13,30 +13,28 @@ import static com.main.app.transactions.TransactionType.DEPOSIT;
 import static com.main.app.transactions.TransactionType.WITHDRAWAL;
 
 public abstract class AccountBase extends Person implements HandleDateTime {
-    private Float balance;
-    private final String bankName;
+    private Float currentBalance;
     private final String userName;
     private final int accountNumber;
-    private final String dateAccountCreated;
+    private final String dateCreated;
     private String dateAccountLastUpdated;
-    private String accountPasswordHash;
+    private String passwordHash;
     private final Transactions accountTransactionHistory;
 
     AccountBase(
             String userName,
-            Float balance,
+            Float currentBalance,
             String firstName,
             String lastName,
             LocalDate dateOfBirth,
             String email
     ) {
         super(firstName, lastName, dateOfBirth, email);
-        this.bankName = "CashMoney Banking Services";
         this.userName = userName;
         this.accountNumber = generateAccountNumber();
-        this.balance = balance;
-        this.dateAccountCreated = getDateTimeNowAsString();
-        this.accountPasswordHash = null;
+        this.currentBalance = currentBalance;
+        this.dateCreated = getDateTimeNowAsString();
+        this.passwordHash = null;
         this.dateAccountLastUpdated = null;
         this.accountTransactionHistory = new Transactions();
     }
@@ -46,30 +44,30 @@ public abstract class AccountBase extends Person implements HandleDateTime {
         handleNegativeArgument(WITHDRAWAL, amount);
         if (amount <= getBalance()) {
             subtractFromAccountBalance(amount);
-            System.out.println("Withdrawal of " + amount + " Successful, your balance is: " + getBalance());
+            System.out.println("Withdrawal of " + amount + " Successful, your currentBalance is: " + getBalance());
             setAccountUpdatedTo(getDateTimeNowAsString());
         } else {
-            throw new IllegalArgumentException("Withdrawal unsuccessful, your do not have enough balance to cover the requested withdrawal amount");
+            throw new IllegalArgumentException("Withdrawal unsuccessful, your do not have enough currentBalance to cover the requested withdrawal amount");
         }
     }
 
     public Float getBalance() {
-        return balance;
+        return currentBalance;
     }
     public void addToAccountBalance(Float amount) {
-        this.balance += amount;
+        this.currentBalance += amount;
         accountTransactionHistory.addTransaction(DEPOSIT, amount);
     }
     public void subtractFromAccountBalance(Float amount) {
-        this.balance -= amount;
+        this.currentBalance -= amount;
         accountTransactionHistory.addTransaction(WITHDRAWAL, amount);
     }
 
     public String getAccountPasswordHash() {
-        return accountPasswordHash;
+        return passwordHash;
     }
     public void setAccountPasswordHash(String hashedPassword) {
-        accountPasswordHash = hashedPassword;
+        passwordHash = hashedPassword;
     }
 
     public String getDateAccountLastUpdated() {
@@ -93,7 +91,7 @@ public abstract class AccountBase extends Person implements HandleDateTime {
         return userName;
     }
     public String getDateAccountCreated() {
-        return dateAccountCreated;
+        return dateCreated;
     }
     public Transactions getAccountTransactionHistory() {
         return accountTransactionHistory;
@@ -101,7 +99,6 @@ public abstract class AccountBase extends Person implements HandleDateTime {
 
     public void printAccountInfo() {
         System.out.println("ACCOUNT INFO:");
-        System.out.println("Bank: " + bankName);
         System.out.println("You are customer: " + getUserName());
         System.out.println("Your account number is: " + getAccountNumber());
         System.out.println("Account created: " + getDateTimeNowAsString());

@@ -7,11 +7,9 @@ public class DatabaseConnection {
     Statement statement = null;
     ResultSet resultsSet = null;
 
-    public void executeUpdate(String update)
-    {
-        try (Statement statement = getDatabaseConnection().createStatement())
-        {
-            int rowcount = statement.executeUpdate(update);
+    public void executeUpdate(PreparedStatement preparedStatement) {
+        try {
+            int rowcount = preparedStatement.executeUpdate();
             System.out.println();
             System.out.printf("Success - %d - rows affected.\n",rowcount);
         } catch(Exception err) {
@@ -21,13 +19,10 @@ public class DatabaseConnection {
         }
     }
 
-    public void executeQuery(String query)
-    {
+    public ResultSet executeQuery(PreparedStatement preparedStatement) {
+        ResultSet resultSet = null;
         try {
-            statement = getDatabaseConnection().createStatement();
-            if (statement.execute(query)) {
-                resultsSet = statement.getResultSet();
-            }
+            resultSet = preparedStatement.executeQuery();
         } catch (SQLException e) {
             System.out.println("SQLException: " + e.getMessage());
             System.out.println("SQLState: " + e.getSQLState());
@@ -35,8 +30,9 @@ public class DatabaseConnection {
         } finally {
             releaseResources();
         }
+        return resultSet;
     }
-    private Connection getDatabaseConnection() {
+    public Connection getDatabaseConnection() {
         try {
             String url = "jdbc:mysql://localhost:3306/bankdb";
             String user = "root";

@@ -45,15 +45,15 @@ public class Main {
         PasswordService.setPasswordHashForAccount(testAccountAdult, password);
         System.out.println("Hashed password for account " + testAccountAdult.getUserName() + ": " + testAccountAdult.getAccountPasswordHash());
         System.out.println("---- Verifying account password ----");
-        boolean isCorrectPassword = PasswordService.authenticateUserPassword(testAccountAdult, password);
-        System.out.println("Your password is " + isCorrectPassword);
-        System.out.println("");
+        //boolean isCorrectPassword = PasswordService.authenticateUserPassword(testAccountAdult, password);
+        //System.out.println("Your password is " + isCorrectPassword);
+        //System.out.println("");
 
         bank.printBankInfo();
         System.out.println("");
 
         // Demo for DatabaseConnection
-        DatabaseConnection databaseConnection = new DatabaseConnection();
-        databaseConnection.executeQuery("INSERT INTO persons(FirstName, LastName, Email) VALUES('Foo','Bar', 'foo_bar@gmail.com')");
+        //DatabaseConnection databaseConnection = new DatabaseConnection();
+        //databaseConnection.executeQuery("INSERT INTO persons(FirstName, LastName, Email) VALUES('Foo','Bar', 'foo_bar@gmail.com')");
     }
 }
