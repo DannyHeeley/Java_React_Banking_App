@@ -4,6 +4,7 @@ import com.main.app.Login.PasswordService;
 import com.main.app.accounts.AdultAccount;
 import com.main.app.accounts.BankAccountFactory;
 import com.main.app.accounts.StudentAccount;
+import com.main.app.database.DatabaseConnection;
 
 import java.time.LocalDate;
 
@@ -49,5 +50,10 @@ public class Main {
         System.out.println("");
 
         bank.printBankInfo();
+        System.out.println("");
+
+        // Demo for DatabaseConnection
+        DatabaseConnection databaseConnection = new DatabaseConnection();
+        databaseConnection.executeQuery("INSERT INTO persons(FirstName, LastName, Email) VALUES('Foo','Bar', 'foo_bar@gmail.com')");
     }
 }
