@@ -5,6 +5,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
 import java.util.concurrent.RejectedExecutionException;
 
 import static com.main.app.Login.PasswordService.*;
@@ -14,14 +15,37 @@ class PasswordServiceTest {
     AccountBase testAccountAdult;
     AccountBase testAccountStudent;
     int accountNumber;
+    String userNameAdult = "Adult";
+    String userNameStudent = "Student";
+    String firstName = "Fizz";
+    String lastName = "Buzz";
+    LocalDate dateOfBirth = LocalDate.of(1993, 1, 11);
+    String email = "fizzbuzz@gmail.com";
     private static final String CORRECT_PASSWORD = "Password123!";
     private static final String INCORRECT_PASSWORD = "Incorrect123!";
     private static final String INCORRECT_FORMAT = "abc";
 
     @BeforeEach
     void setUp() {
-        testAccountAdult = BankAccountFactory.createAccount(AccountType.ADULT, "Adult User", CORRECT_PASSWORD, 0f);
-        testAccountStudent = BankAccountFactory.createAccount(AccountType.STUDENT, "Student User", CORRECT_PASSWORD, 0f);
+        testAccountAdult = BankAccountFactory.createAccount(
+                AccountType.ADULT, userNameAdult,
+                CORRECT_PASSWORD,
+                0f,
+                firstName,
+                lastName,
+                dateOfBirth,
+                email
+        );
+        testAccountStudent = BankAccountFactory.createAccount(
+                AccountType.STUDENT,
+                userNameStudent,
+                CORRECT_PASSWORD,
+                0f,
+                firstName,
+                lastName,
+                dateOfBirth,
+                email
+        );
         accountNumber = testAccountAdult.getAccountNumber();
     }
 
@@ -44,8 +68,10 @@ class PasswordServiceTest {
 
     @Test
     void authenticateIsFalseIfPasswordIsNull() {
-        assertThrows(RejectedExecutionException.class, () -> authenticateUserPassword(testAccountAdult, null));
-        assertThrows(RejectedExecutionException.class, () -> authenticateUserPassword(testAccountStudent, null));
+        assertThrows(RejectedExecutionException.class, () ->
+                authenticateUserPassword(testAccountAdult, null));
+        assertThrows(RejectedExecutionException.class, () ->
+                authenticateUserPassword(testAccountStudent, null));
     }
 
     @Test
@@ -56,46 +82,99 @@ class PasswordServiceTest {
 
     @Test
     void throwsExceptionIfNewPasswordIsNull() {
-        assertThrows(RuntimeException.class, () -> setPasswordHashForAccount(testAccountAdult, null));
-        assertThrows(RuntimeException.class, () -> setPasswordHashForAccount(testAccountStudent, null));
+        assertThrows(RuntimeException.class, () ->
+                setPasswordHashForAccount(testAccountAdult, null)
+        );
+        assertThrows(RuntimeException.class, () ->
+                setPasswordHashForAccount(testAccountStudent, null)
+        );
     }
 
     @Test
     void throwsExceptionIfNewPasswordIsEmptyString() {
-        assertThrows(RuntimeException.class, () -> setPasswordHashForAccount(testAccountAdult, ""));
-        assertThrows(RuntimeException.class, () -> setPasswordHashForAccount(testAccountStudent, ""));
+        assertThrows(RuntimeException.class, () ->
+                setPasswordHashForAccount(testAccountAdult, "")
+        );
+        assertThrows(RuntimeException.class, () ->
+                setPasswordHashForAccount(testAccountStudent, "")
+        );
     }
 
     @Test
     void enforcesPasswordRulesWhenSettingWithIncorrectFormat() {
-        assertThrows(RejectedExecutionException.class, () -> setPasswordHashForAccount(testAccountAdult, INCORRECT_FORMAT));
-        assertThrows(RejectedExecutionException.class, () -> setPasswordHashForAccount(testAccountStudent, INCORRECT_FORMAT));
+        assertThrows(RejectedExecutionException.class, () ->
+                setPasswordHashForAccount(testAccountAdult, INCORRECT_FORMAT)
+        );
+        assertThrows(RejectedExecutionException.class, () ->
+                setPasswordHashForAccount(testAccountStudent, INCORRECT_FORMAT)
+        );
     }
 
     @Test
     void doesNotThrowIfSettingPasswordWithCorrectFormat() {
-        assertDoesNotThrow(() -> setPasswordHashForAccount(testAccountAdult, CORRECT_PASSWORD));
-        assertDoesNotThrow(() -> setPasswordHashForAccount(testAccountStudent, CORRECT_PASSWORD));
+        assertDoesNotThrow(() ->
+                setPasswordHashForAccount(testAccountAdult, CORRECT_PASSWORD)
+        );
+        assertDoesNotThrow(() ->
+                setPasswordHashForAccount(testAccountStudent, CORRECT_PASSWORD)
+        );
     }
 
     @Test
     void enforcesPassRulesWhenAuthenticatingAdultPassWithIncorrectFormat() {
         assertAll(
-                () -> assertThrows(RejectedExecutionException.class, () -> authenticateUserPassword(testAccountAdult, INCORRECT_FORMAT)),
-                () -> assertThrows(RejectedExecutionException.class, () -> BankAccountFactory.createAccount(AccountType.ADULT, "User 2", "password", 0f)),
-                () -> assertThrows(RejectedExecutionException.class, () -> BankAccountFactory.createAccount(AccountType.ADULT, "User 3", "p@ssw0rd", 0f)),
-                () -> assertThrows(RejectedExecutionException.class, () -> BankAccountFactory.createAccount(AccountType.ADULT, "User 4", "UPPERCASE", 0f)),
-                () -> assertThrows(RejectedExecutionException.class, () -> BankAccountFactory.createAccount(AccountType.ADULT, "User 5", "12345678", 0f))
+                () -> assertThrows(RejectedExecutionException.class, () ->
+                        authenticateUserPassword(testAccountAdult, INCORRECT_FORMAT)
+                ),
+
+                () -> assertThrows(RejectedExecutionException.class, () ->
+                        BankAccountFactory.createAccount(
+                        AccountType.ADULT, "User 2", "password",
+                                0f, firstName, lastName, dateOfBirth, email
+                )),
+
+                () -> assertThrows(RejectedExecutionException.class, () ->
+                        BankAccountFactory.createAccount(
+                        AccountType.ADULT, "User 3", "p@ssw0rd",
+                                0f, firstName, lastName, dateOfBirth, email
+                )),
+
+                () -> assertThrows(RejectedExecutionException.class, () ->
+                        BankAccountFactory.createAccount(
+                        AccountType.ADULT, "User 4", "UPPERCASE",
+                                0f, firstName, lastName, dateOfBirth, email
+                )),
+
+                () -> assertThrows(RejectedExecutionException.class, () ->
+                        BankAccountFactory.createAccount(
+                        AccountType.ADULT, "User 5", "12345678",
+                                0f, firstName, lastName, dateOfBirth, email
+                ))
         );
     }
 
     @Test
     void doesNotThrowIfAuthenticatingAdultPassWithCorrectFormat() {
-        AccountBase testAccount2 = BankAccountFactory.createAccount(AccountType.ADULT, "User 2", "Pa$$w0rd", 0f);
-        AccountBase testAccount3 = BankAccountFactory.createAccount(AccountType.ADULT, "User 3", "123abcABC!", 0f);
-        AccountBase testAccount4 = BankAccountFactory.createAccount(AccountType.ADULT, "User 4", "aBcD123!", 0f);
-        AccountBase testAccount5 = BankAccountFactory.createAccount(AccountType.ADULT, "User 5", "P@ssw0rd", 0f);
-        AccountBase testAccount6 = BankAccountFactory.createAccount(AccountType.ADULT, "User 6", "P@$$W0RD!", 0f);
+        AccountBase testAccount2 = BankAccountFactory.createAccount(
+                AccountType.ADULT, "User 2", "Pa$$w0rd",
+                0f, firstName, lastName, dateOfBirth, email
+        );
+        AccountBase testAccount3 = BankAccountFactory.createAccount(
+                AccountType.ADULT, "User 3", "123abcABC!",
+                0f, firstName, lastName, dateOfBirth, email
+        );
+        AccountBase testAccount4 = BankAccountFactory.createAccount(
+                AccountType.ADULT, "User 4", "aBcD123!",
+                0f, firstName, lastName, dateOfBirth, email
+        );
+        AccountBase testAccount5 = BankAccountFactory.createAccount(
+                AccountType.ADULT, "User 5", "P@ssw0rd",
+                0f, firstName, lastName, dateOfBirth, email
+        );
+        AccountBase testAccount6 = BankAccountFactory.createAccount(
+                AccountType.ADULT, "User 6", "P@$$W0RD!",
+                0f, firstName, lastName, dateOfBirth, email
+        );
         assertAll(
                 () -> assertDoesNotThrow(() -> authenticateUserPassword(testAccountAdult, CORRECT_PASSWORD)),
                 () -> assertDoesNotThrow(() -> authenticateUserPassword(testAccount2, "Pa$$w0rd")),
@@ -107,23 +186,58 @@ class PasswordServiceTest {
     }
 
     @Test
-    void enforcesPassRulesWhenAuthenticatingStudentPasstWithIncorrectFormat() {
+    void enforcesPassRulesWhenAuthenticatingStudentPassWithIncorrectFormat() {
         assertAll(
-                () -> assertThrows(RejectedExecutionException.class, () -> authenticateUserPassword(testAccountStudent, INCORRECT_FORMAT)),
-                () -> assertThrows(RejectedExecutionException.class, () -> BankAccountFactory.createAccount(AccountType.STUDENT, "User 2", "password", 0f)),
-                () -> assertThrows(RejectedExecutionException.class, () -> BankAccountFactory.createAccount(AccountType.STUDENT, "User 3", "p@ssw0rd", 0f)),
-                () -> assertThrows(RejectedExecutionException.class, () -> BankAccountFactory.createAccount(AccountType.STUDENT, "User 4", "UPPERCASE", 0f)),
-                () -> assertThrows(RejectedExecutionException.class, () -> BankAccountFactory.createAccount(AccountType.STUDENT, "User 5", "12345678", 0f))
+                () -> assertThrows(RejectedExecutionException.class, () ->
+                        authenticateUserPassword(testAccountStudent, INCORRECT_FORMAT)
+                ),
+
+                () -> assertThrows(RejectedExecutionException.class, () ->
+                        BankAccountFactory.createAccount(
+                        AccountType.STUDENT, "User 2", "password",
+                                0f, firstName, lastName, dateOfBirth, email
+                )),
+
+                () -> assertThrows(RejectedExecutionException.class, () ->
+                        BankAccountFactory.createAccount(
+                        AccountType.STUDENT, "User 3", "p@ssw0rd",
+                                0f, firstName, lastName, dateOfBirth, email
+                )),
+
+                () -> assertThrows(RejectedExecutionException.class, () -> BankAccountFactory.createAccount(
+                        AccountType.STUDENT, "User 4", "UPPERCASE",
+                        0f, firstName, lastName, dateOfBirth, email
+                )),
+
+                () -> assertThrows(RejectedExecutionException.class, () -> BankAccountFactory.createAccount(
+                        AccountType.STUDENT, "User 5", "12345678",
+                        0f, firstName, lastName, dateOfBirth, email
+                ))
         );
     }
 
     @Test
     void doesNotThrowIfAuthenticatingPasswordWithCorrectFormatStudent() {
-        AccountBase testAccount2 = BankAccountFactory.createAccount(AccountType.STUDENT, "User 2", "Pa$$w0rd", 0f);
-        AccountBase testAccount3 = BankAccountFactory.createAccount(AccountType.STUDENT, "User 3", "123abcABC!", 0f);
-        AccountBase testAccount4 = BankAccountFactory.createAccount(AccountType.STUDENT, "User 4", "aBcD123!", 0f);
-        AccountBase testAccount5 = BankAccountFactory.createAccount(AccountType.STUDENT, "User 5", "P@ssw0rd", 0f);
-        AccountBase testAccount6 = BankAccountFactory.createAccount(AccountType.STUDENT, "User 6", "P@$$W0RD!", 0f);
+        AccountBase testAccount2 = BankAccountFactory.createAccount(
+                AccountType.STUDENT, "User 2", "Pa$$w0rd",
+                0f, firstName, lastName, dateOfBirth, email
+        );
+        AccountBase testAccount3 = BankAccountFactory.createAccount(
+                AccountType.STUDENT, "User 3", "123abcABC!",
+                0f, firstName, lastName, dateOfBirth, email
+        );
+        AccountBase testAccount4 = BankAccountFactory.createAccount(
+                AccountType.STUDENT, "User 4", "aBcD123!",
+                0f, firstName, lastName, dateOfBirth, email
+        );
+        AccountBase testAccount5 = BankAccountFactory.createAccount(
+                AccountType.STUDENT, "User 5", "P@ssw0rd",
+                0f, firstName, lastName, dateOfBirth, email
+        );
+        AccountBase testAccount6 = BankAccountFactory.createAccount(
+                AccountType.STUDENT, "User 6", "P@$$W0RD!",
+                0f, firstName, lastName, dateOfBirth, email
+        );
         assertAll(
                 () -> assertDoesNotThrow(() -> authenticateUserPassword(testAccountStudent, CORRECT_PASSWORD)),
                 () -> assertDoesNotThrow(() -> authenticateUserPassword(testAccount2, "Pa$$w0rd")),

@@ -4,12 +4,15 @@ import com.main.app.HandleDateTime;
 import com.main.app.transactions.Transactions;
 import com.main.app.transactions.TransactionType;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 
 import static com.main.app.transactions.TransactionType.DEPOSIT;
 import static com.main.app.transactions.TransactionType.WITHDRAWAL;
 
-public abstract class AccountBase implements HandleDateTime {
+public abstract class AccountBase extends Person implements HandleDateTime {
     private Float balance;
     private final String bankName;
     private final String userName;
@@ -19,7 +22,15 @@ public abstract class AccountBase implements HandleDateTime {
     private String accountPasswordHash;
     private final Transactions accountTransactionHistory;
 
-    AccountBase(String userName, Float balance) {
+    AccountBase(
+            String userName,
+            Float balance,
+            String firstName,
+            String lastName,
+            LocalDate dateOfBirth,
+            String email
+    ) {
+        super(firstName, lastName, dateOfBirth, email);
         this.bankName = "CashMoney Banking Services";
         this.userName = userName;
         this.accountNumber = generateAccountNumber();

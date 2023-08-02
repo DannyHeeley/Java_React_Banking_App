@@ -5,22 +5,34 @@ import com.main.app.accounts.AdultAccount;
 import com.main.app.accounts.BankAccountFactory;
 import com.main.app.accounts.StudentAccount;
 
+import java.time.LocalDate;
+
 import static com.main.app.accounts.AccountType.ADULT;
 import static com.main.app.accounts.AccountType.STUDENT;
 
 public class Main {
     public static void main(String[] args) {
         Bank bank = Bank.getInstance();
+        String userNameAdult = "Adult";
+        String userNameStudent = "Student";
+        String firstName = "Fizz";
+        String lastName = "Buzz";
+        LocalDate dateOfBirth = LocalDate.of(1993, 1, 11);
+        String email = "fizzbuzz@gmail.com";
 
         // Demo adult account
-        AdultAccount testAccountAdult = (AdultAccount) BankAccountFactory.createAccount(ADULT,"Foo Bar", "Password123!", 1000f);
+        AdultAccount testAccountAdult = (AdultAccount) BankAccountFactory.createAccount(
+                ADULT, userNameAdult, "Password123!", 1000f, firstName, lastName, dateOfBirth, email
+        );
         testAccountAdult.deposit(500f);
         System.out.println("");
         testAccountAdult.printAccountInfo();
         System.out.println("");
 
         // Demo student account
-        StudentAccount testAccountStudent = (StudentAccount) BankAccountFactory.createAccount(STUDENT,"Fizz Buzz", "Password123!", 100f);
+        StudentAccount testAccountStudent = (StudentAccount) BankAccountFactory.createAccount(
+                STUDENT,userNameStudent, "Password123!", 100f, firstName, lastName, dateOfBirth, email
+        );
         testAccountStudent.deposit(100f);
         System.out.println("");
         testAccountStudent.printAccountInfo();
