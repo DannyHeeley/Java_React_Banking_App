@@ -5,15 +5,9 @@ b
 2java/src/com/main/app/accounts/AccountManager.java,a\1\a11f503954bc3a90b750f86accfa762d5425a7c7
 _
 /java/src/com/main/app/accounts/AccountType.java,b\9\b9493dd64d88f61728a8845a103cb034d5938faa
-e
-5java/src/com/main/test/accounts/AdultAccountTest.java,1\7\17057c7fdac0e9276d58e24cade4166addd4acba
-k
-;java/src/com/main/test/accounts/BankAccountFactoryTest.java,d\7\d7b68946fd2cdeb4c2a313087b0448cbdcba8a7a
 f
 6java/src/com/main/app/accounts/BankAccountFactory.java,6\8\688d6de0b278aa160cc70117f6fd272f9827fde4
 `
 0java/src/com/main/app/Login/PasswordService.java,9\9\9935ad26bc439981576ad839fdad8ffb7d0404b7
 Y
 )java/src/com/main/app/HandleDateTime.java,6\d\6d06d958bed13011b1565eea2ae54a9cf8ca91e4
-O
-java/src/com/main/app/Main.java,9\3\93f5fa8e8d8e9f80ed3e95b2cefce40ba3d745fe

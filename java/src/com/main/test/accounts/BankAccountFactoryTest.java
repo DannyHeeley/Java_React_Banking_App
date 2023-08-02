@@ -4,6 +4,7 @@ import com.main.app.Bank;
 import com.main.app.accounts.AccountBase;
 import com.main.app.accounts.AccountManager;
 import com.main.app.accounts.BankAccountFactory;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,6 +19,10 @@ public class BankAccountFactoryTest {
     @BeforeEach
     void setUp() {
         bank = Bank.getInstance();
+    }
+
+    @AfterEach
+    void tearDown() {
         bank.resetBank();
     }
 

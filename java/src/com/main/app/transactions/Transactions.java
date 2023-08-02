@@ -6,37 +6,32 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TransactionHistory implements HandleDateTime {
+public class Transactions implements HandleDateTime {
     private static List<TransactionEntry> transactionHistory;
-    public TransactionHistory() {
+    public Transactions() {
         transactionHistory = new ArrayList<>();
     }
-    public void addTransaction(TransactionType type, float value, float balance) {
-        TransactionEntry entry = new TransactionEntry(type, value, balance);
+    public void addTransaction(TransactionType type, float value) {
+        TransactionEntry entry = new TransactionEntry(type, value);
         transactionHistory.add(entry);
     }
     private class TransactionEntry {
-        private final LocalDateTime dateTime;
-        private final float transactionValue;
-        private final TransactionType type;
-        private final Float balance;
-        private TransactionEntry(TransactionType type, float value, float balance) {
-            this.dateTime = getDateTimeNow();
-            this.type = type;
-            this.transactionValue = value;
-            this.balance = balance;
+        private final TransactionType transactionType;
+        private final float amount;
+        private final LocalDateTime transactionDate;
+        private TransactionEntry(TransactionType transactionType, float amount) {
+            this.transactionType = transactionType;
+            this.amount = amount;
+            this.transactionDate = getDateTimeNow();
         }
         private LocalDateTime getTransactionDateTime() {
-            return dateTime;
+            return transactionDate;
         }
         private double getTransactionValue() {
-            return transactionValue;
+            return amount;
         }
         private TransactionType getTransactionType() {
-            return type;
-        }
-        private double getTransactionBalance() {
-            return balance;
+            return transactionType;
         }
     }
     @Override
@@ -47,7 +42,6 @@ public class TransactionHistory implements HandleDateTime {
             sb.append("Date/Time: ").append(parseDateTimeToString((entry.getTransactionDateTime()))).append(", ");
             sb.append("Value: ").append(entry.getTransactionValue()).append(", ");
             sb.append("Type: ").append(entry.getTransactionType()).append(", ");
-            sb.append("Balance: ").append(entry.getTransactionBalance()).append("\n");
         }
         return sb.toString();
     }

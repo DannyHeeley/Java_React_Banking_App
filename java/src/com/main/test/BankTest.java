@@ -1,6 +1,7 @@
 package com.main.test;
 
 import com.main.app.Bank;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,8 +15,13 @@ class BankTest {
     @BeforeEach
     void setUp() {
         bank = Bank.getInstance();
-        bank.resetBank();
+
         assertThat(bank.getBankBalance()).isEqualTo(0f);
+    }
+
+    @AfterEach
+    void tearDown() {
+        bank.resetBank();
     }
 
     @Test

@@ -1,7 +1,7 @@
 package com.main.app.accounts;
 
 import com.main.app.HandleDateTime;
-import com.main.app.transactions.TransactionHistory;
+import com.main.app.transactions.Transactions;
 import com.main.app.transactions.TransactionType;
 
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ public abstract class AccountBase implements HandleDateTime {
     private final String dateAccountCreated;
     private String dateAccountLastUpdated;
     private String accountPasswordHash;
-    private final TransactionHistory accountTransactionHistory;
+    private final Transactions accountTransactionHistory;
 
     AccountBase(String userName, Float balance) {
         this.bankName = "CashMoney Banking Services";
@@ -27,7 +27,7 @@ public abstract class AccountBase implements HandleDateTime {
         this.dateAccountCreated = getDateTimeNowAsString();
         this.accountPasswordHash = null;
         this.dateAccountLastUpdated = null;
-        this.accountTransactionHistory = new TransactionHistory();
+        this.accountTransactionHistory = new Transactions();
     }
 
     abstract void deposit(Float amount);
@@ -47,11 +47,11 @@ public abstract class AccountBase implements HandleDateTime {
     }
     public void addToAccountBalance(Float amount) {
         this.balance += amount;
-        accountTransactionHistory.addTransaction(DEPOSIT, amount, balance);
+        accountTransactionHistory.addTransaction(DEPOSIT, amount);
     }
     public void subtractFromAccountBalance(Float amount) {
         this.balance -= amount;
-        accountTransactionHistory.addTransaction(WITHDRAWAL, amount, balance);
+        accountTransactionHistory.addTransaction(WITHDRAWAL, amount);
     }
 
     public String getAccountPasswordHash() {
@@ -84,7 +84,7 @@ public abstract class AccountBase implements HandleDateTime {
     public String getDateAccountCreated() {
         return dateAccountCreated;
     }
-    public TransactionHistory getAccountTransactionHistory() {
+    public Transactions getAccountTransactionHistory() {
         return accountTransactionHistory;
     }
 
