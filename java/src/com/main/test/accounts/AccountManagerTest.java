@@ -39,7 +39,7 @@ public class AccountManagerTest {
     void getsAllBankAccounts() {
         ArrayList<AccountBase> theseBankAccounts = AccountManager.getBankAccounts();
 
-        AccountBase account1 = BankAccountFactory.createAccount(ADULT,"Foo Bar", CORRECT_PASSWORD, 50f);
+        AccountBase account1 = BankAccountFactory.createAccount(ADULT,"An Adult", CORRECT_PASSWORD, 50f);
         assertThat(theseBankAccounts).containsExactly(account1);
 
         AccountBase account2 = BankAccountFactory.createAccount(STUDENT, "A Student", CORRECT_PASSWORD, 0f);
@@ -80,7 +80,7 @@ public class AccountManagerTest {
     @Test
     void returnsCorrectAccount() {
         AdultAccount account1 = (AdultAccount) BankAccountFactory.createAccount(ADULT,"Foo Bar", CORRECT_PASSWORD, 50f);
-        StudentAccount account2 = (StudentAccount) BankAccountFactory.createAccount(STUDENT,"Fizz Buzz", CORRECT_PASSWORD, 50f);
+        StudentAccount account2 = (StudentAccount) BankAccountFactory.createAccount(STUDENT,"Fizz Buzz", CORRECT_PASSWORD, 150f);
         assertThat(bankAccounts).containsOnlyOnce(account1);
         assertThat(AccountManager.getAccount("Foo Bar")).isEqualTo(account1);
         assertThat(AccountManager.getAccount("Foo Bar")).isNotEqualTo(account2);
@@ -89,12 +89,16 @@ public class AccountManagerTest {
     @Test
     void trueIfAccountExists() {
         BankAccountFactory.createAccount(ADULT,"Foo Bar", CORRECT_PASSWORD, 50f);
+        BankAccountFactory.createAccount(STUDENT,"Fizz Buzz", CORRECT_PASSWORD, 50f);
         assertTrue(AccountManager.accountExists("Foo Bar"));
+        assertTrue(AccountManager.accountExists("Fizz Buzz"));
     }
 
     @Test
     void falseIfAccountExists() {
         BankAccountFactory.createAccount(ADULT,"Foo Bar", CORRECT_PASSWORD, 50f);
-        assertFalse(AccountManager.accountExists("Fizz Buzz"));
+        BankAccountFactory.createAccount(STUDENT,"Fizz Buzz", CORRECT_PASSWORD, 50f);
+        assertFalse(AccountManager.accountExists("Fizz Bar"));
+        assertFalse(AccountManager.accountExists("Foo Buzz"));
     }
 }

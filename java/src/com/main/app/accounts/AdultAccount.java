@@ -2,6 +2,8 @@ package com.main.app.accounts;
 
 import com.main.app.Bank;
 
+import static com.main.app.transactions.TransactionType.DEPOSIT;
+
 public class AdultAccount extends AccountBase {
     public AdultAccount(String userName, Float initialDeposit) {
         super(userName, initialDeposit);
@@ -9,13 +11,11 @@ public class AdultAccount extends AccountBase {
     }
     @Override
     public void deposit(Float amount) {
-        if (amount >= 0) {
-            addToAccountBalance(amount);
-            setAccountUpdatedTo(getDateTimeNowAsString());
-            Bank.getInstance().updateBalanceDeposit(amount);
-            System.out.println("Deposit of " + amount + " was successful! Your new balance is " + getBalance());
-        }else {
-            throw new IllegalArgumentException("Deposit amount must be a positive number");
-        }
+        handleNegativeArgument(DEPOSIT, amount);
+        addToAccountBalance(amount);
+        setAccountUpdatedTo(getDateTimeNowAsString());
+        Bank.getInstance().updateBalanceDeposit(amount);
+        System.out.println("Deposit of " + amount + " was successful! Your new balance is " + getBalance());
+
     }
 }

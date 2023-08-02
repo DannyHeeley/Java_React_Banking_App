@@ -2,6 +2,7 @@ package com.main.app.accounts;
 
 import com.main.app.HandleDateTime;
 import com.main.app.transactions.TransactionHistory;
+import com.main.app.transactions.TransactionType;
 
 import java.util.ArrayList;
 
@@ -30,17 +31,14 @@ public abstract class AccountBase implements HandleDateTime {
     }
 
     abstract void deposit(Float amount);
-    public void withdraw( Float amount) {
-        if (amount >= 0) {
-            if (amount <= getBalance()) {
-                subtractFromAccountBalance(amount);
-                System.out.println("Withdrawal of " + amount + " Successful, your balance is: " + getBalance());
-                setAccountUpdatedTo(getDateTimeNowAsString());
-            } else {
-                throw new IllegalArgumentException("Withdrawal unsuccessful, your do not have enough balance to cover the requested withdrawal amount");
-            }
+    public void withdraw(Float amount) {
+        handleNegativeArgument(WITHDRAWAL, amount);
+        if (amount <= getBalance()) {
+            subtractFromAccountBalance(amount);
+            System.out.println("Withdrawal of " + amount + " Successful, your balance is: " + getBalance());
+            setAccountUpdatedTo(getDateTimeNowAsString());
         } else {
-            throw new IllegalArgumentException("Withdrawal amount must be a positive number");
+            throw new IllegalArgumentException("Withdrawal unsuccessful, your do not have enough balance to cover the requested withdrawal amount");
         }
     }
 
@@ -99,5 +97,15 @@ public abstract class AccountBase implements HandleDateTime {
         System.out.println("Your Balance Is: " + getBalance());
         System.out.println("Balance last updated: " + getDateAccountLastUpdated());
         System.out.println(getAccountTransactionHistory().toString());
+    }
+    public static void handleNegativeArgument(TransactionType transactionType, Float amount) {
+        if (amount < 0) {
+            if (transactionType == DEPOSIT) {
+                throw new IllegalArgumentException("Deposit amount must be a positive number");
+            }
+            if (transactionType == WITHDRAWAL) {
+                throw new IllegalArgumentException("Withdrawal amount must be a positive number");
+            }
+        }
     }
 }

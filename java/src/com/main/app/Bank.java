@@ -1,8 +1,12 @@
 package com.main.app;
 
+import com.main.app.accounts.AccountBase;
 import com.main.app.accounts.AccountManager;
 
 import java.util.concurrent.RejectedExecutionException;
+
+import static com.main.app.transactions.TransactionType.DEPOSIT;
+import static com.main.app.transactions.TransactionType.WITHDRAWAL;
 
 public class Bank {
     private Float bankTotalBalance;
@@ -23,15 +27,17 @@ public class Bank {
             return bankTotalBalance;
     }
 
-    public void updateBalanceDeposit(Float deposit) {
-            bankTotalBalance += deposit;
+    public void updateBalanceDeposit(Float amount) {
+        AccountBase.handleNegativeArgument(DEPOSIT, amount);
+        bankTotalBalance += amount;
     }
 
-    public void updateBalanceWithdrawal(Float withdrawal) {
-        if (bankTotalBalance >= withdrawal) {
-            bankTotalBalance -= withdrawal;
+    public void updateBalanceWithdrawal(Float amount) {
+        AccountBase.handleNegativeArgument(WITHDRAWAL, amount);
+        if (bankTotalBalance >= amount) {
+            bankTotalBalance -= amount;
         } else {
-            throw new RejectedExecutionException("Bank balance not enough to cover deposit");
+            throw new RejectedExecutionException("Bank balance not enough to cover withdrawal");
         }
     }
 
