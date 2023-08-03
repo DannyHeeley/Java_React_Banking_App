@@ -2,13 +2,15 @@ package com.main.app.accounts;
 
 import com.main.app.Bank;
 import com.main.app.Login.PasswordService;
+import com.main.app.database.DatabaseService;
+
 import java.time.LocalDate;
 import java.util.Objects;
 
 import static com.main.app.accounts.AccountType.ADULT;
 import static com.main.app.accounts.AccountType.STUDENT;
 
-public class BankAccountFactory {
+public class BankAccountFactory implements DatabaseService {
     static AccountBase acc;
     private BankAccountFactory() {}
 
@@ -31,9 +33,15 @@ public class BankAccountFactory {
                     dateOfBirth,
                     email
             );
-            AccountManager.updateDatabaseForAccount(acc.getAccountNumber(), accountType, acc.getBalance(), LocalDate.now());
-            Bank.getInstance().updateBalanceDeposit(initialDeposit);
             setAccountPassword(acc, newAccountPassword);
+            DatabaseService.updateDatabaseForAccount(
+                    acc.getAccountNumber(),
+                    accountType,
+                    acc.getBalance(),
+                    LocalDate.now(),
+                    acc.getAccountPasswordHash()
+            );
+            Bank.getInstance().updateBalanceDeposit(initialDeposit);
         } catch(AccountCreationException e){
             System.out.println("Error Creating Acccount: " + e.getMessage());
         }

@@ -25,11 +25,7 @@ public class PasswordService {
 
     public static void setPasswordHashForAccount(AccountBase bankAccountToUpdate, String newAccountPassword) {
         enforcePasswordRules(newAccountPassword);
-        for (AccountBase account: AccountManager.getBankAccounts()) {
-            if (account.getAccountNumber() == bankAccountToUpdate.getAccountNumber()) {
-                bankAccountToUpdate.setAccountPasswordHash(hashPassword(newAccountPassword));
-            }
-        }
+        bankAccountToUpdate.setAccountPasswordHash(hashPassword(newAccountPassword));
     }
 
     private static String hashPassword(String password) {

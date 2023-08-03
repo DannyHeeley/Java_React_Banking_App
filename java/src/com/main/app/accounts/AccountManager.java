@@ -1,16 +1,7 @@
 package com.main.app.accounts;
 
-import com.main.app.database.DatabaseConnection;
-
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
-
-import static java.time.LocalTime.now;
 
 public class AccountManager {
 
@@ -56,19 +47,5 @@ public class AccountManager {
         return Objects.equals(account.getUserName(), userName);
     }
 
-    public static void updateDatabaseForAccount(int accountNumber, AccountType accountType, Float currentBalance, LocalDate dateCreated) {
-        DatabaseConnection databaseConnection = new DatabaseConnection();
-        String sql = "INSERT INTO accounts(AccountNumber, AccountType, CurrentBalance, DateCreated) VALUES(?, ?, ?, ?)";
-        try (PreparedStatement preparedStatement = databaseConnection.getDatabaseConnection().prepareStatement(sql)) {
-            preparedStatement.setInt(1, accountNumber);
-            preparedStatement.setString(2, accountType.toString());
-            preparedStatement.setFloat(3, currentBalance);
-            java.sql.Date sqlDateCreated = java.sql.Date.valueOf(dateCreated);
-            preparedStatement.setDate(4, sqlDateCreated);
-            databaseConnection.executeUpdate(preparedStatement);
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-    }
 
 }
