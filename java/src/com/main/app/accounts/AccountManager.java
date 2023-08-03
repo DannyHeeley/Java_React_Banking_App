@@ -24,6 +24,11 @@ public class AccountManager {
                 });
     }
 
+    public static AccountBase addAccount(AccountBase account) {
+        bankAccounts.add(account);
+        return account;
+    }
+
     public static boolean accountExists(String userName) {
         return bankAccounts.stream().anyMatch(account -> Objects.equals(account.getUserName(), userName));
     }

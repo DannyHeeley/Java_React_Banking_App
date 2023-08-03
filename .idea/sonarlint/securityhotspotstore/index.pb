@@ -17,7 +17,5 @@ g
 7java/src/com/main/test/accounts/StudentAccountTest.java,2\0\201cfa70b10591d1ce6c395c3c1b6ba266def944
 g
 7java/src/com/main/test/accounts/AccountManagerTest.java,5\b\5b56ecfcd746c7757ca07994a80738b0be99edab
-k
-;java/src/com/main/test/accounts/BankAccountFactoryTest.java,d\7\d7b68946fd2cdeb4c2a313087b0448cbdcba8a7a
 Y
 )java/src/com/main/app/HandleDateTime.java,6\d\6d06d958bed13011b1565eea2ae54a9cf8ca91e4

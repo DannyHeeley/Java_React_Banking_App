@@ -15,8 +15,6 @@ g
 7java/src/com/main/test/accounts/StudentAccountTest.java,2\0\201cfa70b10591d1ce6c395c3c1b6ba266def944
 g
 7java/src/com/main/test/accounts/AccountManagerTest.java,5\b\5b56ecfcd746c7757ca07994a80738b0be99edab
-k
-;java/src/com/main/test/accounts/BankAccountFactoryTest.java,d\7\d7b68946fd2cdeb4c2a313087b0448cbdcba8a7a
 e
 5java/src/com/main/test/accounts/AdultAccountTest.java,1\7\17057c7fdac0e9276d58e24cade4166addd4acba
 Y

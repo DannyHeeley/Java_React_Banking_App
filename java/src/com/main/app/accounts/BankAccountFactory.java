@@ -33,6 +33,7 @@ public class BankAccountFactory implements DatabaseService {
                     dateOfBirth,
                     email
             );
+            AccountManager.addAccount(acc);
             setAccountPassword(acc, newAccountPassword);
             DatabaseService.updateDatabaseForAccount(
                     acc.getAccountNumber(),
