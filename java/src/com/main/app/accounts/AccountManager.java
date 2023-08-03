@@ -1,9 +1,11 @@
 package com.main.app.accounts;
 
+import com.main.app.database.DatabaseService;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class AccountManager {
+public class AccountManager implements DatabaseService {
 
     //    responsible for managing various operations related to accounts,
     //    such as updating account information, handling transactions,
@@ -32,6 +34,7 @@ public class AccountManager {
     }
 
     public static ArrayList<AccountBase> getBankAccounts() {
+        //System.out.println(DatabaseService.getAllAccountsFromDatabase());
         return bankAccounts;
     }
 

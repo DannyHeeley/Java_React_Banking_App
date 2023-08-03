@@ -76,8 +76,8 @@ class PasswordServiceTest {
 
     @Test
     void setsPasswordHashForAccount() {
-        assertTrue(testAccountAdult.getAccountPasswordHash() != null);
-        assertTrue(testAccountStudent.getAccountPasswordHash() != null);
+        assertNotNull(testAccountAdult.getAccountPasswordHash());
+        assertNotNull(testAccountStudent.getAccountPasswordHash());
     }
 
     @Test

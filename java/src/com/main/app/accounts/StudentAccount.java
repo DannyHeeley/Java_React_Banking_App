@@ -1,13 +1,17 @@
 package com.main.app.accounts;
 
 import com.main.app.Bank;
+import com.main.app.database.DatabaseService;
 
 import java.time.LocalDate;
 
+import static com.main.app.accounts.AccountType.ADULT;
+import static com.main.app.accounts.AccountType.STUDENT;
 import static com.main.app.transactions.TransactionType.DEPOSIT;
 
 public class StudentAccount extends AccountBase {
     private final Integer accountLimit;
+
     public StudentAccount(
             String userName,
             Float initialDeposit,

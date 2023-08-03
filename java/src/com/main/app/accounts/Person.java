@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 
 public class Person implements DatabaseService {
-    private int personId;
+    private static int personId;
     private String firstName;
     private String lastName;
     private LocalDate dateOfBirth;
@@ -21,12 +21,11 @@ public class Person implements DatabaseService {
             LocalDate dateOfBirth,
             String email
     ) {
-        this.personId = personId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
         this.email = email;
-        DatabaseService.updateDatabaseForPerson(firstName, lastName, dateOfBirth, email);
+        this.personId = DatabaseService.updateDatabaseForPerson(firstName, lastName, dateOfBirth, email);
     }
 
     public void setFirstName(String firstName) {
@@ -45,10 +44,6 @@ public class Person implements DatabaseService {
         this.email = email;
     }
 
-    public int getPersonId() {
-        return personId;
-    }
-
     public String getFirstName() {
         return firstName;
     }
@@ -65,4 +60,11 @@ public class Person implements DatabaseService {
         return email;
     }
 
+    public static int getPersonId() {
+        return personId;
+    }
+
+    public void setPersonId(int personId) {
+        Person.personId = personId;
+    }
 }

@@ -12,6 +12,7 @@ import static com.main.app.accounts.AccountType.STUDENT;
 
 public class BankAccountFactory implements DatabaseService {
     static AccountBase acc;
+    static int accountId;
     private BankAccountFactory() {}
 
     public static AccountBase createAccount(
@@ -33,15 +34,16 @@ public class BankAccountFactory implements DatabaseService {
                     dateOfBirth,
                     email
             );
-            AccountManager.addAccount(acc);
             setAccountPassword(acc, newAccountPassword);
-            DatabaseService.updateDatabaseForAccount(
+            accountId = DatabaseService.updateDatabaseForAccount(
                     acc.getAccountNumber(),
                     accountType,
                     acc.getBalance(),
                     LocalDate.now(),
                     acc.getAccountPasswordHash()
             );
+            AccountBase.setAccountId(accountId);
+            AccountManager.addAccount(acc);
             Bank.getInstance().updateBalanceDeposit(initialDeposit);
         } catch(AccountCreationException e){
             System.out.println("Error Creating Acccount: " + e.getMessage());

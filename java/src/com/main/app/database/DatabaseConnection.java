@@ -7,15 +7,16 @@ public class DatabaseConnection {
     Statement statement = null;
     ResultSet resultsSet = null;
 
-    public void executeUpdate(PreparedStatement preparedStatement) {
+    public int executeUpdate(PreparedStatement preparedStatement) throws SQLException {
         try {
             int rowcount = preparedStatement.executeUpdate();
-            System.out.println();
             System.out.printf("Success - %d - rows affected.\n",rowcount);
-        } catch(Exception err) {
+            return rowcount;
+        } catch(SQLException err) {
             System.out.println("An error has occurred.");
             System.out.println("See full details below.");
             err.printStackTrace();
+            throw err;  // Rethrow the exception so it can be handled by the calling method
         }
     }
 

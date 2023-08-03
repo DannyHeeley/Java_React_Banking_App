@@ -1,10 +1,10 @@
 package com.main.app;
 
 import com.main.app.Login.PasswordService;
+import com.main.app.accounts.AccountManager;
 import com.main.app.accounts.AdultAccount;
 import com.main.app.accounts.BankAccountFactory;
 import com.main.app.accounts.StudentAccount;
-import com.main.app.database.DatabaseConnection;
 
 import java.time.LocalDate;
 

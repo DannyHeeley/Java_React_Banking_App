@@ -1,6 +1,7 @@
 package com.main.app.accounts;
 
 import com.main.app.HandleDateTime;
+import com.main.app.database.DatabaseService;
 import com.main.app.transactions.Transactions;
 import com.main.app.transactions.TransactionType;
 
@@ -21,6 +22,8 @@ public abstract class AccountBase extends Person implements HandleDateTime {
     private String passwordHash;
     private final Transactions accountTransactionHistory;
 
+    private static int accountId;
+
     AccountBase(
             String userName,
             Float currentBalance,
@@ -37,6 +40,7 @@ public abstract class AccountBase extends Person implements HandleDateTime {
         this.passwordHash = null;
         this.dateAccountLastUpdated = null;
         this.accountTransactionHistory = new Transactions();
+        this.accountId = 0;
     }
 
     abstract void deposit(Float amount);
@@ -56,11 +60,11 @@ public abstract class AccountBase extends Person implements HandleDateTime {
     }
     public void addToAccountBalance(Float amount) {
         this.currentBalance += amount;
-        accountTransactionHistory.addTransaction(DEPOSIT, amount);
+        accountTransactionHistory.addTransaction(DEPOSIT, amount, accountId);
     }
     public void subtractFromAccountBalance(Float amount) {
         this.currentBalance -= amount;
-        accountTransactionHistory.addTransaction(WITHDRAWAL, amount);
+        accountTransactionHistory.addTransaction(WITHDRAWAL, amount, accountId);
     }
 
     public String getAccountPasswordHash() {
@@ -106,5 +110,13 @@ public abstract class AccountBase extends Person implements HandleDateTime {
                 throw new IllegalArgumentException("Withdrawal amount must be a positive number");
             }
         }
+    }
+
+    public static int getAccountId() {
+        return accountId;
+    }
+
+    public static void setAccountId(int accountId) {
+        AccountBase.accountId = accountId;
     }
 }
