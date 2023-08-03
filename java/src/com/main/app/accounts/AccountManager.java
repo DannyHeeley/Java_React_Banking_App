@@ -9,9 +9,7 @@ public class AccountManager {
     //    such as updating account information, handling transactions,
     //    and managing account state.
 
-
-    // Implement DB for accounts
-
+    private static int lastAccountNumber = 0;
     private static ArrayList<AccountBase> bankAccounts = new ArrayList<>();
 
     public static AccountBase getAccount(String userName) {
@@ -52,5 +50,9 @@ public class AccountManager {
         return Objects.equals(account.getUserName(), userName);
     }
 
+    public static int generateAccountNumber() {
+        lastAccountNumber++;
+        return lastAccountNumber;
+    }
 
 }

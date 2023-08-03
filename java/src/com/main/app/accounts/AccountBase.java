@@ -31,7 +31,7 @@ public abstract class AccountBase extends Person implements HandleDateTime {
     ) {
         super(firstName, lastName, dateOfBirth, email);
         this.userName = userName;
-        this.accountNumber = generateAccountNumber();
+        this.accountNumber = AccountManager.generateAccountNumber();
         this.currentBalance = currentBalance;
         this.dateCreated = getDateTimeNowAsString();
         this.passwordHash = null;
@@ -78,15 +78,6 @@ public abstract class AccountBase extends Person implements HandleDateTime {
     }
 
     public int getAccountNumber() {return accountNumber; }
-    private int generateAccountNumber() {
-        ArrayList<AccountBase> bankAccounts = AccountManager.getBankAccounts();
-        if (!bankAccounts.isEmpty()) {
-            return bankAccounts.get(bankAccounts.size() - 1).accountNumber + 1;
-        } else {
-            return 1;
-        }
-    }
-
     public String getUserName() {
         return userName;
     }

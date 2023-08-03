@@ -6,10 +6,12 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
+import static java.time.LocalDate.now;
+
 public interface DatabaseService {
     public static void updateDatabaseForAccount(int accountNumber, AccountType accountType, Float currentBalance, LocalDate dateCreated, String passwordHash) {
         DatabaseConnection databaseConnection = new DatabaseConnection();
-        String sql = "INSERT INTO accounts(AccountNumber, AccountType, CurrentBalance, DateCreated, PasswordHash) VALUES(?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO accounts(AccountNumber, AccountType, CurrentBalance, DateCreated, PasswordHash, LastUpdated) VALUES(?, ?, ?, ?, ?, ?)";
         try (PreparedStatement preparedStatement = databaseConnection.getDatabaseConnection().prepareStatement(sql)) {
             preparedStatement.setInt(1, accountNumber);
             preparedStatement.setString(2, accountType.toString());
@@ -17,6 +19,8 @@ public interface DatabaseService {
             java.sql.Date sqlDateCreated = java.sql.Date.valueOf(dateCreated);
             preparedStatement.setDate(4, sqlDateCreated);
             preparedStatement.setString(5, passwordHash);
+            java.sql.Date sqlLastUpdated = java.sql.Date.valueOf(dateCreated);
+            preparedStatement.setDate(6, sqlLastUpdated);
             databaseConnection.executeUpdate(preparedStatement);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
