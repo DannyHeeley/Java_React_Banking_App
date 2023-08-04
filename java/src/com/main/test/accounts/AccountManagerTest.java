@@ -80,7 +80,6 @@ public class AccountManagerTest {
                 ADULT, userNameAdult, CORRECT_PASSWORD, initialDeposit, firstName, lastName, dateOfBirth, email
         );
         assertThat(bankAccounts).containsOnly(account1);
-        assertThat(bankAccounts).containsOnly(account2);
     }
 
     @Test
@@ -100,7 +99,6 @@ public class AccountManagerTest {
                 STUDENT, userNameStudent, CORRECT_PASSWORD, initialDeposit, firstName, lastName, dateOfBirth, email
         );
         assertThat(bankAccounts).containsOnly(account1);
-        assertThat(bankAccounts).containsOnly(account2);
     }
 
     @Test

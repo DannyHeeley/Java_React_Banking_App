@@ -47,7 +47,7 @@ public abstract class AccountBase extends Person implements HandleDateTime, Data
             subtractFromAccountBalance(amount);
             System.out.println("Withdrawal of " + amount + " Successful, your currentBalance is: " + getAccountBalance());
             setAccountUpdatedTo(getDateTimeNowAsString());
-            DatabaseService.updateAccountBalanceInDatabase(currentBalance, LocalDate.now(), LocalTime.now());
+            DatabaseService.updateAccountBalanceInDatabase(currentBalance);
         } else {
             throw new IllegalArgumentException("Withdrawal unsuccessful, your do not have enough currentBalance to cover the requested withdrawal amount");
         }
@@ -59,7 +59,7 @@ public abstract class AccountBase extends Person implements HandleDateTime, Data
     public void addToAccountBalance(Float amount) {
         this.currentBalance += amount;
         accountTransactionHistory.addTransaction(this, DEPOSIT, amount, accountId);
-        DatabaseService.updateAccountBalanceInDatabase(currentBalance, LocalDate.now(), LocalTime.now());
+        DatabaseService.updateAccountBalanceInDatabase(currentBalance);
     }
     public void subtractFromAccountBalance(Float amount) {
         this.currentBalance -= amount;

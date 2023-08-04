@@ -9,8 +9,6 @@ e
 5java/src/com/main/test/accounts/AdultAccountTest.java,1\7\17057c7fdac0e9276d58e24cade4166addd4acba
 g
 7java/src/com/main/test/accounts/StudentAccountTest.java,2\0\201cfa70b10591d1ce6c395c3c1b6ba266def944
-g
-7java/src/com/main/test/accounts/AccountManagerTest.java,5\b\5b56ecfcd746c7757ca07994a80738b0be99edab
 Y
 )java/src/com/main/app/HandleDateTime.java,6\d\6d06d958bed13011b1565eea2ae54a9cf8ca91e4
 T

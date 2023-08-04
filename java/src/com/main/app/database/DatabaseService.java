@@ -4,6 +4,7 @@ import com.main.app.accounts.AccountBase;
 import com.main.app.accounts.AccountType;
 import com.main.app.accounts.Person;
 import com.main.app.transactions.TransactionType;
+import org.apache.tomcat.jni.Local;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -45,9 +46,11 @@ public interface DatabaseService {
             java.sql.Date sqlDateCreated = java.sql.Date.valueOf(dateCreated);
             preparedStatement.setDate(4, sqlDateCreated);
             preparedStatement.setString(5, passwordHash);
-            java.sql.Date sqlLastUpdated = java.sql.Date.valueOf(dateCreated);
-            preparedStatement.setDate(6, sqlLastUpdated);
-            preparedStatement.setInt(7, account.getPersonId());
+            java.sql.Date sqlDateLastUpdated = java.sql.Date.valueOf(LocalDate.now());
+            preparedStatement.setDate(6, sqlDateLastUpdated);
+            java.sql.Time sqlTimeLastUpdated = java.sql.Time.valueOf(LocalTime.now());
+            preparedStatement.setTime(7, sqlTimeLastUpdated);
+            preparedStatement.setInt(8, account.getPersonId());
             int affectedRows = databaseConnection.handleUpdate(preparedStatement);
             sqlGeneratedAccountId = getIdFromDatabase(preparedStatement, affectedRows);
         } catch (SQLException e) {
@@ -56,16 +59,16 @@ public interface DatabaseService {
         return sqlGeneratedAccountId;
     }
 
-    static int addTransactionEntryToDatabase(AccountBase account, TransactionType transactionType, Float amount, LocalDate transactionDate, LocalTime transactionTime) {
+    static int addTransactionEntryToDatabase(AccountBase account, TransactionType transactionType, Float amount) {
         DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
         String sql = "INSERT INTO transactions(TransactionType, Amount, TransactionDate, TransactionTime, AccountID) VALUES(?, ?, ?, ?, ?)";
         int sqlGeneratedTransactionId = -1;
         try (PreparedStatement preparedStatement = databaseConnection.getDatabaseConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, transactionType.toString());
             preparedStatement.setFloat(2, amount);
-            java.sql.Date dateOfTransaction = java.sql.Date.valueOf(transactionDate);
+            java.sql.Date dateOfTransaction = java.sql.Date.valueOf(LocalDate.now());
             preparedStatement.setDate(3, dateOfTransaction);
-            java.sql.Time timeOfTransaction = java.sql.Time.valueOf(transactionTime);
+            java.sql.Time timeOfTransaction = java.sql.Time.valueOf(LocalTime.now());
             preparedStatement.setTime(4, timeOfTransaction);
             preparedStatement.setInt(5, account.getAccountId());
             int affectedRows = databaseConnection.handleUpdate(preparedStatement);
@@ -76,14 +79,14 @@ public interface DatabaseService {
         return sqlGeneratedTransactionId;
     }
 
-    static void updateAccountBalanceInDatabase(Float currentBalance, LocalDate dateUpdated, LocalTime timeUpdated) {
+    static void updateAccountBalanceInDatabase(Float currentBalance) {
         DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
         String sql = "UPDATE accounts SET CurrentBalance = ?, dateLastUpdated = ?, timeLastUpdated = ? WHERE AccountID = ?";
         try (PreparedStatement preparedStatement = databaseConnection.getDatabaseConnection().prepareStatement(sql)) {
             preparedStatement.setFloat(1, currentBalance);
-            java.sql.Date sqlUpdateDate = java.sql.Date.valueOf(dateUpdated);
+            java.sql.Date sqlUpdateDate = java.sql.Date.valueOf(LocalDate.now());
             preparedStatement.setDate(2, sqlUpdateDate);
-            java.sql.Time sqlUpdateTime = java.sql.Time.valueOf(timeUpdated);
+            java.sql.Time sqlUpdateTime = java.sql.Time.valueOf(LocalTime.now());
             preparedStatement.setTime(3, sqlUpdateTime);
             databaseConnection.handleUpdate(preparedStatement);
         } catch (SQLException e) {

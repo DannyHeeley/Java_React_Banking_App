@@ -31,7 +31,7 @@ public class Transactions implements HandleDateTime, DatabaseService {
             this.transactionDate = getDateTimeNow();
             this.accountId = accountId;
             this.transactionId = DatabaseService.addTransactionEntryToDatabase(
-                    account, transactionType, amount, LocalDate.now(), LocalTime.now()
+                    account, transactionType, amount
             );
         }
         private LocalDateTime getTransactionDateTime() {
