@@ -5,10 +5,6 @@ _
 /java/src/com/main/app/accounts/AccountType.java,b\9\b9493dd64d88f61728a8845a103cb034d5938faa
 g
 7java/src/com/main/app/transactions/TransactionType.java,c\c\ccd1473c4de58f582b140871a1bb53686be7dca9
-e
-5java/src/com/main/test/accounts/AdultAccountTest.java,1\7\17057c7fdac0e9276d58e24cade4166addd4acba
-g
-7java/src/com/main/test/accounts/StudentAccountTest.java,2\0\201cfa70b10591d1ce6c395c3c1b6ba266def944
 Y
 )java/src/com/main/app/HandleDateTime.java,6\d\6d06d958bed13011b1565eea2ae54a9cf8ca91e4
 T

@@ -15,8 +15,8 @@ public class StudentAccount extends AccountBase {
             String firstName,
             String lastName,
             LocalDate dateOfBirth,
-            String email
-    ) {
+            String email,
+            String newAccountPassword) {
         super(
                 userName,
                 initialDeposit,
@@ -24,7 +24,8 @@ public class StudentAccount extends AccountBase {
                 lastName,
                 dateOfBirth,
                 email,
-                STUDENT
+                STUDENT,
+                newAccountPassword
         );
         this.accountLimit = 5000;
         System.out.println("Bank Account created successfully for userName: " + userName + " - initial deposit of: " + initialDeposit + ".");

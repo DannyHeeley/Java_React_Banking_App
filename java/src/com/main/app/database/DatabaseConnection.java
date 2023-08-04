@@ -18,7 +18,7 @@ public class DatabaseConnection {
             return instance;
     }
 
-    // Currently vulnerable to SQLinjection due to using concatenated strings to for SQL commands
+    // Currently vulnerable to SQL injection due to using concatenated strings to for SQL commands
     public int handleUpdate(PreparedStatement preparedStatement) throws SQLException {
         try {
             int rowCount = preparedStatement.executeUpdate();

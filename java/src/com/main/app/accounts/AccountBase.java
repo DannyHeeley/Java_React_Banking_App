@@ -8,6 +8,7 @@ import com.main.app.transactions.TransactionType;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import static com.main.app.Login.PasswordService.hashPassword;
 import static com.main.app.transactions.TransactionType.DEPOSIT;
 import static com.main.app.transactions.TransactionType.WITHDRAWAL;
 
@@ -29,7 +30,8 @@ public abstract class AccountBase extends Person implements HandleDateTime, Data
             String lastName,
             LocalDate dateOfBirth,
             String email,
-            AccountType accountType
+            AccountType accountType,
+            String newAccountPassword
     ) {
         super(firstName, lastName, dateOfBirth, email);
         this.userName = userName;
@@ -37,7 +39,7 @@ public abstract class AccountBase extends Person implements HandleDateTime, Data
         this.accountType = accountType;
         this.currentBalance = currentBalance;
         this.dateCreated = getDateTimeNowAsString();
-        this.passwordHash = null;
+        this.passwordHash = hashPassword(newAccountPassword);
         this.dateAccountLastUpdated = null;
         this.accountTransactionHistory = new Transactions();
         this.accountId = DatabaseService.addAccountEntryToDatabase(
@@ -47,7 +49,7 @@ public abstract class AccountBase extends Person implements HandleDateTime, Data
                 currentBalance,
                 LocalDate.now(),
                 passwordHash
-        );;
+        );
     }
 
     abstract void deposit(Float amount);
@@ -127,5 +129,13 @@ public abstract class AccountBase extends Person implements HandleDateTime, Data
 
     public void setAccountId(int accountId) {
         this.accountId = accountId;
+    }
+
+    public AccountType getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(AccountType accountType) {
+        this.accountType = accountType;
     }
 }

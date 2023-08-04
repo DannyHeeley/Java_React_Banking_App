@@ -1,7 +1,6 @@
 package com.main.app.Login;
 
 import com.main.app.accounts.AccountBase;
-import com.main.app.accounts.AccountManager;
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
 import de.mkammerer.argon2.Argon2Factory.Argon2Types;
@@ -23,12 +22,8 @@ public class PasswordService {
         }
     }
 
-    public static void setPasswordHashForAccount(AccountBase bankAccountToUpdate, String newAccountPassword) {
-        enforcePasswordRules(newAccountPassword);
-        bankAccountToUpdate.setAccountPasswordHash(hashPassword(newAccountPassword));
-    }
-
-    private static String hashPassword(String password) {
+    public static String hashPassword(String password) {
+        enforcePasswordRules(password);
         Argon2 argon2 = Argon2Factory.create(Argon2Types.ARGON2id);
         return argon2.hash(10, 65536, 1, password.toCharArray());
     }
@@ -36,6 +31,9 @@ public class PasswordService {
     private static boolean verifyPassword(String hashedPassword, char[] inputPassword) {
         Argon2 argon2 = Argon2Factory.create(Argon2Types.ARGON2id);
         return argon2.verify(hashedPassword, inputPassword);
+    }
+    public static void setPasswordHashForAccount(AccountBase bankAccountToUpdate, String newAccountPassword) {
+        bankAccountToUpdate.setAccountPasswordHash(hashPassword(newAccountPassword));
     }
 
     private static void enforcePasswordRules(String password) {

@@ -16,8 +16,8 @@ public class AdultAccount extends AccountBase {
             String firstName,
             String lastName,
             LocalDate dateOfBirth,
-            String email
-    ) {
+            String email,
+            String newAccountPassword) {
         super(
                 userName,
                 initialDeposit,
@@ -25,7 +25,8 @@ public class AdultAccount extends AccountBase {
                 lastName,
                 dateOfBirth,
                 email,
-                ADULT
+                ADULT,
+                newAccountPassword
         );
         System.out.println("Bank Account created successfully for customer: " + userName + " - initial deposit of: " + initialDeposit + ".");
     }

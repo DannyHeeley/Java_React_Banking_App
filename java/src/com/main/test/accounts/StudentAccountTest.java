@@ -17,6 +17,7 @@ class StudentAccountTest {
     String lastName = "Buzz";
     LocalDate dateOfBirth = LocalDate.of(1993, 1, 11);
     String email = "fizzbuzz@gmail.com";
+    String newAccountPassword = "Password123!";
 
     @AfterEach
     void tearDown() {
@@ -26,58 +27,58 @@ class StudentAccountTest {
     // Deposit tests:
     @Test
     void depositIncreasesAccountBalance() {
-        StudentAccount studentAccount = new StudentAccount(userName, 0f, firstName, lastName, dateOfBirth, email);
+        StudentAccount studentAccount = new StudentAccount(userName, 0f, firstName, lastName, dateOfBirth, email, newAccountPassword);
         studentAccount.deposit(100f);
         assertThat(studentAccount.getAccountBalance()).isEqualTo(100f);
     }
     @Test
     void depositOfZeroDoesNotChangeBalance() {
-        StudentAccount studentAccount = new StudentAccount(userName, 100f, firstName, lastName, dateOfBirth, email);
+        StudentAccount studentAccount = new StudentAccount(userName, 100f, firstName, lastName, dateOfBirth, email, newAccountPassword);
         studentAccount.deposit(0f);
         assertThat(studentAccount.getAccountBalance()).isEqualTo(100f);
     }
     @Test
     void depositWithMinusValueThrowsException() {
-        StudentAccount studentAccount1 = new StudentAccount(userName, 0f, firstName, lastName, dateOfBirth, email);
+        StudentAccount studentAccount1 = new StudentAccount(userName, 0f, firstName, lastName, dateOfBirth, email, newAccountPassword);
         assertThrows(RuntimeException.class, () -> studentAccount1.deposit(-100f));
 
-        StudentAccount studentAccount2 = new StudentAccount("Another Student", 100f, firstName, lastName, dateOfBirth, email);
+        StudentAccount studentAccount2 = new StudentAccount("Another Student", 100f, firstName, lastName, dateOfBirth, email, newAccountPassword);
         assertThrows(RuntimeException.class, () -> studentAccount2.deposit(-100f));
     }
 
     // Withdraw tests:
     @Test
     void withdrawalDecreasesBalance() {
-        StudentAccount studentAccount = new StudentAccount(userName, 100f, firstName, lastName, dateOfBirth, email);
+        StudentAccount studentAccount = new StudentAccount(userName, 100f, firstName, lastName, dateOfBirth, email, newAccountPassword);
         studentAccount.withdraw(25f);
         assertThat(studentAccount.getAccountBalance()).isEqualTo(75f);
     }
     @Test
     void withdrawalOfZeroDoesNotChangeBalance() {
-        StudentAccount studentAccount = new StudentAccount(userName, 100f, firstName, lastName, dateOfBirth, email);
+        StudentAccount studentAccount = new StudentAccount(userName, 100f, firstName, lastName, dateOfBirth, email, newAccountPassword);
         studentAccount.withdraw(0f);
         assertThat(studentAccount.getAccountBalance()).isEqualTo(100f);
     }
     @Test
     void withdrawalWithMinusValueThrowsException() {
-        StudentAccount studentAccount1 = new StudentAccount(userName, 0f, firstName, lastName, dateOfBirth, email);
+        StudentAccount studentAccount1 = new StudentAccount(userName, 0f, firstName, lastName, dateOfBirth, email, newAccountPassword);
         assertThrows(RuntimeException.class, () -> studentAccount1.withdraw(-100f));
 
-        StudentAccount studentAccount2 = new StudentAccount("Another Adult", 100f, firstName, lastName, dateOfBirth, email);
+        StudentAccount studentAccount2 = new StudentAccount("Another Adult", 100f, firstName, lastName, dateOfBirth, email, newAccountPassword);
         assertThrows(RuntimeException.class, () -> studentAccount2.withdraw(-100f));
     }
 
     // Date tests:
     @Test
     void getsDateAccountLastUpdated() {
-        StudentAccount studentAccount = new StudentAccount(userName, 100f, firstName, lastName, dateOfBirth, email);
+        StudentAccount studentAccount = new StudentAccount(userName, 100f, firstName, lastName, dateOfBirth, email, newAccountPassword);
         studentAccount.deposit(100f);
         assertThat(studentAccount.getDateAccountLastUpdated()).isNotNull();
     }
 
     @Test
     void getsAccountCreationDate() {
-        StudentAccount studentAccount = new StudentAccount(userName, 100f, firstName, lastName, dateOfBirth, email);
+        StudentAccount studentAccount = new StudentAccount(userName, 100f, firstName, lastName, dateOfBirth, email, newAccountPassword);
         assertThat(studentAccount.getDateAccountCreated()).isNotNull();
     }
 

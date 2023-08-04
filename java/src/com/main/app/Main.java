@@ -40,16 +40,16 @@ public class Main {
 
         // Demo for transactions
 
-
         // Demo for passwords
-        System.out.println("---- Getting account password ----");
+        System.out.println("---- Password entered ----");
         String password = "Password123!";
-        PasswordService.setPasswordHashForAccount(testAccountAdult, password);
+        System.out.println("Password entered: " + password);
+        System.out.println("---- Getting password hash for account ----");
         System.out.println("Hashed password for account " + testAccountAdult.getUserName() + ": " + testAccountAdult.getAccountPasswordHash());
         System.out.println("---- Verifying account password ----");
-        //boolean isCorrectPassword = PasswordService.authenticateUserPassword(testAccountAdult, password);
-        //System.out.println("Your password is " + isCorrectPassword);
-        //System.out.println("");
+        boolean isCorrectPassword = PasswordService.authenticateUserPassword(testAccountAdult, password);
+        System.out.println("Your password is " + isCorrectPassword);
+        System.out.println("");
 
         bank.printBankInfo();
         System.out.println("");

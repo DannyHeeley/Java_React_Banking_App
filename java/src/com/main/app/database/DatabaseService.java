@@ -35,9 +35,11 @@ public interface DatabaseService {
         return sqlGeneratedPersonId;
     }
 
-    static int addAccountEntryToDatabase(AccountBase account, int accountNumber, AccountType accountType, Float currentBalance, LocalDate dateCreated, String passwordHash) {
+    static int addAccountEntryToDatabase(
+            AccountBase account, int accountNumber, AccountType accountType, Float currentBalance, LocalDate dateCreated, String passwordHash
+    ) {
         DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
-        String sql = "INSERT INTO accounts(AccountNumber, AccountType, CurrentBalance, DateCreated, PasswordHash, LastUpdated, PersonId) VALUES(?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO accounts(AccountNumber, AccountType, CurrentBalance, DateCreated, PasswordHash, DateLastUpdated, TimeLastUpdated, PersonId) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
         int sqlGeneratedAccountId = -1;
         try (PreparedStatement preparedStatement = databaseConnection.getDatabaseConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setInt(1, accountNumber);

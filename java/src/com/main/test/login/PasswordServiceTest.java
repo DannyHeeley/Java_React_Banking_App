@@ -83,40 +83,40 @@ class PasswordServiceTest {
     @Test
     void throwsExceptionIfNewPasswordIsNull() {
         assertThrows(RuntimeException.class, () ->
-                setPasswordHashForAccount(testAccountAdult, null)
+                hashPassword(null)
         );
         assertThrows(RuntimeException.class, () ->
-                setPasswordHashForAccount(testAccountStudent, null)
+                hashPassword(null)
         );
     }
 
     @Test
     void throwsExceptionIfNewPasswordIsEmptyString() {
         assertThrows(RuntimeException.class, () ->
-                setPasswordHashForAccount(testAccountAdult, "")
+                hashPassword("")
         );
         assertThrows(RuntimeException.class, () ->
-                setPasswordHashForAccount(testAccountStudent, "")
+                hashPassword("")
         );
     }
 
     @Test
     void enforcesPasswordRulesWhenSettingWithIncorrectFormat() {
         assertThrows(RejectedExecutionException.class, () ->
-                setPasswordHashForAccount(testAccountAdult, INCORRECT_FORMAT)
+                hashPassword(INCORRECT_FORMAT)
         );
         assertThrows(RejectedExecutionException.class, () ->
-                setPasswordHashForAccount(testAccountStudent, INCORRECT_FORMAT)
+                hashPassword(INCORRECT_FORMAT)
         );
     }
 
     @Test
     void doesNotThrowIfSettingPasswordWithCorrectFormat() {
         assertDoesNotThrow(() ->
-                setPasswordHashForAccount(testAccountAdult, CORRECT_PASSWORD)
+                hashPassword(CORRECT_PASSWORD)
         );
         assertDoesNotThrow(() ->
-                setPasswordHashForAccount(testAccountStudent, CORRECT_PASSWORD)
+                hashPassword(CORRECT_PASSWORD)
         );
     }
 

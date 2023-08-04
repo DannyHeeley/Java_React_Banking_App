@@ -1,7 +1,6 @@
 package com.main.app.accounts;
 
 import com.main.app.Bank;
-import com.main.app.Login.PasswordService;
 import com.main.app.database.DatabaseService;
 import com.main.app.transactions.Transactions;
 
@@ -15,14 +14,10 @@ import static com.main.app.transactions.TransactionType.DEPOSIT;
 public class BankAccountFactory implements DatabaseService {
     private BankAccountFactory() {}
     public static AccountBase createAccount(
-            AccountType accountType,
-            String userName,
-            String newAccountPassword,
-            Float initialDeposit,
-            String firstName,
-            String lastName,
-            LocalDate dateOfBirth,
-            String email
+            AccountType accountType, String userName,
+            String newAccountPassword, Float initialDeposit,
+            String firstName, String lastName,
+            LocalDate dateOfBirth, String email
     ) {
         AccountBase acc = null;
         try {
@@ -32,9 +27,10 @@ public class BankAccountFactory implements DatabaseService {
                     firstName,
                     lastName,
                     dateOfBirth,
-                    email
+                    email,
+                    newAccountPassword
             );
-            handleUpdate(acc, accountType, newAccountPassword, initialDeposit);
+            handleUpdate(acc, initialDeposit);
         } catch (AccountCreationException e) {
             System.out.println("Error Creating Acccount: " + e.getMessage());
         }
@@ -42,25 +38,23 @@ public class BankAccountFactory implements DatabaseService {
     }
 
     private static AccountBase createAccountForAccountType(
-            AccountType accountType,
-            String userName,
-            Float initialDeposit,
-            String firstName,
-            String lastName,
-            LocalDate dateOfBirth,
-            String email
+            AccountType accountType, String userName, Float initialDeposit,
+            String firstName, String lastName, LocalDate dateOfBirth,
+            String email, String newAccountPassword
     )
             throws AccountCreationException {
         if (Objects.equals(accountType, STUDENT)) {
-            return studentAccount(userName, initialDeposit, firstName, lastName, dateOfBirth, email);
+            return studentAccount(userName, initialDeposit, firstName, lastName, dateOfBirth, email, newAccountPassword);
         } else if (Objects.equals(accountType, ADULT)) {
-            return adultAccount(userName, initialDeposit, firstName, lastName, dateOfBirth, email);
+            return adultAccount(userName, initialDeposit, firstName, lastName, dateOfBirth, email, newAccountPassword);
         }
         throw new AccountCreationException("Account type must be valid");
     }
 
     private static AdultAccount adultAccount(
-            String userName, Float initialDeposit, String firstName, String lastName, LocalDate dateOfBirth, String email
+            String userName, Float initialDeposit, String firstName,
+            String lastName, LocalDate dateOfBirth, String email,
+            String newAccountPassword
     ) throws AccountCreationException {
         return BankAccountFactory.createNewAdultAccount(
                 userName,
@@ -68,12 +62,15 @@ public class BankAccountFactory implements DatabaseService {
                 firstName,
                 lastName,
                 dateOfBirth,
-                email
+                email,
+                newAccountPassword
         );
     }
 
     private static StudentAccount studentAccount(
-            String userName, Float initialDeposit, String firstName, String lastName, LocalDate dateOfBirth, String email
+            String userName, Float initialDeposit, String firstName,
+            String lastName, LocalDate dateOfBirth, String email,
+            String newAccountPassword
     ) throws AccountCreationException {
         return BankAccountFactory.createNewStudentAccount(
                 userName,
@@ -81,16 +78,15 @@ public class BankAccountFactory implements DatabaseService {
                 firstName,
                 lastName,
                 dateOfBirth,
-                email);
+                email,
+                newAccountPassword
+        );
     }
 
     private static AdultAccount createNewAdultAccount(
-            String userName,
-            Float initialDeposit,
-            String firstName,
-            String lastName,
-            LocalDate dateOfBirth,
-            String email
+            String userName, Float initialDeposit, String firstName,
+            String lastName, LocalDate dateOfBirth, String email,
+            String newAccountPassword
     ) throws AccountCreationException {
         throwsErrorIfAccountExistsOrMinusDeposit(userName, initialDeposit);
         return new AdultAccount(
@@ -99,17 +95,15 @@ public class BankAccountFactory implements DatabaseService {
                 firstName,
                 lastName,
                 dateOfBirth,
-                email
+                email,
+                newAccountPassword
         );
     }
 
     private static StudentAccount createNewStudentAccount(
-            String userName,
-            Float initialDeposit,
-            String firstName,
-            String lastName,
-            LocalDate dateOfBirth,
-            String email
+            String userName, Float initialDeposit, String firstName,
+            String lastName, LocalDate dateOfBirth, String email,
+            String newAccountPassword
     ) throws AccountCreationException {
         throwsErrorIfAccountExistsOrMinusDeposit(userName, initialDeposit);
 
@@ -119,20 +113,16 @@ public class BankAccountFactory implements DatabaseService {
                 firstName,
                 lastName,
                 dateOfBirth,
-                email
+                email,
+                newAccountPassword
         );
     }
 
-    private static void handleUpdate(AccountBase acc, AccountType accountType, String newAccountPassword, Float initialDeposit) {
-        setAccountPassword(acc, newAccountPassword);
+    private static void handleUpdate(AccountBase acc, Float initialDeposit) {
         Transactions transactions = new Transactions();
         transactions.addTransaction(acc, DEPOSIT, initialDeposit, acc.getAccountId());
         AccountManager.addAccount(acc);
         Bank.getInstance().updateMainBankBalanceDeposit(initialDeposit);
-    }
-
-    private static void setAccountPassword(AccountBase account, String newAccountPassword) {
-        PasswordService.setPasswordHashForAccount(account, newAccountPassword);
     }
 
     private static void throwsErrorIfAccountExistsOrMinusDeposit(String userName, Float initialDeposit)
