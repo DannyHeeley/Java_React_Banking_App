@@ -2,17 +2,18 @@ package com.main.app.accounts;
 
 import com.main.app.HandleDateTime;
 import com.main.app.database.DatabaseService;
+import com.main.app.entities.Customer;
+import com.main.app.entities.Person;
 import com.main.app.transactions.Transactions;
 import com.main.app.transactions.TransactionType;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 import static com.main.app.Login.PasswordService.hashPassword;
 import static com.main.app.transactions.TransactionType.DEPOSIT;
 import static com.main.app.transactions.TransactionType.WITHDRAWAL;
 
-public abstract class AccountBase extends Person implements HandleDateTime, DatabaseService {
+public abstract class AccountBase extends Customer implements HandleDateTime, DatabaseService {
     private Float currentBalance;
     private final String userName;
     private final int accountNumber;

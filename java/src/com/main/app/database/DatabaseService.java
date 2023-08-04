@@ -2,9 +2,9 @@ package com.main.app.database;
 
 import com.main.app.accounts.AccountBase;
 import com.main.app.accounts.AccountType;
-import com.main.app.accounts.Person;
+import com.main.app.entities.EntityType;
+import com.main.app.entities.Person;
 import com.main.app.transactions.TransactionType;
-import org.apache.tomcat.jni.Local;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -60,13 +60,14 @@ public interface DatabaseService {
         }
         return sqlGeneratedAccountId;
     }
-    static int addEmployeeEntryToDatabase(AccountType position, AccountBase account) {
+
+    static int addEmployeeEntryToDatabase(EntityType position, Person employee) {
         DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
         String sql = "INSERT INTO employees(Position, PersonID) VALUES(?, ?)";
         int sqlGeneratedAccountId = -1;
         try (PreparedStatement preparedStatement = databaseConnection.getDatabaseConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, position.toString());
-            preparedStatement.setInt(2, account.getPersonId());
+            preparedStatement.setInt(2, employee.getPersonId());
             int affectedRows = databaseConnection.handleUpdate(preparedStatement);
             sqlGeneratedAccountId = getIdFromDatabase(preparedStatement, affectedRows);
         } catch (SQLException e) {
@@ -74,6 +75,7 @@ public interface DatabaseService {
         }
         return sqlGeneratedAccountId;
     }
+
     static int addTransactionEntryToDatabase(AccountBase account, TransactionType transactionType, Float amount) {
         DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
         String sql = "INSERT INTO transactions(TransactionType, Amount, TransactionDate, TransactionTime, AccountID) VALUES(?, ?, ?, ?, ?)";

@@ -3,19 +3,20 @@ package com.main.app;
 import com.main.app.Login.PasswordService;
 import com.main.app.accounts.AdultAccount;
 import com.main.app.accounts.AccountFactory;
-import com.main.app.accounts.Employee;
+import com.main.app.entities.Employee;
 import com.main.app.accounts.StudentAccount;
+import com.main.app.entities.EntityFactory;
 
 import java.time.LocalDate;
 
 import static com.main.app.accounts.AccountType.*;
+import static com.main.app.entities.EntityType.EMPLOYEE;
 
 public class Main {
     public static void main(String[] args) {
         Bank bank = Bank.getInstance();
         String userNameAdult = "Adult";
         String userNameStudent = "Student";
-        String userNameEmployee = "Employee";
         String password = "Password123!";
         String firstName = "Fizz";
         String lastName = "Buzz";
@@ -57,20 +58,13 @@ public class Main {
         System.out.println("");
 
         // Demo employee account
-        Employee testEmployee = (Employee) AccountFactory.createAccount(
+        EntityFactory.createEmployee(
                 EMPLOYEE,
-                userNameEmployee,
-                password,
-                0f,
                 "Jordan",
                 "Bellfort",
                 dateOfBirth,
                 emailEmployee
         );
-        testEmployee.deposit(100f);
-        System.out.println("");
-        testEmployee.printAccountInfo();
-        System.out.println("");
 
         // Demo for passwords
         System.out.println("---- Enter password ----");

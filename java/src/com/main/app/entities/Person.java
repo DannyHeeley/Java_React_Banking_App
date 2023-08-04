@@ -1,4 +1,4 @@
-package com.main.app.accounts;
+package com.main.app.entities;
 
 import com.main.app.database.DatabaseService;
 
