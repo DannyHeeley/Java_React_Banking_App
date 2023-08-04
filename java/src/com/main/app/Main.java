@@ -9,6 +9,7 @@ import com.main.app.entities.EntityFactory;
 import java.time.LocalDate;
 
 import static com.main.app.accounts.AccountType.*;
+import static com.main.app.entities.EntityType.ADMINISTRATOR;
 import static com.main.app.entities.EntityType.EMPLOYEE;
 
 public class Main {
@@ -59,6 +60,13 @@ public class Main {
         // Demo employee account
         EntityFactory.createEntityForType(
                 EMPLOYEE,
+                "Hunter.S",
+                "Thompsan",
+                dateOfBirth,
+                emailEmployee
+        );
+        EntityFactory.createEntityForType(
+                ADMINISTRATOR,
                 "Jordan",
                 "Bellfort",
                 dateOfBirth,
@@ -76,7 +84,5 @@ public class Main {
         System.out.println("");
 
         bank.printBankInfo();
-        System.out.println("");
-
     }
 }

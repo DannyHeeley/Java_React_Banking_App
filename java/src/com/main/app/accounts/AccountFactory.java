@@ -1,6 +1,6 @@
 package com.main.app.accounts;
 
-import com.main.app.FactoryInterface;
+import com.main.app.FactoryBase;
 import com.main.app.database.DatabaseService;
 
 import java.time.LocalDate;
@@ -8,8 +8,11 @@ import java.util.Objects;
 
 import static com.main.app.accounts.AccountType.*;
 
-public class AccountFactory implements DatabaseService, FactoryInterface {
-    private AccountFactory() {}
+public class AccountFactory extends FactoryBase implements DatabaseService {
+
+    private AccountFactory() {
+    }
+
     public static AccountBase createAccount(
             AccountType accountType, String userName,
             String newAccountPassword, Float initialDeposit,
@@ -18,7 +21,7 @@ public class AccountFactory implements DatabaseService, FactoryInterface {
     ) {
         AccountBase acc = null;
         try {
-            acc = createAccountForAccountType(accountType,
+            acc = handleCreateAccountForType(accountType,
                     userName,
                     initialDeposit,
                     firstName,
@@ -27,14 +30,14 @@ public class AccountFactory implements DatabaseService, FactoryInterface {
                     email,
                     newAccountPassword
             );
-            FactoryInterface.handleUpdate(acc, initialDeposit);
+            handleUpdate(acc, initialDeposit);
         } catch (AccountCreationException e) {
             System.out.println("Error Creating Acccount: " + e.getMessage());
         }
         return acc;
     }
 
-    private static AccountBase createAccountForAccountType(
+    private static AccountBase handleCreateAccountForType(
             AccountType accountType, String userName, Float initialDeposit,
             String firstName, String lastName, LocalDate dateOfBirth,
             String email, String newAccountPassword
@@ -53,8 +56,8 @@ public class AccountFactory implements DatabaseService, FactoryInterface {
             String lastName, LocalDate dateOfBirth, String email,
             String newAccountPassword
     ) throws AccountCreationException {
-        FactoryInterface.throwErrorIfAccountExists(userName);
-        FactoryInterface.throwErrorIfDepositIsMinus(initialDeposit);
+        throwErrorIfAccountExists(userName);
+        throwErrorIfDepositIsMinus(initialDeposit);
         return new AdultAccount(
                 userName,
                 initialDeposit,
@@ -71,8 +74,8 @@ public class AccountFactory implements DatabaseService, FactoryInterface {
             String lastName, LocalDate dateOfBirth, String email,
             String newAccountPassword
     ) throws AccountCreationException {
-        FactoryInterface.throwErrorIfAccountExists(userName);
-        FactoryInterface.throwErrorIfDepositIsMinus(initialDeposit);
+        FactoryBase.throwErrorIfAccountExists(userName);
+        FactoryBase.throwErrorIfDepositIsMinus(initialDeposit);
         return new StudentAccount(
                 userName,
                 initialDeposit,

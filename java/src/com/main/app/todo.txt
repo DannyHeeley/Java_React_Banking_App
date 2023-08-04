@@ -1,0 +1,10 @@
+Write tests for transactions
+Write tests that mock the DB
+Implement transfers
+Write tests for transfers
+Implement login
+Write tests for login
+Refactor DatabaseService to an abstract or concrete class
+Write tests for database connection and service
+Create SQL table for bank/branch and implement update wiring
+Implement loans

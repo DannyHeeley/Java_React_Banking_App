@@ -1,13 +1,13 @@
 package com.main.app.entities;
 
-import com.main.app.FactoryInterface;
+import com.main.app.FactoryBase;
 
 import java.time.LocalDate;
 import java.util.Objects;
 
 import static com.main.app.entities.EntityType.*;
 
-public class EntityFactory implements FactoryInterface {
+public class EntityFactory extends FactoryBase {
 
     private EntityFactory() {
 
