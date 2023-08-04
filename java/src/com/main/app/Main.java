@@ -1,7 +1,6 @@
 package com.main.app;
 
 import com.main.app.Login.PasswordService;
-import com.main.app.accounts.AccountManager;
 import com.main.app.accounts.AdultAccount;
 import com.main.app.accounts.BankAccountFactory;
 import com.main.app.accounts.StudentAccount;
@@ -38,6 +37,9 @@ public class Main {
         System.out.println("");
         testAccountStudent.printAccountInfo();
         System.out.println("");
+
+        // Demo for transactions
+
 
         // Demo for passwords
         System.out.println("---- Getting account password ----");

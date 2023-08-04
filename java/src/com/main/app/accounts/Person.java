@@ -1,15 +1,11 @@
 package com.main.app.accounts;
 
-import com.main.app.database.DatabaseConnection;
 import com.main.app.database.DatabaseService;
 
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.time.LocalDate;
 
 public class Person implements DatabaseService {
-    private static int personId;
+    private int personId;
     private String firstName;
     private String lastName;
     private LocalDate dateOfBirth;
@@ -25,7 +21,7 @@ public class Person implements DatabaseService {
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
         this.email = email;
-        this.personId = DatabaseService.updateDatabaseForPerson(firstName, lastName, dateOfBirth, email);
+        this.personId = DatabaseService.addPersonEntryToDatabase(firstName, lastName, dateOfBirth, email);
     }
 
     public void setFirstName(String firstName) {
@@ -60,11 +56,11 @@ public class Person implements DatabaseService {
         return email;
     }
 
-    public static int getPersonId() {
+    public int getPersonId() {
         return personId;
     }
 
     public void setPersonId(int personId) {
-        Person.personId = personId;
+        this.personId = personId;
     }
 }

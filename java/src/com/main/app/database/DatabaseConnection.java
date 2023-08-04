@@ -6,12 +6,24 @@ public class DatabaseConnection {
     Connection conn = null;
     Statement statement = null;
     ResultSet resultsSet = null;
+    private static DatabaseConnection instance;
 
-    public int executeUpdate(PreparedStatement preparedStatement) throws SQLException {
+    private DatabaseConnection() {
+
+    }
+    public static DatabaseConnection getInstance() {
+        if (instance == null) {
+            instance = new DatabaseConnection();
+        }
+            return instance;
+    }
+
+    // Currently vulnerable to SQLinjection due to using concatenated strings to for SQL commands
+    public int handleUpdate(PreparedStatement preparedStatement) throws SQLException {
         try {
-            int rowcount = preparedStatement.executeUpdate();
-            System.out.printf("Success - %d - rows affected.\n",rowcount);
-            return rowcount;
+            int rowCount = preparedStatement.executeUpdate();
+            System.out.printf("Success - %d - rows affected.\n",rowCount);
+            return rowCount;
         } catch(SQLException err) {
             System.out.println("An error has occurred.");
             System.out.println("See full details below.");
@@ -19,8 +31,7 @@ public class DatabaseConnection {
             throw err;  // Rethrow the exception so it can be handled by the calling method
         }
     }
-
-    public ResultSet executeQuery(PreparedStatement preparedStatement) {
+    public ResultSet handleQuery(PreparedStatement preparedStatement) {
         ResultSet resultSet = null;
         try {
             resultSet = preparedStatement.executeQuery();
@@ -47,7 +58,7 @@ public class DatabaseConnection {
         return conn;
     }
     private void releaseResources() {
-        // closes connections in reverse-order of
+        // Releases resources in reverse-order of
         // their creation if they are no-longer needed
         if (resultsSet != null) {
             try {
@@ -63,6 +74,8 @@ public class DatabaseConnection {
             }
             statement = null;
         }
+    }
+    private void closeConnection() {
         if (conn != null) {
             try {
                 conn.close();

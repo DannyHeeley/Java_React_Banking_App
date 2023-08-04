@@ -28,13 +28,13 @@ class StudentAccountTest {
     void depositIncreasesAccountBalance() {
         StudentAccount studentAccount = new StudentAccount(userName, 0f, firstName, lastName, dateOfBirth, email);
         studentAccount.deposit(100f);
-        assertThat(studentAccount.getBalance()).isEqualTo(100f);
+        assertThat(studentAccount.getAccountBalance()).isEqualTo(100f);
     }
     @Test
     void depositOfZeroDoesNotChangeBalance() {
         StudentAccount studentAccount = new StudentAccount(userName, 100f, firstName, lastName, dateOfBirth, email);
         studentAccount.deposit(0f);
-        assertThat(studentAccount.getBalance()).isEqualTo(100f);
+        assertThat(studentAccount.getAccountBalance()).isEqualTo(100f);
     }
     @Test
     void depositWithMinusValueThrowsException() {
@@ -50,13 +50,13 @@ class StudentAccountTest {
     void withdrawalDecreasesBalance() {
         StudentAccount studentAccount = new StudentAccount(userName, 100f, firstName, lastName, dateOfBirth, email);
         studentAccount.withdraw(25f);
-        assertThat(studentAccount.getBalance()).isEqualTo(75f);
+        assertThat(studentAccount.getAccountBalance()).isEqualTo(75f);
     }
     @Test
     void withdrawalOfZeroDoesNotChangeBalance() {
         StudentAccount studentAccount = new StudentAccount(userName, 100f, firstName, lastName, dateOfBirth, email);
         studentAccount.withdraw(0f);
-        assertThat(studentAccount.getBalance()).isEqualTo(100f);
+        assertThat(studentAccount.getAccountBalance()).isEqualTo(100f);
     }
     @Test
     void withdrawalWithMinusValueThrowsException() {

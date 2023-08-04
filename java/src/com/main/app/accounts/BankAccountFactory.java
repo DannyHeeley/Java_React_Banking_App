@@ -3,18 +3,17 @@ package com.main.app.accounts;
 import com.main.app.Bank;
 import com.main.app.Login.PasswordService;
 import com.main.app.database.DatabaseService;
+import com.main.app.transactions.Transactions;
 
 import java.time.LocalDate;
 import java.util.Objects;
 
 import static com.main.app.accounts.AccountType.ADULT;
 import static com.main.app.accounts.AccountType.STUDENT;
+import static com.main.app.transactions.TransactionType.DEPOSIT;
 
 public class BankAccountFactory implements DatabaseService {
-    static AccountBase acc;
-    static int accountId;
     private BankAccountFactory() {}
-
     public static AccountBase createAccount(
             AccountType accountType,
             String userName,
@@ -25,6 +24,7 @@ public class BankAccountFactory implements DatabaseService {
             LocalDate dateOfBirth,
             String email
     ) {
+        AccountBase acc = null;
         try {
             acc = createAccountForAccountType(accountType,
                     userName,
@@ -34,18 +34,8 @@ public class BankAccountFactory implements DatabaseService {
                     dateOfBirth,
                     email
             );
-            setAccountPassword(acc, newAccountPassword);
-            accountId = DatabaseService.updateDatabaseForAccount(
-                    acc.getAccountNumber(),
-                    accountType,
-                    acc.getBalance(),
-                    LocalDate.now(),
-                    acc.getAccountPasswordHash()
-            );
-            AccountBase.setAccountId(accountId);
-            AccountManager.addAccount(acc);
-            Bank.getInstance().updateBalanceDeposit(initialDeposit);
-        } catch(AccountCreationException e){
+            handleUpdate(acc, accountType, newAccountPassword, initialDeposit);
+        } catch (AccountCreationException e) {
             System.out.println("Error Creating Acccount: " + e.getMessage());
         }
         return acc;
@@ -131,6 +121,23 @@ public class BankAccountFactory implements DatabaseService {
                 dateOfBirth,
                 email
         );
+    }
+
+    private static void handleUpdate(AccountBase acc, AccountType accountType, String newAccountPassword, Float initialDeposit) {
+        setAccountPassword(acc, newAccountPassword);
+        int accountId = DatabaseService.addAccountEntryToDatabase(
+                acc,
+                acc.getAccountNumber(),
+                accountType,
+                acc.getAccountBalance(),
+                LocalDate.now(),
+                acc.getAccountPasswordHash()
+        );
+        Transactions transactions = new Transactions();
+        transactions.addTransaction(acc, DEPOSIT, initialDeposit, accountId);
+        acc.setAccountId(accountId);
+        AccountManager.addAccount(acc);
+        Bank.getInstance().updateMainBankBalanceDeposit(initialDeposit);
     }
 
     private static void setAccountPassword(AccountBase account, String newAccountPassword) {

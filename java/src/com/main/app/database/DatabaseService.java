@@ -12,12 +12,32 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+//Should not be an interface but an abstract or concrete class
+
 public interface DatabaseService {
 
-    static int updateDatabaseForAccount(int accountNumber, AccountType accountType, Float currentBalance, LocalDate dateCreated, String passwordHash) {
-        DatabaseConnection databaseConnection = new DatabaseConnection();
+    static int addPersonEntryToDatabase(String firstName, String lastName, LocalDate dateOfBirth , String email) {
+        DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
+        String sql = "INSERT INTO persons(FirstName, LastName, DateOfBirth, Email) VALUES(?, ?, ?, ?)";
+        int sqlGeneratedPersonId = -1;
+        try (PreparedStatement preparedStatement = databaseConnection.getDatabaseConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            preparedStatement.setString(1, firstName);
+            preparedStatement.setString(2, lastName);
+            java.sql.Date sqlDateOfBirth = java.sql.Date.valueOf(dateOfBirth);
+            preparedStatement.setDate(3, sqlDateOfBirth);
+            preparedStatement.setString(4, email);
+            int affectedRows = databaseConnection.handleUpdate(preparedStatement);
+            sqlGeneratedPersonId = getIdFromDatabase(preparedStatement, affectedRows);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return sqlGeneratedPersonId;
+    }
+
+    static int addAccountEntryToDatabase(AccountBase account, int accountNumber, AccountType accountType, Float currentBalance, LocalDate dateCreated, String passwordHash) {
+        DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
         String sql = "INSERT INTO accounts(AccountNumber, AccountType, CurrentBalance, DateCreated, PasswordHash, LastUpdated, PersonId) VALUES(?, ?, ?, ?, ?, ?, ?)";
-        int SqlGeneratedAccountId = -1;
+        int sqlGeneratedAccountId = -1;
         try (PreparedStatement preparedStatement = databaseConnection.getDatabaseConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setInt(1, accountNumber);
             preparedStatement.setString(2, accountType.toString());
@@ -27,54 +47,19 @@ public interface DatabaseService {
             preparedStatement.setString(5, passwordHash);
             java.sql.Date sqlLastUpdated = java.sql.Date.valueOf(dateCreated);
             preparedStatement.setDate(6, sqlLastUpdated);
-            preparedStatement.setInt(7, Person.getPersonId());
-            databaseConnection.executeUpdate(preparedStatement);
-            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    SqlGeneratedAccountId = generatedKeys.getInt(1);
-                }
-                else {
-                    throw new SQLException("Creating account failed, no ID obtained.");
-                }
-            }
+            preparedStatement.setInt(7, account.getPersonId());
+            int affectedRows = databaseConnection.handleUpdate(preparedStatement);
+            sqlGeneratedAccountId = getIdFromDatabase(preparedStatement, affectedRows);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return SqlGeneratedAccountId;
+        return sqlGeneratedAccountId;
     }
 
-    static int updateDatabaseForPerson(String firstName, String lastName, LocalDate dateOfBirth , String email) {
-        DatabaseConnection databaseConnection = new DatabaseConnection();
-        String sql = "INSERT INTO persons(FirstName, LastName, DateOfBirth, Email) VALUES(?, ?, ?, ?)";
-        int SqlGeneratedPersonId = -1;
-        try (PreparedStatement preparedStatement = databaseConnection.getDatabaseConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            preparedStatement.setString(1, firstName);
-            preparedStatement.setString(2, lastName);
-            java.sql.Date sqlDateOfBirth = java.sql.Date.valueOf(dateOfBirth);
-            preparedStatement.setDate(3, sqlDateOfBirth);
-            preparedStatement.setString(4, email);
-            int affectedRows = databaseConnection.executeUpdate(preparedStatement);
-            if (affectedRows == 0) {
-                throw new SQLException("Creating account failed, no rows affected.");
-            }
-            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    SqlGeneratedPersonId = generatedKeys.getInt(1);
-                }
-                else {
-                    throw new SQLException("Creating account failed, no ID obtained.");
-                }
-            }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-            return SqlGeneratedPersonId;
-    }
-
-    static int updateDatabaseForTransaction(TransactionType transactionType, Float amount, LocalDate transactionDate, LocalTime transactionTime) {
-        DatabaseConnection databaseConnection = new DatabaseConnection();
+    static int addTransactionEntryToDatabase(AccountBase account, TransactionType transactionType, Float amount, LocalDate transactionDate, LocalTime transactionTime) {
+        DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
         String sql = "INSERT INTO transactions(TransactionType, Amount, TransactionDate, TransactionTime, AccountID) VALUES(?, ?, ?, ?, ?)";
-        int SqlGeneratedTransactionId = -1;
+        int sqlGeneratedTransactionId = -1;
         try (PreparedStatement preparedStatement = databaseConnection.getDatabaseConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, transactionType.toString());
             preparedStatement.setFloat(2, amount);
@@ -82,27 +67,49 @@ public interface DatabaseService {
             preparedStatement.setDate(3, dateOfTransaction);
             java.sql.Time timeOfTransaction = java.sql.Time.valueOf(transactionTime);
             preparedStatement.setTime(4, timeOfTransaction);
-            preparedStatement.setInt(5, AccountBase.getAccountId());
-            databaseConnection.executeUpdate(preparedStatement);
-            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    SqlGeneratedTransactionId = generatedKeys.getInt(1);
-                }
-                else {
-                    throw new SQLException("Creating account failed, no ID obtained.");
-                }
-            }
+            preparedStatement.setInt(5, account.getAccountId());
+            int affectedRows = databaseConnection.handleUpdate(preparedStatement);
+            sqlGeneratedTransactionId = getIdFromDatabase(preparedStatement, affectedRows);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return SqlGeneratedTransactionId;
+        return sqlGeneratedTransactionId;
+    }
+
+    static void updateAccountBalanceInDatabase(Float currentBalance, LocalDate dateUpdated, LocalTime timeUpdated) {
+        DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
+        String sql = "UPDATE accounts SET CurrentBalance = ?, dateLastUpdated = ?, timeLastUpdated = ? WHERE AccountID = ?";
+        try (PreparedStatement preparedStatement = databaseConnection.getDatabaseConnection().prepareStatement(sql)) {
+            preparedStatement.setFloat(1, currentBalance);
+            java.sql.Date sqlUpdateDate = java.sql.Date.valueOf(dateUpdated);
+            preparedStatement.setDate(2, sqlUpdateDate);
+            java.sql.Time sqlUpdateTime = java.sql.Time.valueOf(timeUpdated);
+            preparedStatement.setTime(3, sqlUpdateTime);
+            databaseConnection.handleUpdate(preparedStatement);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private static int getIdFromDatabase(PreparedStatement preparedStatement, int affectedRows) throws SQLException {
+        if (affectedRows == 0) {
+            throw new SQLException("Creating account failed, no rows affected.");
+        }
+        try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+            if (generatedKeys.next()) {
+                return generatedKeys.getInt(1);
+            }
+            else {
+                throw new SQLException("Creating account failed, no ID obtained.");
+            }
+        }
     }
 
 //    static ResultSet getAllAccountsFromDatabase() {
 //        DatabaseConnection databaseConnection = new DatabaseConnection();
 //        String sql = "SELECT * FROM accounts";
 //        try (PreparedStatement preparedStatement = databaseConnection.getDatabaseConnection().prepareStatement(sql)) {
-//             return databaseConnection.executeQuery(preparedStatement);
+//             return databaseConnection.handleQuery(preparedStatement);
 //        } catch (SQLException e) {
 //            System.out.println(e.getMessage());
 //        }

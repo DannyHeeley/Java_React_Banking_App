@@ -6,14 +6,12 @@ import com.main.app.transactions.Transactions;
 import com.main.app.transactions.TransactionType;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
+import java.time.LocalTime;
 
 import static com.main.app.transactions.TransactionType.DEPOSIT;
 import static com.main.app.transactions.TransactionType.WITHDRAWAL;
 
-public abstract class AccountBase extends Person implements HandleDateTime {
+public abstract class AccountBase extends Person implements HandleDateTime, DatabaseService {
     private Float currentBalance;
     private final String userName;
     private final int accountNumber;
@@ -21,8 +19,7 @@ public abstract class AccountBase extends Person implements HandleDateTime {
     private String dateAccountLastUpdated;
     private String passwordHash;
     private final Transactions accountTransactionHistory;
-
-    private static int accountId;
+    private int accountId;
 
     AccountBase(
             String userName,
@@ -46,25 +43,27 @@ public abstract class AccountBase extends Person implements HandleDateTime {
     abstract void deposit(Float amount);
     public void withdraw(Float amount) {
         handleNegativeArgument(WITHDRAWAL, amount);
-        if (amount <= getBalance()) {
+        if (amount <= getAccountBalance()) {
             subtractFromAccountBalance(amount);
-            System.out.println("Withdrawal of " + amount + " Successful, your currentBalance is: " + getBalance());
+            System.out.println("Withdrawal of " + amount + " Successful, your currentBalance is: " + getAccountBalance());
             setAccountUpdatedTo(getDateTimeNowAsString());
+            DatabaseService.updateAccountBalanceInDatabase(currentBalance, LocalDate.now(), LocalTime.now());
         } else {
             throw new IllegalArgumentException("Withdrawal unsuccessful, your do not have enough currentBalance to cover the requested withdrawal amount");
         }
     }
 
-    public Float getBalance() {
+    public Float getAccountBalance() {
         return currentBalance;
     }
     public void addToAccountBalance(Float amount) {
         this.currentBalance += amount;
-        accountTransactionHistory.addTransaction(DEPOSIT, amount, accountId);
+        accountTransactionHistory.addTransaction(this, DEPOSIT, amount, accountId);
+        DatabaseService.updateAccountBalanceInDatabase(currentBalance, LocalDate.now(), LocalTime.now());
     }
     public void subtractFromAccountBalance(Float amount) {
         this.currentBalance -= amount;
-        accountTransactionHistory.addTransaction(WITHDRAWAL, amount, accountId);
+        accountTransactionHistory.addTransaction(this, WITHDRAWAL, amount, this.getAccountId());
     }
 
     public String getAccountPasswordHash() {
@@ -97,11 +96,11 @@ public abstract class AccountBase extends Person implements HandleDateTime {
         System.out.println("You are customer: " + getUserName());
         System.out.println("Your account number is: " + getAccountNumber());
         System.out.println("Account created: " + getDateTimeNowAsString());
-        System.out.println("Your Balance Is: " + getBalance());
+        System.out.println("Your Balance Is: " + getAccountBalance());
         System.out.println("Balance last updated: " + getDateAccountLastUpdated());
         System.out.println(getAccountTransactionHistory().toString());
     }
-    public static void handleNegativeArgument(TransactionType transactionType, Float amount) {
+    public void handleNegativeArgument(TransactionType transactionType, Float amount) {
         if (amount < 0) {
             if (transactionType == DEPOSIT) {
                 throw new IllegalArgumentException("Deposit amount must be a positive number");
@@ -112,11 +111,11 @@ public abstract class AccountBase extends Person implements HandleDateTime {
         }
     }
 
-    public static int getAccountId() {
+    public int getAccountId() {
         return accountId;
     }
 
-    public static void setAccountId(int accountId) {
-        AccountBase.accountId = accountId;
+    public void setAccountId(int accountId) {
+        this.accountId = accountId;
     }
 }

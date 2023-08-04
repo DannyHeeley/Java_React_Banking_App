@@ -1,6 +1,7 @@
 package com.main.app.transactions;
 
 import com.main.app.HandleDateTime;
+import com.main.app.accounts.AccountBase;
 import com.main.app.database.DatabaseService;
 
 import java.time.LocalDate;
@@ -10,27 +11,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Transactions implements HandleDateTime, DatabaseService {
-    private static List<TransactionEntry> transactionHistory;
+    private final List<TransactionEntry> transactionHistory;
     public Transactions() {
         transactionHistory = new ArrayList<>();
     }
-    public void addTransaction(TransactionType transactionType, float amount, int accountId) {
-        TransactionEntry entry = new TransactionEntry(transactionType, amount, accountId);
-        int relationalId = DatabaseService.updateDatabaseForTransaction(entry.getTransactionType(), entry.getTransactionValue(), LocalDate.now(), LocalTime.now());
-
+    public void addTransaction(AccountBase account, TransactionType transactionType, float amount, int accountId) {
+        TransactionEntry entry = new TransactionEntry(account, transactionType, amount, accountId);
         transactionHistory.add(entry);
     }
     private class TransactionEntry {
         private final TransactionType transactionType;
         private final float amount;
         private final LocalDateTime transactionDate;
-
-        private int accountId;
-        private TransactionEntry(TransactionType transactionType, float amount, int accountId) {
+        private final int accountId;
+        private final int transactionId;
+        private TransactionEntry(AccountBase account, TransactionType transactionType, float amount, int accountId) {
             this.transactionType = transactionType;
             this.amount = amount;
             this.transactionDate = getDateTimeNow();
             this.accountId = accountId;
+            this.transactionId = DatabaseService.addTransactionEntryToDatabase(
+                    account, transactionType, amount, LocalDate.now(), LocalTime.now()
+            );
         }
         private LocalDateTime getTransactionDateTime() {
             return transactionDate;
@@ -40,6 +42,14 @@ public class Transactions implements HandleDateTime, DatabaseService {
         }
         private TransactionType getTransactionType() {
             return transactionType;
+        }
+
+        public int getTransactionId() {
+            return transactionId;
+        }
+
+        public int getAccountId() {
+            return accountId;
         }
     }
     @Override

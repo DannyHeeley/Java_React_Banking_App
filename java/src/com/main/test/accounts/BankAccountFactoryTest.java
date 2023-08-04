@@ -40,7 +40,7 @@ public class BankAccountFactoryTest {
         BankAccountFactory.createAccount(
                 ADULT, userNameAdult, CORRECT_PASSWORD, 100f, firstName, lastName, dateOfBirth, email
         );
-        assertThat(bank.getBankBalance()).isEqualTo(100f);
+        assertThat(bank.getMainBankBalance()).isEqualTo(100f);
     }
 
     @Test
@@ -48,7 +48,7 @@ public class BankAccountFactoryTest {
         BankAccountFactory.createAccount(
                 ADULT, userNameAdult, CORRECT_PASSWORD, 0f, firstName, lastName, dateOfBirth, email
         );
-        assertThat(bank.getBankBalance()).isEqualTo(0f);
+        assertThat(bank.getMainBankBalance()).isEqualTo(0f);
     }
 
     @Test
@@ -59,7 +59,7 @@ public class BankAccountFactoryTest {
         BankAccountFactory.createAccount(
                 ADULT, userNameAdult, CORRECT_PASSWORD,  1000f, firstName, lastName, dateOfBirth, email
         );
-        assertThat(bank.getBankBalance()).isEqualTo(0f);
+        assertThat(bank.getMainBankBalance()).isEqualTo(0f);
     }
 
     // Test cases for createNewAdultAccount:
@@ -76,7 +76,7 @@ public class BankAccountFactoryTest {
         AccountBase account = BankAccountFactory.createAccount(
                 ADULT, userNameAdult, CORRECT_PASSWORD, initialDeposit, firstName, lastName, dateOfBirth, email
         );
-        assertThat(account.getBalance()).isEqualTo(initialDeposit);
+        assertThat(account.getAccountBalance()).isEqualTo(initialDeposit);
     }
 
     @Test
@@ -85,16 +85,16 @@ public class BankAccountFactoryTest {
         AccountBase account = BankAccountFactory.createAccount(
                 ADULT, userNameAdult, CORRECT_PASSWORD, initialDeposit, firstName, lastName, dateOfBirth, email
         );
-        assertThat(account.getBalance()).isEqualTo(initialDeposit);
+        assertThat(account.getAccountBalance()).isEqualTo(initialDeposit);
     }
 
     @Test
-    void adultAccountNegativeInitialDepositThrowsException() {
+    void cannotCreateAdultAccountWithNegativeInitialDeposit() {
         Float initialDeposit = -1000f;
         AccountBase account = BankAccountFactory.createAccount(
                 ADULT, userNameAdult, CORRECT_PASSWORD, initialDeposit, firstName, lastName, dateOfBirth, email
         );
-        assertThat(account.getBalance()).isEqualTo(0);
+        assertThat(account).isNull();
     }
 
     @Test
@@ -142,7 +142,7 @@ public class BankAccountFactoryTest {
         AccountBase account = BankAccountFactory.createAccount(
                 STUDENT, userNameStudent, CORRECT_PASSWORD, initialDeposit, firstName, lastName, dateOfBirth, email
         );
-        assertThat(account.getBalance()).isEqualTo(initialDeposit);
+        assertThat(account.getAccountBalance()).isEqualTo(initialDeposit);
     }
 
     @Test
@@ -151,7 +151,7 @@ public class BankAccountFactoryTest {
         AccountBase account = BankAccountFactory.createAccount(
                 STUDENT, userNameStudent, CORRECT_PASSWORD, initialDeposit, firstName, lastName, dateOfBirth, email
         );
-        assertThat(account.getBalance()).isEqualTo(initialDeposit);
+        assertThat(account.getAccountBalance()).isEqualTo(initialDeposit);
     }
 
     @Test
@@ -160,7 +160,7 @@ public class BankAccountFactoryTest {
         AccountBase account = BankAccountFactory.createAccount(
                 STUDENT, userNameStudent, CORRECT_PASSWORD, initialDeposit, firstName, lastName, dateOfBirth, email
         );
-        assertThat(account.getBalance()).isEqualTo(0);
+        assertThat(account).isNull();
     }
 
     @Test

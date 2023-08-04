@@ -1,7 +1,7 @@
 package com.main.app;
 
-import com.main.app.accounts.AccountBase;
 import com.main.app.accounts.AccountManager;
+import com.main.app.transactions.TransactionType;
 
 import java.util.concurrent.RejectedExecutionException;
 
@@ -23,17 +23,17 @@ public class Bank {
         return instance;
     }
 
-    public Float getBankBalance() {
+    public Float getMainBankBalance() {
             return bankTotalBalance;
     }
 
-    public void updateBalanceDeposit(Float amount) {
-        AccountBase.handleNegativeArgument(DEPOSIT, amount);
+    public void updateMainBankBalanceDeposit(Float amount) {
+        handleNegativeArgument(DEPOSIT, amount);
         bankTotalBalance += amount;
     }
 
-    public void updateBalanceWithdrawal(Float amount) {
-        AccountBase.handleNegativeArgument(WITHDRAWAL, amount);
+    public void updateMainBankBalanceWithdrawal(Float amount) {
+        handleNegativeArgument(WITHDRAWAL, amount);
         if (bankTotalBalance >= amount) {
             bankTotalBalance -= amount;
         } else {
@@ -52,7 +52,16 @@ public class Bank {
         getInstance().printBankBalance();
     }
     private void printBankBalance() {
-        System.out.println("The total balance in the bank is: " + getBankBalance());
+        System.out.println("The total balance in the bank is: " + getMainBankBalance());
     }
-
+    private void handleNegativeArgument(TransactionType transactionType, Float amount) {
+        if (amount < 0) {
+            if (transactionType == DEPOSIT) {
+                throw new IllegalArgumentException("Deposit amount must be a positive number");
+            }
+            if (transactionType == WITHDRAWAL) {
+                throw new IllegalArgumentException("Withdrawal amount must be a positive number");
+            }
+        }
+    }
 }

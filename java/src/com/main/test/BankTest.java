@@ -16,7 +16,7 @@ class BankTest {
     void setUp() {
         bank = Bank.getInstance();
 
-        assertThat(bank.getBankBalance()).isEqualTo(0f);
+        assertThat(bank.getMainBankBalance()).isEqualTo(0f);
     }
 
     @AfterEach
@@ -33,51 +33,51 @@ class BankTest {
 
     @Test
     void returnsBankBalance() {
-        assertThat(bank.getBankBalance()).isEqualTo(0f);
+        assertThat(bank.getMainBankBalance()).isEqualTo(0f);
     }
 
     @Test
     void resetsBankBalance() {
-        bank.updateBalanceDeposit(1000f);
+        bank.updateMainBankBalanceDeposit(1000f);
         bank.resetBank();
-        assertThat(bank.getBankBalance()).isEqualTo(0f);
+        assertThat(bank.getMainBankBalance()).isEqualTo(0f);
     }
 
     @Test
     void depositIncreasesBankBalance() {
-        bank.updateBalanceDeposit(100f);
-        assertThat(bank.getBankBalance()).isEqualTo(100f);
+        bank.updateMainBankBalanceDeposit(100f);
+        assertThat(bank.getMainBankBalance()).isEqualTo(100f);
     }
 
     @Test
     void zeroDepositDoesNotChangeBankBalance() {
-        bank.updateBalanceDeposit(0f);
-        assertThat(bank.getBankBalance()).isEqualTo(0f);
+        bank.updateMainBankBalanceDeposit(0f);
+        assertThat(bank.getMainBankBalance()).isEqualTo(0f);
     }
 
     @Test
     void minusDepositThrowsException() {
-        assertThrows(RuntimeException.class, () -> bank.updateBalanceDeposit(-100f));
+        assertThrows(RuntimeException.class, () -> bank.updateMainBankBalanceDeposit(-100f));
     }
 
     @Test
     void withdrawalDecreasesBankBalance() {
-        bank.updateBalanceDeposit(100f);
-        bank.updateBalanceWithdrawal(50f);
-        assertThat(bank.getBankBalance()).isEqualTo(50f);
+        bank.updateMainBankBalanceDeposit(100f);
+        bank.updateMainBankBalanceWithdrawal(50f);
+        assertThat(bank.getMainBankBalance()).isEqualTo(50f);
     }
 
     @Test
     void zer0WithdrawalDoesNotChangeBankBalance() {
-        bank.updateBalanceDeposit(100f);
-        bank.updateBalanceWithdrawal(0f);
-        assertThat(bank.getBankBalance()).isEqualTo(100f);
+        bank.updateMainBankBalanceDeposit(100f);
+        bank.updateMainBankBalanceWithdrawal(0f);
+        assertThat(bank.getMainBankBalance()).isEqualTo(100f);
     }
 
     @Test
     void minusWithdrawalThrowsException() {
-        bank.updateBalanceDeposit(100f);
-        assertThrows(RuntimeException.class, () -> bank.updateBalanceWithdrawal(-100f));
+        bank.updateMainBankBalanceDeposit(100f);
+        assertThrows(RuntimeException.class, () -> bank.updateMainBankBalanceWithdrawal(-100f));
     }
 
 
