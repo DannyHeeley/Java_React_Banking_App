@@ -11,7 +11,6 @@ import static com.main.app.transactions.TransactionType.DEPOSIT;
 public class Employee extends AccountBase {
 
     private AccountType position;
-    private final String passwordHash;
     private final int employeeId;
 
     public Employee(
@@ -24,7 +23,6 @@ public class Employee extends AccountBase {
                 lastName, dateOfBirth, email,
                 position, newAccountPassword);
         this.position = position;
-        this.passwordHash = hashPassword(newAccountPassword);
         this.employeeId = DatabaseService.addEmployeeEntryToDatabase(
                 position,
                 this
@@ -40,11 +38,15 @@ public class Employee extends AccountBase {
     }
 
     @Override
-    void deposit(Float amount) {
+    public void deposit(Float amount) {
         handleNegativeArgument(DEPOSIT, amount);
         addToAccountBalance(amount);
         setAccountUpdatedTo(getDateTimeNowAsString());
         Bank.getInstance().updateMainBankBalanceDeposit(amount);
         System.out.println("Deposit of " + amount + " was successful! Your new balance is " + getAccountBalance());
+    }
+
+    public int getEmployeeId() {
+        return employeeId;
     }
 }
