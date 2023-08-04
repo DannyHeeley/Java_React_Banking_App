@@ -34,7 +34,7 @@ public abstract class AccountBase extends Customer implements HandleDateTime, Da
             AccountType accountType,
             String newAccountPassword
     ) {
-        super(firstName, lastName, dateOfBirth, email);
+        super(firstName, lastName, dateOfBirth, email, accountType);
         this.userName = userName;
         this.accountNumber = AccountManager.generateAccountNumber();
         this.accountType = accountType;

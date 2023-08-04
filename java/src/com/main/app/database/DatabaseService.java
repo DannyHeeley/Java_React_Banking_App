@@ -39,7 +39,7 @@ public interface DatabaseService {
             AccountBase account, int accountNumber, AccountType accountType, Float currentBalance, LocalDate dateCreated, String passwordHash
     ) {
         DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
-        String sql = "INSERT INTO accounts(AccountNumber, AccountType, CurrentBalance, DateCreated, PasswordHash, DateLastUpdated, TimeLastUpdated, PersonId) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO accounts(AccountNumber, AccountType, CurrentBalance, DateCreated, PasswordHash, DateLastUpdated, TimeLastUpdated, CustomerID) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
         int sqlGeneratedAccountId = -1;
         try (PreparedStatement preparedStatement = databaseConnection.getDatabaseConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setInt(1, accountNumber);
@@ -52,7 +52,7 @@ public interface DatabaseService {
             preparedStatement.setDate(6, sqlDateLastUpdated);
             java.sql.Time sqlTimeLastUpdated = java.sql.Time.valueOf(LocalTime.now());
             preparedStatement.setTime(7, sqlTimeLastUpdated);
-            preparedStatement.setInt(8, account.getPersonId());
+            preparedStatement.setInt(8, account.getCustomerId());
             int affectedRows = databaseConnection.handleUpdate(preparedStatement);
             sqlGeneratedAccountId = getIdFromDatabase(preparedStatement, affectedRows);
         } catch (SQLException e) {
@@ -64,16 +64,31 @@ public interface DatabaseService {
     static int addEmployeeEntryToDatabase(EntityType position, Person employee) {
         DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
         String sql = "INSERT INTO employees(Position, PersonID) VALUES(?, ?)";
-        int sqlGeneratedAccountId = -1;
+        int sqlGeneratedEmployeeId = -1;
         try (PreparedStatement preparedStatement = databaseConnection.getDatabaseConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, position.toString());
             preparedStatement.setInt(2, employee.getPersonId());
             int affectedRows = databaseConnection.handleUpdate(preparedStatement);
-            sqlGeneratedAccountId = getIdFromDatabase(preparedStatement, affectedRows);
+            sqlGeneratedEmployeeId = getIdFromDatabase(preparedStatement, affectedRows);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return sqlGeneratedAccountId;
+        return sqlGeneratedEmployeeId;
+    }
+
+    static int addCustomerEntryToDatabase(AccountType customerType, Person employee) {
+        DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
+        String sql = "INSERT INTO customers(CustomerType, PersonID) VALUES(?, ?)";
+        int sqlGeneratedCustomerId = -1;
+        try (PreparedStatement preparedStatement = databaseConnection.getDatabaseConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            preparedStatement.setString(1, customerType.toString());
+            preparedStatement.setInt(2, employee.getPersonId());
+            int affectedRows = databaseConnection.handleUpdate(preparedStatement);
+            sqlGeneratedCustomerId = getIdFromDatabase(preparedStatement, affectedRows);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return sqlGeneratedCustomerId;
     }
 
     static int addTransactionEntryToDatabase(AccountBase account, TransactionType transactionType, Float amount) {

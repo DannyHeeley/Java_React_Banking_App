@@ -3,7 +3,6 @@ package com.main.app;
 import com.main.app.Login.PasswordService;
 import com.main.app.accounts.AdultAccount;
 import com.main.app.accounts.AccountFactory;
-import com.main.app.entities.Employee;
 import com.main.app.accounts.StudentAccount;
 import com.main.app.entities.EntityFactory;
 
@@ -58,7 +57,7 @@ public class Main {
         System.out.println("");
 
         // Demo employee account
-        EntityFactory.createEmployee(
+        EntityFactory.createEntityForType(
                 EMPLOYEE,
                 "Jordan",
                 "Bellfort",

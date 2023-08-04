@@ -13,14 +13,14 @@ public class EntityFactory implements FactoryInterface {
 
     }
 
-    public static Employee createEmployee(
+    public static Employee createEntityForType(
             EntityType entityType,
             String firstName, String lastName,
             LocalDate dateOfBirth, String email
     ) {
-        Employee employee = null;
+        Employee entity = null;
         try {
-            employee = createEntityForEntityType(entityType,
+            entity = handleCreateEntityByTypes(entityType,
                     firstName,
                     lastName,
                     dateOfBirth,
@@ -29,10 +29,10 @@ public class EntityFactory implements FactoryInterface {
         } catch (AccountCreationException e) {
             System.out.println("Error Creating Acccount: " + e.getMessage());
         }
-        return employee;
+        return entity;
     }
 
-    private static Employee createEntityForEntityType(
+    private static Employee handleCreateEntityByTypes(
             EntityType entityType, String firstName,
             String lastName, LocalDate dateOfBirth,
             String email
@@ -43,7 +43,7 @@ public class EntityFactory implements FactoryInterface {
         } else if (Objects.equals(entityType, ADMINISTRATOR)) {
             return employee(ADMINISTRATOR, firstName, lastName, dateOfBirth, email);
         } else if (Objects.equals(entityType, CUSTOMER)) {
-            return employee(ADMINISTRATOR, firstName, lastName, dateOfBirth, email);
+            return employee(CUSTOMER, firstName, lastName, dateOfBirth, email);
         }
         throw new AccountCreationException("Account type must be valid");
     }
