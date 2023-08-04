@@ -60,7 +60,20 @@ public interface DatabaseService {
         }
         return sqlGeneratedAccountId;
     }
-
+    static int addEmployeeEntryToDatabase(AccountType position, AccountBase account) {
+        DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
+        String sql = "INSERT INTO employees(Position, PersonID) VALUES(?, ?)";
+        int sqlGeneratedAccountId = -1;
+        try (PreparedStatement preparedStatement = databaseConnection.getDatabaseConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            preparedStatement.setString(1, position.toString());
+            preparedStatement.setInt(2, account.getPersonId());
+            int affectedRows = databaseConnection.handleUpdate(preparedStatement);
+            sqlGeneratedAccountId = getIdFromDatabase(preparedStatement, affectedRows);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return sqlGeneratedAccountId;
+    }
     static int addTransactionEntryToDatabase(AccountBase account, TransactionType transactionType, Float amount) {
         DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
         String sql = "INSERT INTO transactions(TransactionType, Amount, TransactionDate, TransactionTime, AccountID) VALUES(?, ?, ?, ?, ?)";

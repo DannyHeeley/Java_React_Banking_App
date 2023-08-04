@@ -7,12 +7,11 @@ import com.main.app.transactions.Transactions;
 import java.time.LocalDate;
 import java.util.Objects;
 
-import static com.main.app.accounts.AccountType.ADULT;
-import static com.main.app.accounts.AccountType.STUDENT;
+import static com.main.app.accounts.AccountType.*;
 import static com.main.app.transactions.TransactionType.DEPOSIT;
 
-public class BankAccountFactory implements DatabaseService {
-    private BankAccountFactory() {}
+public class AccountFactory implements DatabaseService {
+    private AccountFactory() {}
     public static AccountBase createAccount(
             AccountType accountType, String userName,
             String newAccountPassword, Float initialDeposit,
@@ -47,6 +46,10 @@ public class BankAccountFactory implements DatabaseService {
             return studentAccount(userName, initialDeposit, firstName, lastName, dateOfBirth, email, newAccountPassword);
         } else if (Objects.equals(accountType, ADULT)) {
             return adultAccount(userName, initialDeposit, firstName, lastName, dateOfBirth, email, newAccountPassword);
+        } else if (Objects.equals(accountType, EMPLOYEE)) {
+            return employee(EMPLOYEE, userName, firstName, lastName, dateOfBirth, email, newAccountPassword);
+        } else if (Objects.equals(accountType, ADMINISTRATOR)) {
+            return employee(ADMINISTRATOR, userName, firstName, lastName, dateOfBirth, email, newAccountPassword);
         }
         throw new AccountCreationException("Account type must be valid");
     }
@@ -56,7 +59,7 @@ public class BankAccountFactory implements DatabaseService {
             String lastName, LocalDate dateOfBirth, String email,
             String newAccountPassword
     ) throws AccountCreationException {
-        return BankAccountFactory.createNewAdultAccount(
+        return AccountFactory.createNewAdultAccount(
                 userName,
                 initialDeposit,
                 firstName,
@@ -72,9 +75,25 @@ public class BankAccountFactory implements DatabaseService {
             String lastName, LocalDate dateOfBirth, String email,
             String newAccountPassword
     ) throws AccountCreationException {
-        return BankAccountFactory.createNewStudentAccount(
+        return AccountFactory.createNewStudentAccount(
                 userName,
                 initialDeposit,
+                firstName,
+                lastName,
+                dateOfBirth,
+                email,
+                newAccountPassword
+        );
+    }
+
+    private static Employee employee(
+            AccountType accountType, String userName, String firstName,
+            String lastName, LocalDate dateOfBirth, String email,
+            String newAccountPassword
+    ) throws AccountCreationException {
+        return AccountFactory.createNewEmployeeAccount(
+                accountType,
+                userName,
                 firstName,
                 lastName,
                 dateOfBirth,
@@ -106,10 +125,25 @@ public class BankAccountFactory implements DatabaseService {
             String newAccountPassword
     ) throws AccountCreationException {
         throwsErrorIfAccountExistsOrMinusDeposit(userName, initialDeposit);
-
         return new StudentAccount(
                 userName,
                 initialDeposit,
+                firstName,
+                lastName,
+                dateOfBirth,
+                email,
+                newAccountPassword
+        );
+    }
+
+    private static Employee createNewEmployeeAccount(
+            AccountType accountType, String userName, String firstName, String lastName,
+            LocalDate dateOfBirth, String email, String newAccountPassword
+    ) throws AccountCreationException {
+        throwsErrorIfAccountExistsOrMinusDeposit(userName, 0f);
+        return new Employee(
+                accountType,
+                userName,
                 firstName,
                 lastName,
                 dateOfBirth,

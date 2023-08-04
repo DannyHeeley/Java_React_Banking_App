@@ -2,7 +2,7 @@ package com.main.app;
 
 import com.main.app.Login.PasswordService;
 import com.main.app.accounts.AdultAccount;
-import com.main.app.accounts.BankAccountFactory;
+import com.main.app.accounts.AccountFactory;
 import com.main.app.accounts.StudentAccount;
 
 import java.time.LocalDate;
@@ -21,7 +21,7 @@ public class Main {
         String email = "fizzbuzz@gmail.com";
 
         // Demo adult account
-        AdultAccount testAccountAdult = (AdultAccount) BankAccountFactory.createAccount(
+        AdultAccount testAccountAdult = (AdultAccount) AccountFactory.createAccount(
                 ADULT, userNameAdult, "Password123!", 1000f, firstName, lastName, dateOfBirth, email
         );
         testAccountAdult.deposit(500f);
@@ -30,7 +30,7 @@ public class Main {
         System.out.println("");
 
         // Demo student account
-        StudentAccount testAccountStudent = (StudentAccount) BankAccountFactory.createAccount(
+        StudentAccount testAccountStudent = (StudentAccount) AccountFactory.createAccount(
                 STUDENT,userNameStudent, "Password123!", 100f, firstName, lastName, dateOfBirth, email
         );
         testAccountStudent.deposit(100f);
@@ -38,10 +38,8 @@ public class Main {
         testAccountStudent.printAccountInfo();
         System.out.println("");
 
-        // Demo for transactions
-
         // Demo for passwords
-        System.out.println("---- Password entered ----");
+        System.out.println("---- Enter password ----");
         String password = "Password123!";
         System.out.println("Password entered: " + password);
         System.out.println("---- Getting password hash for account ----");
@@ -54,8 +52,5 @@ public class Main {
         bank.printBankInfo();
         System.out.println("");
 
-        // Demo for DatabaseConnection
-        //DatabaseConnection databaseConnection = new DatabaseConnection();
-        //databaseConnection.executeQuery("INSERT INTO persons(FirstName, LastName, Email) VALUES('Foo','Bar', 'foo_bar@gmail.com')");
     }
 }
