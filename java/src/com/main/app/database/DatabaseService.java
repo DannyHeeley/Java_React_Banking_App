@@ -79,7 +79,7 @@ public interface DatabaseService {
         return sqlGeneratedTransactionId;
     }
 
-    static void updateAccountBalanceInDatabase(Float currentBalance) {
+    static void updateAccountBalanceInDatabase(AccountBase account, Float currentBalance) {
         DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
         String sql = "UPDATE accounts SET CurrentBalance = ?, dateLastUpdated = ?, timeLastUpdated = ? WHERE AccountID = ?";
         try (PreparedStatement preparedStatement = databaseConnection.getDatabaseConnection().prepareStatement(sql)) {
@@ -88,6 +88,7 @@ public interface DatabaseService {
             preparedStatement.setDate(2, sqlUpdateDate);
             java.sql.Time sqlUpdateTime = java.sql.Time.valueOf(LocalTime.now());
             preparedStatement.setTime(3, sqlUpdateTime);
+            preparedStatement.setInt(4, account.getAccountId());
             databaseConnection.handleUpdate(preparedStatement);
         } catch (SQLException e) {
             System.out.println(e.getMessage());

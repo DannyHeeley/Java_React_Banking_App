@@ -20,6 +20,7 @@ public abstract class AccountBase extends Person implements HandleDateTime, Data
     private String passwordHash;
     private final Transactions accountTransactionHistory;
     private int accountId;
+    private AccountType accountType;
 
     AccountBase(
             String userName,
@@ -27,17 +28,26 @@ public abstract class AccountBase extends Person implements HandleDateTime, Data
             String firstName,
             String lastName,
             LocalDate dateOfBirth,
-            String email
+            String email,
+            AccountType accountType
     ) {
         super(firstName, lastName, dateOfBirth, email);
         this.userName = userName;
         this.accountNumber = AccountManager.generateAccountNumber();
+        this.accountType = accountType;
         this.currentBalance = currentBalance;
         this.dateCreated = getDateTimeNowAsString();
         this.passwordHash = null;
         this.dateAccountLastUpdated = null;
         this.accountTransactionHistory = new Transactions();
-        this.accountId = 0;
+        this.accountId = DatabaseService.addAccountEntryToDatabase(
+                this,
+                accountNumber,
+                accountType,
+                currentBalance,
+                LocalDate.now(),
+                passwordHash
+        );;
     }
 
     abstract void deposit(Float amount);
@@ -47,7 +57,6 @@ public abstract class AccountBase extends Person implements HandleDateTime, Data
             subtractFromAccountBalance(amount);
             System.out.println("Withdrawal of " + amount + " Successful, your currentBalance is: " + getAccountBalance());
             setAccountUpdatedTo(getDateTimeNowAsString());
-            DatabaseService.updateAccountBalanceInDatabase(currentBalance);
         } else {
             throw new IllegalArgumentException("Withdrawal unsuccessful, your do not have enough currentBalance to cover the requested withdrawal amount");
         }
@@ -59,11 +68,12 @@ public abstract class AccountBase extends Person implements HandleDateTime, Data
     public void addToAccountBalance(Float amount) {
         this.currentBalance += amount;
         accountTransactionHistory.addTransaction(this, DEPOSIT, amount, accountId);
-        DatabaseService.updateAccountBalanceInDatabase(currentBalance);
+        DatabaseService.updateAccountBalanceInDatabase(this, currentBalance);
     }
     public void subtractFromAccountBalance(Float amount) {
         this.currentBalance -= amount;
         accountTransactionHistory.addTransaction(this, WITHDRAWAL, amount, this.getAccountId());
+        DatabaseService.updateAccountBalanceInDatabase(this, currentBalance);
     }
 
     public String getAccountPasswordHash() {

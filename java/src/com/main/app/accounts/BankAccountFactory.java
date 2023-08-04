@@ -125,17 +125,8 @@ public class BankAccountFactory implements DatabaseService {
 
     private static void handleUpdate(AccountBase acc, AccountType accountType, String newAccountPassword, Float initialDeposit) {
         setAccountPassword(acc, newAccountPassword);
-        int accountId = DatabaseService.addAccountEntryToDatabase(
-                acc,
-                acc.getAccountNumber(),
-                accountType,
-                acc.getAccountBalance(),
-                LocalDate.now(),
-                acc.getAccountPasswordHash()
-        );
         Transactions transactions = new Transactions();
-        transactions.addTransaction(acc, DEPOSIT, initialDeposit, accountId);
-        acc.setAccountId(accountId);
+        transactions.addTransaction(acc, DEPOSIT, initialDeposit, acc.getAccountId());
         AccountManager.addAccount(acc);
         Bank.getInstance().updateMainBankBalanceDeposit(initialDeposit);
     }

@@ -24,15 +24,15 @@ public class Transactions implements HandleDateTime, DatabaseService {
         private final float amount;
         private final LocalDateTime transactionDate;
         private final int accountId;
-        private final int transactionId;
+        private final int transactionId = 0;
         private TransactionEntry(AccountBase account, TransactionType transactionType, float amount, int accountId) {
             this.transactionType = transactionType;
             this.amount = amount;
             this.transactionDate = getDateTimeNow();
             this.accountId = accountId;
-            this.transactionId = DatabaseService.addTransactionEntryToDatabase(
-                    account, transactionType, amount
-            );
+            //this.transactionId = DatabaseService.addTransactionEntryToDatabase(
+            //        account, transactionType, amount
+            //);
         }
         private LocalDateTime getTransactionDateTime() {
             return transactionDate;
