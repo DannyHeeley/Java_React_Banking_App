@@ -22,7 +22,6 @@ public class DatabaseConnection {
     public int handleUpdate(PreparedStatement preparedStatement) throws SQLException {
         try {
             int rowCount = preparedStatement.executeUpdate();
-            System.out.printf("Success - %d - rows affected.\n",rowCount);
             return rowCount;
         } catch(SQLException err) {
             System.out.println("An error has occurred.");
@@ -58,8 +57,6 @@ public class DatabaseConnection {
         return conn;
     }
     private void releaseResources() {
-        // Releases resources in reverse-order of
-        // their creation if they are no-longer needed
         if (resultsSet != null) {
             try {
                 resultsSet.close();

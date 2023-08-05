@@ -42,13 +42,13 @@ public class Bank {
     }
 
     public void resetBank() {
-        AccountManager.clearBankAccountList();
+        AccountManager.getInstance().clearBankAccountList();
         bankTotalBalance = 0f;
     }
 
     public void printBankInfo() {
         System.out.println("Registered bank accounts: ");
-        AccountManager.printAccounts();
+        AccountManager.getInstance().printAccounts();
         getInstance().printBankBalance();
     }
     private void printBankBalance() {

@@ -6,7 +6,7 @@ public class FactoryBase {
 
     public static void throwErrorIfAccountExists(String userName)
             throws AccountCreationException {
-        if (AccountManager.accountExists(userName)) {
+        if (AccountManager.getInstance().accountExists(userName)) {
             throw new AccountCreationException("Account already exists");
         }
     }

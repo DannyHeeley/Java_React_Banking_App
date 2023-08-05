@@ -35,7 +35,7 @@ class PasswordServiceTest {
 
     @AfterEach
     void tearDown() {
-        AccountManager.clearBankAccountList();
+        AccountManager.getInstance().clearBankAccountList();
         testAccountAdult = null;
         testAccountStudent = null;
     }

@@ -12,9 +12,18 @@ public class AccountManager implements DatabaseService {
     //    and managing account state.
 
     private static int lastAccountNumber = 0;
-    private static ArrayList<AccountBase> bankAccounts = new ArrayList<>();
+    private ArrayList<AccountBase> bankAccounts = new ArrayList<>();
+    private static AccountManager instance;
+    private AccountManager() {
 
-    public static AccountBase getAccount(String userName) {
+    }
+    public static AccountManager getInstance() {
+        if (instance == null) {
+            instance = new AccountManager();
+        } return instance;
+    }
+
+    public AccountBase getAccount(String userName) {
         return bankAccounts.stream()
                 .filter(account -> userNameMatchesAccount(userName, account))
                 .findFirst()
@@ -24,32 +33,32 @@ public class AccountManager implements DatabaseService {
                 });
     }
 
-    public static AccountBase addAccount(AccountBase account) {
+    public AccountBase addAccount(AccountBase account) {
         bankAccounts.add(account);
         return account;
     }
 
-    public static boolean accountExists(String userName) {
+    public boolean accountExists(String userName) {
         return bankAccounts.stream().anyMatch(account -> Objects.equals(account.getUserName(), userName));
     }
 
-    public static ArrayList<AccountBase> getBankAccounts() {
+    public ArrayList<AccountBase> getBankAccounts() {
         //System.out.println(DatabaseService.getAllAccountsFromDatabase());
         return bankAccounts;
     }
 
-    public static void printAccounts() {
+    public void printAccounts() {
         for (AccountBase account : getBankAccounts()) {
             System.out.print("Account: " + account.getUserName());
             System.out.println(", Created: " + account.getDateAccountCreated());
         }
     }
 
-    public static void clearBankAccountList() {
+    public void clearBankAccountList() {
         bankAccounts = new ArrayList<>();
     }
 
-    private static boolean userNameMatchesAccount(String userName, AccountBase account) {
+    private boolean userNameMatchesAccount(String userName, AccountBase account) {
         return Objects.equals(account.getUserName(), userName);
     }
 

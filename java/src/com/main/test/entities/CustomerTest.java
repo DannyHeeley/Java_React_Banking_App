@@ -4,6 +4,7 @@ import com.main.app.Bank;
 import com.main.app.accounts.AdultAccount;
 import com.main.app.accounts.PersonalInformation;
 import com.main.app.entities.Customer;
+import com.main.app.login.PasswordService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,7 +26,7 @@ class CustomerTest {
                 "Best", "Customer", LocalDate.of(1960, 4, 28), "bestcustomer@gmail.com"
         );
         customer = new Customer(ADULT, personalInformation);
-        account1 = new AdultAccount(customer, "BestCustomer", 123456f, "chad123!");
+        account1 = new AdultAccount(customer, "BestCustomer", 123456f, PasswordService.hashPassword("$$Giga_chad123!"));
     }
 
     @AfterEach
@@ -44,7 +45,7 @@ class CustomerTest {
     }
     @Test
     void addsMultipleAccountsToCustomerAccounts() {
-        account2 = new AdultAccount(customer, "BestCustomerSavings", 999999f, "chad123!");
+        account2 = new AdultAccount(customer, "BestCustomerSavings", 999999f, PasswordService.hashPassword("$$Giga_chad123!"));
         customer.addAccount(account1);
         customer.addAccount(account2);
         assertThat(customer.getAccounts()).contains(account1, account2);

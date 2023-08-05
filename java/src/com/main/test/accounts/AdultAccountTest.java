@@ -32,7 +32,7 @@ class AdultAccountTest {
 
     @AfterEach
     void tearDown() {
-        AccountManager.clearBankAccountList();
+        AccountManager.getInstance().clearBankAccountList();
         customer = null;
         Bank.getInstance().resetBank();
     }

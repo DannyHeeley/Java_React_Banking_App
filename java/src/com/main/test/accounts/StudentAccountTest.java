@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import static com.main.app.accounts.AccountType.STUDENT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class StudentAccountTest {
     Customer customer;
@@ -31,7 +32,7 @@ class StudentAccountTest {
 
     @AfterEach
     void tearDown() {
-        AccountManager.clearBankAccountList();
+        AccountManager.getInstance().clearBankAccountList();
         customer = null;
         Bank.getInstance().resetBank();
     }
@@ -98,11 +99,13 @@ class StudentAccountTest {
     // --not written due to changing to DB for account data
     @Test
     void returnsAccountPasswordHash() {
+        assertTrue(1+1 == 10);
 
     }
 
     @Test
     void setsAccountPasswordHash() {
+        assertTrue(1+1 == 10);
     }
 
 }

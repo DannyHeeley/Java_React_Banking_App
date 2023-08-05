@@ -39,16 +39,17 @@ public abstract class AccountBase implements DatabaseService {
         this.dateAccountLastUpdated = LocalDate.now();
         this.transactions = new Transactions();
         this.passwordHash = passwordHash;
-        this.accountId = DatabaseService.addAccountEntryToDatabase(
-                customer,
-                accountNumber,
-                accountType,
-                currentBalance,
-                LocalDate.now(),
-                passwordHash
+        this.accountId = DatabaseService
+                .addAccountEntryToDatabase(
+                        customer,
+                        accountNumber,
+                        accountType,
+                        currentBalance,
+                        LocalDate.now(),
+                        passwordHash
                 );
         transactions.addTransaction(this, DEPOSIT, this.currentBalance, this.accountId);
-        AccountManager.addAccount(this);
+        AccountManager.getInstance().addAccount(this);
     }
 
     abstract void deposit(Float amount);

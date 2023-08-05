@@ -29,12 +29,12 @@ public class AccountManagerTest {
 
     @BeforeEach
     void setUp() {
-        bankAccounts = AccountManager.getBankAccounts();
+        bankAccounts = AccountManager.getInstance().getBankAccounts();
     }
 
     @AfterEach
     void tearDown() {
-        AccountManager.clearBankAccountList();
+        AccountManager.getInstance().clearBankAccountList();
         Bank.getInstance().resetBank();
     }
 
@@ -47,7 +47,7 @@ public class AccountManagerTest {
 
     @Test
     void getsAllBankAccounts() {
-        ArrayList<AccountBase> theseBankAccounts = AccountManager.getBankAccounts();
+        ArrayList<AccountBase> theseBankAccounts = AccountManager.getInstance().getBankAccounts();
 
         AccountBase account1 = AccountFactory.createAccount(
                 ADULT, userNameAdult, CORRECT_PASSWORD, initialDeposit, firstName, lastName, dateOfBirth, email
@@ -67,7 +67,7 @@ public class AccountManagerTest {
 
     @Test
     void accountsHasOneAdultAccount() {
-        AccountBase account = (AdultAccount) AccountFactory.createAccount(
+        AdultAccount account = (AdultAccount) AccountFactory.createAccount(
                 ADULT, userNameAdult, CORRECT_PASSWORD, initialDeposit, firstName, lastName, dateOfBirth, email
         );
         assertThat(bankAccounts).containsOnlyOnce(account);
@@ -112,8 +112,8 @@ public class AccountManagerTest {
                 STUDENT, userNameStudent, CORRECT_PASSWORD, 150f, firstName, lastName, dateOfBirth, email
         );
         assertThat(bankAccounts).containsOnlyOnce(account1);
-        assertThat(AccountManager.getAccount(userNameAdult)).isEqualTo(account1);
-        assertThat(AccountManager.getAccount(userNameAdult)).isNotEqualTo(account2);
+        assertThat(AccountManager.getInstance().getAccount(userNameAdult)).isEqualTo(account1);
+        assertThat(AccountManager.getInstance().getAccount(userNameAdult)).isNotEqualTo(account2);
     }
 
     @Test
@@ -124,8 +124,8 @@ public class AccountManagerTest {
         AccountFactory.createAccount(
                 STUDENT, userNameStudent, CORRECT_PASSWORD, initialDeposit, firstName, lastName, dateOfBirth, email
         );
-        assertTrue(AccountManager.accountExists(userNameAdult));
-        assertTrue(AccountManager.accountExists(userNameStudent));
+        assertTrue(AccountManager.getInstance().accountExists(userNameAdult));
+        assertTrue(AccountManager.getInstance().accountExists(userNameStudent));
     }
 
     @Test
@@ -136,7 +136,7 @@ public class AccountManagerTest {
         AccountFactory.createAccount(
                 STUDENT, userNameStudent, CORRECT_PASSWORD, initialDeposit, firstName, lastName, dateOfBirth, email
         );
-        assertFalse(AccountManager.accountExists("Fizz Bar"));
-        assertFalse(AccountManager.accountExists("Foo Buzz"));
+        assertFalse(AccountManager.getInstance().accountExists("Fizz Bar"));
+        assertFalse(AccountManager.getInstance().accountExists("Foo Buzz"));
     }
 }

@@ -26,6 +26,7 @@ public class AccountFactoryTest {
     String lastName = "Buzz";
     LocalDate dateOfBirth = LocalDate.of(1993, 1, 11);
     String email = "fizzbuzz@gmail.com";
+
     @BeforeEach
     void setUp() {
         bank = Bank.getInstance();
@@ -79,7 +80,7 @@ public class AccountFactoryTest {
                 AccountType.ADULT, "NotCreated", "password",
                 0f, firstName, lastName, dateOfBirth, email
                 ));
-        assertThat(AccountManager.getBankAccounts()).isEmpty();
+        assertThat(AccountManager.getInstance().getBankAccounts()).isEmpty();
     }
 
     @Test
@@ -127,7 +128,7 @@ public class AccountFactoryTest {
         AccountFactory.createAccount(
                 ADULT, userNameAdult, CORRECT_PASSWORD, 0f, firstName, lastName, dateOfBirth, email
         );
-        assertThat(AccountManager.getBankAccounts()).containsOnlyOnce(account1);
+        assertThat(AccountManager.getInstance().getBankAccounts()).containsOnlyOnce(account1);
     }
     @Test
     void doesNotThrowExceptionIfAdultAccountsHaveUniqueUserNames() {
@@ -192,7 +193,7 @@ public class AccountFactoryTest {
         AccountFactory.createAccount(
                 STUDENT, userNameStudent, CORRECT_PASSWORD, 0f, firstName, lastName, dateOfBirth, email
         );
-        assertThat(AccountManager.getBankAccounts()).containsOnlyOnce(account1);
+        assertThat(AccountManager.getInstance().getBankAccounts()).containsOnlyOnce(account1);
     }
 
     @Test

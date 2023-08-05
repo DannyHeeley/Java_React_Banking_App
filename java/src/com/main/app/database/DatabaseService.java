@@ -22,17 +22,19 @@ public interface DatabaseService {
         DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
         String sql = "INSERT INTO persons(FirstName, LastName, DateOfBirth, Email) VALUES(?, ?, ?, ?)";
         int sqlGeneratedPersonId = -1;
+        int affectedRows = -1;
         try (PreparedStatement preparedStatement = databaseConnection.getDatabaseConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, firstName);
             preparedStatement.setString(2, lastName);
             java.sql.Date sqlDateOfBirth = java.sql.Date.valueOf(dateOfBirth);
             preparedStatement.setDate(3, sqlDateOfBirth);
             preparedStatement.setString(4, email);
-            int affectedRows = databaseConnection.handleUpdate(preparedStatement);
+            affectedRows = databaseConnection.handleUpdate(preparedStatement);
             sqlGeneratedPersonId = getIdFromDatabase(preparedStatement, affectedRows);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+        System.out.printf("Success - %d - rows affected.\n",affectedRows);
         return sqlGeneratedPersonId;
     }
 
@@ -42,6 +44,7 @@ public interface DatabaseService {
         DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
         String sql = "INSERT INTO accounts(AccountNumber, AccountType, CurrentBalance, DateCreated, PasswordHash, DateLastUpdated, TimeLastUpdated, CustomerID) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
         int sqlGeneratedAccountId = -1;
+        int affectedRows = -1;
         try (PreparedStatement preparedStatement = databaseConnection.getDatabaseConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setInt(1, accountNumber);
             preparedStatement.setString(2, accountType.toString());
@@ -54,11 +57,12 @@ public interface DatabaseService {
             java.sql.Time sqlTimeLastUpdated = java.sql.Time.valueOf(LocalTime.now());
             preparedStatement.setTime(7, sqlTimeLastUpdated);
             preparedStatement.setInt(8, customer.getCustomerId());
-            int affectedRows = databaseConnection.handleUpdate(preparedStatement);
+            affectedRows = databaseConnection.handleUpdate(preparedStatement);
             sqlGeneratedAccountId = getIdFromDatabase(preparedStatement, affectedRows);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+        System.out.printf("Success - %d - rows affected.\n",affectedRows);
         return sqlGeneratedAccountId;
     }
 
@@ -66,14 +70,16 @@ public interface DatabaseService {
         DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
         String sql = "INSERT INTO employees(Position, PersonID) VALUES(?, ?)";
         int sqlGeneratedEmployeeId = -1;
+        int affectedRows = -1;
         try (PreparedStatement preparedStatement = databaseConnection.getDatabaseConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, position.toString());
             preparedStatement.setInt(2, employee.getPersonId());
-            int affectedRows = databaseConnection.handleUpdate(preparedStatement);
+            affectedRows = databaseConnection.handleUpdate(preparedStatement);
             sqlGeneratedEmployeeId = getIdFromDatabase(preparedStatement, affectedRows);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+        System.out.printf("Success - %d - rows affected.\n",affectedRows);
         return sqlGeneratedEmployeeId;
     }
 
@@ -81,14 +87,16 @@ public interface DatabaseService {
         DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
         String sql = "INSERT INTO customers(CustomerType, PersonID) VALUES(?, ?)";
         int sqlGeneratedCustomerId = -1;
+        int affectedRows = -1;
         try (PreparedStatement preparedStatement = databaseConnection.getDatabaseConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, customerType.toString());
             preparedStatement.setInt(2, employee.getPersonId());
-            int affectedRows = databaseConnection.handleUpdate(preparedStatement);
+            affectedRows = databaseConnection.handleUpdate(preparedStatement);
             sqlGeneratedCustomerId = getIdFromDatabase(preparedStatement, affectedRows);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+        System.out.printf("Success - %d - rows affected.\n",affectedRows);
         return sqlGeneratedCustomerId;
     }
 
@@ -96,6 +104,7 @@ public interface DatabaseService {
         DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
         String sql = "INSERT INTO transactions(TransactionType, Amount, TransactionDate, TransactionTime, AccountID) VALUES(?, ?, ?, ?, ?)";
         int sqlGeneratedTransactionId = -1;
+        int affectedRows = -1;
         try (PreparedStatement preparedStatement = databaseConnection.getDatabaseConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, transactionType.toString());
             preparedStatement.setFloat(2, amount);
@@ -104,17 +113,19 @@ public interface DatabaseService {
             java.sql.Time timeOfTransaction = java.sql.Time.valueOf(LocalTime.now());
             preparedStatement.setTime(4, timeOfTransaction);
             preparedStatement.setInt(5, account.getAccountId());
-            int affectedRows = databaseConnection.handleUpdate(preparedStatement);
+            affectedRows = databaseConnection.handleUpdate(preparedStatement);
             sqlGeneratedTransactionId = getIdFromDatabase(preparedStatement, affectedRows);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+        System.out.printf("Success - %d - rows affected.\n",affectedRows);
         return sqlGeneratedTransactionId;
     }
 
     static void updateAccountBalanceInDatabase(AccountBase account, Float currentBalance) {
         DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
         String sql = "UPDATE accounts SET CurrentBalance = ?, dateLastUpdated = ?, timeLastUpdated = ? WHERE AccountID = ?";
+        int affectedRows = -1;
         try (PreparedStatement preparedStatement = databaseConnection.getDatabaseConnection().prepareStatement(sql)) {
             preparedStatement.setFloat(1, currentBalance);
             java.sql.Date sqlUpdateDate = java.sql.Date.valueOf(LocalDate.now());
@@ -122,10 +133,11 @@ public interface DatabaseService {
             java.sql.Time sqlUpdateTime = java.sql.Time.valueOf(LocalTime.now());
             preparedStatement.setTime(3, sqlUpdateTime);
             preparedStatement.setInt(4, account.getAccountId());
-            databaseConnection.handleUpdate(preparedStatement);
+            affectedRows = databaseConnection.handleUpdate(preparedStatement);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+        System.out.printf("Success - %d - rows affected.\n",affectedRows);
     }
 
     private static int getIdFromDatabase(PreparedStatement preparedStatement, int affectedRows) throws SQLException {
