@@ -4,6 +4,7 @@ import com.main.app.Bank;
 import com.main.app.accounts.AccountBase;
 import com.main.app.accounts.AccountManager;
 import com.main.app.accounts.AccountFactory;
+import com.main.app.accounts.AccountType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +16,7 @@ import static com.main.app.accounts.AccountType.STUDENT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-public class BankAccountFactoryTest {
+public class AccountFactoryTest {
     private static final String CORRECT_PASSWORD = "Password123!";
     Bank bank;
     String userNameAdult = "Adult";
@@ -69,6 +70,13 @@ public class BankAccountFactoryTest {
                 ADULT, userNameAdult, CORRECT_PASSWORD, 0f, firstName, lastName, dateOfBirth, email
         );
         assertThat(account).isNotNull();
+    }
+    @Test
+    void doesNotCreateAccountIfCreatingPasswordThrowsException() {
+        AccountBase accountNotCreated = AccountFactory.createAccount(
+                AccountType.ADULT, "NotCreated", "password",
+                0f, firstName, lastName, dateOfBirth, email);
+        assertThat(AccountManager.getBankAccounts()).doesNotContain(accountNotCreated);
     }
     @Test
     void adultAccountWithDepositHasBalance() {

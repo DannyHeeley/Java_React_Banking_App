@@ -8,6 +8,7 @@ import com.main.app.transactions.TransactionType;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.concurrent.RejectedExecutionException;
 
 import static com.main.app.login.PasswordService.hashPassword;
 import static com.main.app.transactions.TransactionType.DEPOSIT;
@@ -15,13 +16,13 @@ import static com.main.app.transactions.TransactionType.WITHDRAWAL;
 
 public abstract class AccountBase implements HandleDateTime, DatabaseService {
     private Float currentBalance;
-    private final String userName;
+    private String userName;
     private final int accountNumber;
     private final String dateCreated;
     private String dateAccountLastUpdated;
     private String passwordHash;
     private final Transactions accountTransactionHistory;
-    private int accountId;
+    private int accountId = -1;
     private AccountType accountType;
 
     AccountBase(
@@ -36,9 +37,14 @@ public abstract class AccountBase implements HandleDateTime, DatabaseService {
         this.accountType = accountType;
         this.currentBalance = currentBalance;
         this.dateCreated = getDateTimeNowAsString();
-        this.passwordHash = hashPassword(newAccountPassword);
         this.dateAccountLastUpdated = null;
         this.accountTransactionHistory = new Transactions();
+        try {
+            this.passwordHash = hashPassword(newAccountPassword);
+        } catch (RejectedExecutionException e) {
+            System.out.println("Account creation interrupted: " + e);
+            return;
+        }
         this.accountId = DatabaseService.addAccountEntryToDatabase(
                 customer,
                 accountNumber,
