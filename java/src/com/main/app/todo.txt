@@ -1,7 +1,6 @@
 Test student account limit
 Write getAccount for DatabaseService so that it gets an account's details from the DB and create a new account object with those details.
 Write tests for transactions
-Fix account number duplicate entry
 Write tests that mock the DB
 Implement transfers
 Write tests for transfers

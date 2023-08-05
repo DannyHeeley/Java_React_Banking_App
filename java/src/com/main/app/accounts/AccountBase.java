@@ -17,7 +17,7 @@ import static java.time.LocalDateTime.now;
 public abstract class AccountBase implements DatabaseService {
     private Float currentBalance;
     private String userName;
-    private int accountNumber = -1;
+    private int accountNumber;
     private final LocalDate dateCreated;
     private LocalDate dateAccountLastUpdated;
     private String passwordHash;
@@ -39,6 +39,8 @@ public abstract class AccountBase implements DatabaseService {
         this.dateAccountLastUpdated = LocalDate.now();
         this.transactions = new Transactions();
         this.passwordHash = passwordHash;
+        transactions.addTransaction(this, DEPOSIT, this.currentBalance, this.accountId);
+        this.accountNumber = generateAccountNumber(customer);
         this.accountId = DatabaseService
                 .addAccountEntryToDatabase(
                         customer,
@@ -48,8 +50,6 @@ public abstract class AccountBase implements DatabaseService {
                         LocalDate.now(),
                         passwordHash
                 );
-        this.accountNumber = generateAccountNumber(customer);
-        transactions.addTransaction(this, DEPOSIT, this.currentBalance, this.accountId);
         AccountManager.getInstance().addAccount(this);
     }
 
@@ -97,7 +97,9 @@ public abstract class AccountBase implements DatabaseService {
     }
 
     private int generateAccountNumber(Customer customer) {
-        return parseInt(String.valueOf(customer.getCustomerId()) + String.valueOf(accountId));
+        String customerId = String.valueOf(customer.getCustomerId());
+        String personId = String.valueOf(customer.getPersonId());
+        return parseInt(customerId + personId);
     }
     public int getAccountNumber() {return accountNumber; }
     public String getUserName() {
