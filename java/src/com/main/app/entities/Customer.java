@@ -38,4 +38,5 @@ public class Customer extends Person {
     public int getCustomerId() {
         return customerId;
     }
+
 }

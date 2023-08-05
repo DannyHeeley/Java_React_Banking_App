@@ -11,12 +11,13 @@ import java.time.format.DateTimeFormatter;
 
 import static com.main.app.transactions.TransactionType.DEPOSIT;
 import static com.main.app.transactions.TransactionType.WITHDRAWAL;
+import static java.lang.Integer.parseInt;
 import static java.time.LocalDateTime.now;
 
 public abstract class AccountBase implements DatabaseService {
     private Float currentBalance;
     private String userName;
-    private final int accountNumber;
+    private int accountNumber = -1;
     private final LocalDate dateCreated;
     private LocalDate dateAccountLastUpdated;
     private String passwordHash;
@@ -32,7 +33,6 @@ public abstract class AccountBase implements DatabaseService {
             Customer customer
     ) {
         this.userName = userName;
-        this.accountNumber = AccountManager.generateAccountNumber();
         this.accountType = accountType;
         this.currentBalance = currentBalance;
         this.dateCreated = LocalDate.now();
@@ -48,6 +48,7 @@ public abstract class AccountBase implements DatabaseService {
                         LocalDate.now(),
                         passwordHash
                 );
+        this.accountNumber = generateAccountNumber(customer);
         transactions.addTransaction(this, DEPOSIT, this.currentBalance, this.accountId);
         AccountManager.getInstance().addAccount(this);
     }
@@ -95,6 +96,9 @@ public abstract class AccountBase implements DatabaseService {
         this.dateAccountLastUpdated = accountUpdated;
     }
 
+    private int generateAccountNumber(Customer customer) {
+        return parseInt(String.valueOf(customer.getCustomerId()) + String.valueOf(accountId));
+    }
     public int getAccountNumber() {return accountNumber; }
     public String getUserName() {
         return userName;
