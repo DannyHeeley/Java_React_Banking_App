@@ -1,33 +1,26 @@
 package com.main.app.accounts;
 
 import com.main.app.Bank;
+import com.main.app.entities.Customer;
+
 import static com.main.app.accounts.AccountType.ADULT;
 import static com.main.app.transactions.TransactionType.DEPOSIT;
-
-import java.time.LocalDate;
-
-
 
 public class AdultAccount extends AccountBase {
 
     public AdultAccount(
+            Customer customer,
             String userName,
             Float initialDeposit,
-            String firstName,
-            String lastName,
-            LocalDate dateOfBirth,
-            String email,
-            String newAccountPassword) {
+            String newAccountPassword
+    ) {
         super(
                 userName,
                 initialDeposit,
-                firstName,
-                lastName,
-                dateOfBirth,
-                email,
                 ADULT,
-                newAccountPassword
-        );
+                newAccountPassword,
+                customer
+                );
         System.out.println("Bank Account created successfully for customer: " + userName + " - initial deposit of: " + initialDeposit + ".");
     }
 

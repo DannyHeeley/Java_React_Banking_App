@@ -3,17 +3,17 @@ package com.main.app.accounts;
 import com.main.app.HandleDateTime;
 import com.main.app.database.DatabaseService;
 import com.main.app.entities.Customer;
-import com.main.app.entities.Person;
 import com.main.app.transactions.Transactions;
 import com.main.app.transactions.TransactionType;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
-import static com.main.app.Login.PasswordService.hashPassword;
+import static com.main.app.login.PasswordService.hashPassword;
 import static com.main.app.transactions.TransactionType.DEPOSIT;
 import static com.main.app.transactions.TransactionType.WITHDRAWAL;
 
-public abstract class AccountBase extends Customer implements HandleDateTime, DatabaseService {
+public abstract class AccountBase implements HandleDateTime, DatabaseService {
     private Float currentBalance;
     private final String userName;
     private final int accountNumber;
@@ -27,14 +27,10 @@ public abstract class AccountBase extends Customer implements HandleDateTime, Da
     AccountBase(
             String userName,
             Float currentBalance,
-            String firstName,
-            String lastName,
-            LocalDate dateOfBirth,
-            String email,
             AccountType accountType,
-            String newAccountPassword
+            String newAccountPassword,
+            Customer customer
     ) {
-        super(firstName, lastName, dateOfBirth, email, accountType);
         this.userName = userName;
         this.accountNumber = AccountManager.generateAccountNumber();
         this.accountType = accountType;
@@ -44,13 +40,13 @@ public abstract class AccountBase extends Customer implements HandleDateTime, Da
         this.dateAccountLastUpdated = null;
         this.accountTransactionHistory = new Transactions();
         this.accountId = DatabaseService.addAccountEntryToDatabase(
-                this,
+                customer,
                 accountNumber,
                 accountType,
                 currentBalance,
                 LocalDate.now(),
                 passwordHash
-        );
+                );
     }
 
     abstract void deposit(Float amount);
@@ -71,12 +67,16 @@ public abstract class AccountBase extends Customer implements HandleDateTime, Da
     public void addToAccountBalance(Float amount) {
         this.currentBalance += amount;
         accountTransactionHistory.addTransaction(this, DEPOSIT, amount, accountId);
-        DatabaseService.updateAccountBalanceInDatabase(this, currentBalance);
+        if (amount > 0) {
+            DatabaseService.updateAccountBalanceInDatabase(this, currentBalance);
+        }
     }
     public void subtractFromAccountBalance(Float amount) {
         this.currentBalance -= amount;
         accountTransactionHistory.addTransaction(this, WITHDRAWAL, amount, this.getAccountId());
-        DatabaseService.updateAccountBalanceInDatabase(this, currentBalance);
+        if (amount > 0) {
+            DatabaseService.updateAccountBalanceInDatabase(this, currentBalance);
+        }
     }
 
     public String getAccountPasswordHash() {

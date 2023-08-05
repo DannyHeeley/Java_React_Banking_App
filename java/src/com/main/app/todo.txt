@@ -1,3 +1,6 @@
+Create an object for personal info to pass around instead of 8 variables
+Separate customer and accounts from the is-a relationship to the has-a relationship
+Write getAccount for DatabaseService so that it gets an account's details from the DB and create a new account object with those details.
 Write tests for transactions
 Write tests that mock the DB
 Implement transfers
@@ -8,3 +11,12 @@ Refactor DatabaseService to an abstract or concrete class
 Write tests for database connection and service
 Create SQL table for bank/branch and implement update wiring
 Implement loans
+
+Do not use arraylist
+
+The logic for synchronizing objects with the database is spread across several classes, such as the AccountManager and DatabaseService classes. It may be beneficial to centralize this logic, possibly in the individual model classes (AccountBase, Person, etc.) or in dedicated data access objects.
+
+In DatabaseService, it's not clear how changes to objects are written back to the database. A clear strategy for this is crucial for keeping the objects and database in sync.
+
+Concurrency: If the database can be modified by another process while your program is running, you'll need to decide how to handle this. You could refresh the object's data from the database regularly, or only when you're about to make a change.
+- use the synchronized keyword to ensure that only one thread can access a method at a time.

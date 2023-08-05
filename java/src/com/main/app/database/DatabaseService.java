@@ -2,6 +2,7 @@ package com.main.app.database;
 
 import com.main.app.accounts.AccountBase;
 import com.main.app.accounts.AccountType;
+import com.main.app.entities.Customer;
 import com.main.app.entities.EntityType;
 import com.main.app.entities.Person;
 import com.main.app.transactions.TransactionType;
@@ -36,7 +37,7 @@ public interface DatabaseService {
     }
 
     static int addAccountEntryToDatabase(
-            AccountBase account, int accountNumber, AccountType accountType, Float currentBalance, LocalDate dateCreated, String passwordHash
+            Customer customer, int accountNumber, AccountType accountType, Float currentBalance, LocalDate dateCreated, String passwordHash
     ) {
         DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
         String sql = "INSERT INTO accounts(AccountNumber, AccountType, CurrentBalance, DateCreated, PasswordHash, DateLastUpdated, TimeLastUpdated, CustomerID) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
@@ -52,7 +53,7 @@ public interface DatabaseService {
             preparedStatement.setDate(6, sqlDateLastUpdated);
             java.sql.Time sqlTimeLastUpdated = java.sql.Time.valueOf(LocalTime.now());
             preparedStatement.setTime(7, sqlTimeLastUpdated);
-            preparedStatement.setInt(8, account.getCustomerId());
+            preparedStatement.setInt(8, customer.getCustomerId());
             int affectedRows = databaseConnection.handleUpdate(preparedStatement);
             sqlGeneratedAccountId = getIdFromDatabase(preparedStatement, affectedRows);
         } catch (SQLException e) {

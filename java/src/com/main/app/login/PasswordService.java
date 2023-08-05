@@ -1,4 +1,4 @@
-package com.main.app.Login;
+package com.main.app.login;
 
 import com.main.app.accounts.AccountBase;
 import de.mkammerer.argon2.Argon2;

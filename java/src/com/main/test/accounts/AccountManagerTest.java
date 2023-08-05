@@ -76,7 +76,7 @@ public class AccountManagerTest {
         AdultAccount account1 = (AdultAccount) AccountFactory.createAccount(
                 ADULT, userNameAdult, CORRECT_PASSWORD, initialDeposit, firstName, lastName, dateOfBirth, email
         );
-        AdultAccount account2 = (AdultAccount) AccountFactory.createAccount(
+        AccountFactory.createAccount(
                 ADULT, userNameAdult, CORRECT_PASSWORD, initialDeposit, firstName, lastName, dateOfBirth, email
         );
         assertThat(bankAccounts).containsOnly(account1);
@@ -95,7 +95,7 @@ public class AccountManagerTest {
         AccountBase account1 = AccountFactory.createAccount(
                 STUDENT, userNameStudent, CORRECT_PASSWORD, initialDeposit, firstName, lastName, dateOfBirth, email
         );
-        AccountBase account2 = AccountFactory.createAccount(
+        AccountFactory.createAccount(
                 STUDENT, userNameStudent, CORRECT_PASSWORD, initialDeposit, firstName, lastName, dateOfBirth, email
         );
         assertThat(bankAccounts).containsOnly(account1);

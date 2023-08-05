@@ -1,6 +1,7 @@
 package com.main.app.entities;
 
 import com.main.app.FactoryBase;
+import com.main.app.accounts.PersonalInformation;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -19,13 +20,10 @@ public class EntityFactory extends FactoryBase {
             LocalDate dateOfBirth, String email
     ) {
         Employee entity = null;
+        PersonalInformation personalInformation =
+                new PersonalInformation(firstName, lastName, dateOfBirth, email);
         try {
-            entity = handleCreateEntityByTypes(entityType,
-                    firstName,
-                    lastName,
-                    dateOfBirth,
-                    email
-            );
+            entity = handleCreateEntityByTypes(entityType, personalInformation);
         } catch (AccountCreationException e) {
             System.out.println("Error Creating Acccount: " + e.getMessage());
         }
@@ -33,31 +31,25 @@ public class EntityFactory extends FactoryBase {
     }
 
     private static Employee handleCreateEntityByTypes(
-            EntityType entityType, String firstName,
-            String lastName, LocalDate dateOfBirth,
-            String email
+            EntityType entityType, PersonalInformation personalInformation
     )
             throws AccountCreationException {
         if (Objects.equals(entityType, EMPLOYEE)) {
-            return employee(EMPLOYEE, firstName, lastName, dateOfBirth, email);
+            return employee(EMPLOYEE, personalInformation);
         } else if (Objects.equals(entityType, ADMINISTRATOR)) {
-            return employee(ADMINISTRATOR, firstName, lastName, dateOfBirth, email);
+            return employee(ADMINISTRATOR, personalInformation);
         } else if (Objects.equals(entityType, CUSTOMER)) {
-            return employee(CUSTOMER, firstName, lastName, dateOfBirth, email);
+            return employee(CUSTOMER, personalInformation);
         }
         throw new AccountCreationException("Account type must be valid");
     }
 
     private static Employee employee(
-            EntityType entityType, String firstName,
-            String lastName, LocalDate dateOfBirth, String email
+            EntityType entityType, PersonalInformation personalInformation
     ) {
         return new Employee(
                 entityType,
-                firstName,
-                lastName,
-                dateOfBirth,
-                email
+                personalInformation
         );
     }
 }

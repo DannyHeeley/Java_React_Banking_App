@@ -1,5 +1,6 @@
 package com.main.app.entities;
 
+import com.main.app.accounts.PersonalInformation;
 import com.main.app.database.DatabaseService;
 
 import java.time.LocalDate;
@@ -10,12 +11,10 @@ public class Employee extends Person {
     private final int employeeId;
 
     public Employee(
-            EntityType position, String firstName,
-            String lastName, LocalDate dateOfBirth, String email
+            EntityType position, PersonalInformation personalInformation
     ) {
         super(
-                firstName, lastName,
-                dateOfBirth, email
+                personalInformation
         );
         this.position = position;
         this.employeeId = DatabaseService.addEmployeeEntryToDatabase(

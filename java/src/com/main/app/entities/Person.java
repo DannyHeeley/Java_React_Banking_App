@@ -1,5 +1,6 @@
 package com.main.app.entities;
 
+import com.main.app.accounts.PersonalInformation;
 import com.main.app.database.DatabaseService;
 
 import java.time.LocalDate;
@@ -12,15 +13,12 @@ public class Person implements DatabaseService {
     private String email;
 
     public Person(
-            String firstName,
-            String lastName,
-            LocalDate dateOfBirth,
-            String email
+            PersonalInformation personalInformation
     ) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.dateOfBirth = dateOfBirth;
-        this.email = email;
+        this.firstName = personalInformation.getFirstName();
+        this.lastName = personalInformation.getLastName();
+        this.dateOfBirth = personalInformation.getDateOfBirth();
+        this.email = personalInformation.getEmail();
         this.personId = DatabaseService.addPersonEntryToDatabase(firstName, lastName, dateOfBirth, email);
     }
 

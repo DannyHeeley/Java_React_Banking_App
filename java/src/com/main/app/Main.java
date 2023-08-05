@@ -1,6 +1,6 @@
 package com.main.app;
 
-import com.main.app.Login.PasswordService;
+import com.main.app.login.PasswordService;
 import com.main.app.accounts.AdultAccount;
 import com.main.app.accounts.AccountFactory;
 import com.main.app.accounts.StudentAccount;
