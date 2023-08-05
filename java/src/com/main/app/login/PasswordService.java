@@ -42,11 +42,11 @@ public class PasswordService {
         //At least one number
         //At least one special character
         if (password == null || password.equals("")) {
-            throw new RejectedExecutionException("Password cannot be null or empty string");
+            throw new IllegalArgumentException("Password cannot be null or empty string");
         }
         Matcher matchPass = passwordPattern.matcher(password);
         if (!matchPass.matches()) {
-            throw new RejectedExecutionException("Password must be in the following format: Minimum of 8 characters. At least one uppercase letter. At lease one number. At least one special character");
+            throw new IllegalArgumentException("Password must be in the following format: Minimum of 8 characters. At least one uppercase letter. At lease one number. At least one special character");
         }
     }
 }

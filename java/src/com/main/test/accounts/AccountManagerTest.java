@@ -1,5 +1,6 @@
 package com.main.test.accounts;
 
+import com.main.app.Bank;
 import com.main.app.accounts.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,6 +35,7 @@ public class AccountManagerTest {
     @AfterEach
     void tearDown() {
         AccountManager.clearBankAccountList();
+        Bank.getInstance().resetBank();
     }
 
     @Test

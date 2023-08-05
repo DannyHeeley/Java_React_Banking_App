@@ -1,27 +1,26 @@
 package com.main.app.accounts;
 
-import com.main.app.HandleDateTime;
 import com.main.app.database.DatabaseService;
 import com.main.app.entities.Customer;
 import com.main.app.transactions.Transactions;
 import com.main.app.transactions.TransactionType;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.concurrent.RejectedExecutionException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
-import static com.main.app.login.PasswordService.hashPassword;
 import static com.main.app.transactions.TransactionType.DEPOSIT;
 import static com.main.app.transactions.TransactionType.WITHDRAWAL;
+import static java.time.LocalDateTime.now;
 
-public abstract class AccountBase implements HandleDateTime, DatabaseService {
+public abstract class AccountBase implements DatabaseService {
     private Float currentBalance;
     private String userName;
     private final int accountNumber;
-    private final String dateCreated;
-    private String dateAccountLastUpdated;
+    private final LocalDate dateCreated;
+    private LocalDate dateAccountLastUpdated;
     private String passwordHash;
-    private final Transactions accountTransactionHistory;
+    private final Transactions transactions;
     private int accountId = -1;
     private AccountType accountType;
 
@@ -29,22 +28,17 @@ public abstract class AccountBase implements HandleDateTime, DatabaseService {
             String userName,
             Float currentBalance,
             AccountType accountType,
-            String newAccountPassword,
+            String passwordHash,
             Customer customer
     ) {
         this.userName = userName;
         this.accountNumber = AccountManager.generateAccountNumber();
         this.accountType = accountType;
         this.currentBalance = currentBalance;
-        this.dateCreated = getDateTimeNowAsString();
-        this.dateAccountLastUpdated = null;
-        this.accountTransactionHistory = new Transactions();
-        try {
-            this.passwordHash = hashPassword(newAccountPassword);
-        } catch (RejectedExecutionException e) {
-            System.out.println("Account creation interrupted: " + e);
-            return;
-        }
+        this.dateCreated = LocalDate.now();
+        this.dateAccountLastUpdated = LocalDate.now();
+        this.transactions = new Transactions();
+        this.passwordHash = passwordHash;
         this.accountId = DatabaseService.addAccountEntryToDatabase(
                 customer,
                 accountNumber,
@@ -53,6 +47,8 @@ public abstract class AccountBase implements HandleDateTime, DatabaseService {
                 LocalDate.now(),
                 passwordHash
                 );
+        transactions.addTransaction(this, DEPOSIT, this.currentBalance, this.accountId);
+        AccountManager.addAccount(this);
     }
 
     abstract void deposit(Float amount);
@@ -61,25 +57,26 @@ public abstract class AccountBase implements HandleDateTime, DatabaseService {
         if (amount <= getAccountBalance()) {
             subtractFromAccountBalance(amount);
             System.out.println("Withdrawal of " + amount + " Successful, your currentBalance is: " + getAccountBalance());
-            setAccountUpdatedTo(getDateTimeNowAsString());
+            setAccountUpdatedTo(LocalDate.now());
         } else {
             throw new IllegalArgumentException("Withdrawal unsuccessful, your do not have enough currentBalance to cover the requested withdrawal amount");
         }
     }
+
 
     public Float getAccountBalance() {
         return currentBalance;
     }
     public void addToAccountBalance(Float amount) {
         this.currentBalance += amount;
-        accountTransactionHistory.addTransaction(this, DEPOSIT, amount, accountId);
+        transactions.addTransaction(this, DEPOSIT, amount, accountId);
         if (amount > 0) {
             DatabaseService.updateAccountBalanceInDatabase(this, currentBalance);
         }
     }
     public void subtractFromAccountBalance(Float amount) {
         this.currentBalance -= amount;
-        accountTransactionHistory.addTransaction(this, WITHDRAWAL, amount, this.getAccountId());
+        transactions.addTransaction(this, WITHDRAWAL, amount, this.getAccountId());
         if (amount > 0) {
             DatabaseService.updateAccountBalanceInDatabase(this, currentBalance);
         }
@@ -92,10 +89,10 @@ public abstract class AccountBase implements HandleDateTime, DatabaseService {
         passwordHash = hashedPassword;
     }
 
-    public String getDateAccountLastUpdated() {
+    public LocalDate getDateAccountLastUpdated() {
         return dateAccountLastUpdated;
     }
-    public void setAccountUpdatedTo(String accountUpdated) {
+    public void setAccountUpdatedTo(LocalDate accountUpdated) {
         this.dateAccountLastUpdated = accountUpdated;
     }
 
@@ -103,11 +100,14 @@ public abstract class AccountBase implements HandleDateTime, DatabaseService {
     public String getUserName() {
         return userName;
     }
-    public String getDateAccountCreated() {
+    public void setUserName(String newUserName) {
+        this.userName = newUserName;
+    }
+    public LocalDate getDateAccountCreated() {
         return dateCreated;
     }
     public Transactions getAccountTransactionHistory() {
-        return accountTransactionHistory;
+        return transactions;
     }
 
     public void printAccountInfo() {
@@ -134,15 +134,17 @@ public abstract class AccountBase implements HandleDateTime, DatabaseService {
         return accountId;
     }
 
-    public void setAccountId(int accountId) {
-        this.accountId = accountId;
-    }
-
     public AccountType getAccountType() {
         return accountType;
     }
 
     public void setAccountType(AccountType accountType) {
         this.accountType = accountType;
+    }
+
+    private String getDateTimeNowAsString() {
+        LocalDateTime dateTimeNow = now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm:ss");
+        return dateTimeNow.format(formatter);
     }
 }

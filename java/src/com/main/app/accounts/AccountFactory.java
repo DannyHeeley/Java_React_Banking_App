@@ -1,5 +1,6 @@
 package com.main.app.accounts;
 
+import com.main.app.Bank;
 import com.main.app.FactoryBase;
 import com.main.app.database.DatabaseService;
 import com.main.app.entities.Customer;
@@ -8,6 +9,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 import static com.main.app.accounts.AccountType.*;
+import static com.main.app.login.PasswordService.hashPassword;
 
 public class AccountFactory extends FactoryBase implements DatabaseService {
 
@@ -21,16 +23,24 @@ public class AccountFactory extends FactoryBase implements DatabaseService {
             LocalDate dateOfBirth, String email
     ) {
         AccountBase account = null;
-        Customer customer = createNewCustomer(accountType, firstName, lastName, dateOfBirth, email);
+        String passwordHash;
+        Customer customer;
         try {
+            passwordHash = hashPassword(newAccountPassword);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e);
+            throw(e);
+        }
+        try {
+            customer = createNewCustomer(accountType, firstName, lastName, dateOfBirth, email);
             account = handleCreatingAccountForType(
                     accountType,
                     userName,
                     initialDeposit,
-                    newAccountPassword,
+                    passwordHash,
                     customer
             );
-            handleUpdate(account, initialDeposit);
+            Bank.getInstance().updateMainBankBalanceDeposit(initialDeposit);
             customer.addAccount(account);
         } catch (AccountCreationException e) {
             System.out.println("Error Creating Acccount: " + e.getMessage());

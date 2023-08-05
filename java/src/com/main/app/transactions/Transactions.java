@@ -1,17 +1,19 @@
 package com.main.app.transactions;
 
-import com.main.app.HandleDateTime;
 import com.main.app.accounts.AccountBase;
 import com.main.app.database.DatabaseService;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Transactions implements HandleDateTime, DatabaseService {
+
+public class Transactions implements DatabaseService {
     private final List<TransactionEntry> transactionHistory;
     public Transactions() {
-        transactionHistory = new ArrayList<>();
+        this.transactionHistory = new ArrayList<>();
     }
     public void addTransaction(AccountBase account, TransactionType transactionType, float amount, int accountId) {
         TransactionEntry entry = new TransactionEntry(account, transactionType, amount, accountId);
@@ -20,20 +22,25 @@ public class Transactions implements HandleDateTime, DatabaseService {
     private class TransactionEntry {
         private final TransactionType transactionType;
         private final float amount;
-        private final LocalDateTime transactionDate;
+        private final LocalDate transactionDate;
+        private final LocalTime transactionTime;
         private final int accountId;
         private final int transactionId;
         private TransactionEntry(AccountBase account, TransactionType transactionType, float amount, int accountId) {
             this.transactionType = transactionType;
             this.amount = amount;
-            this.transactionDate = getDateTimeNow();
+            this.transactionDate = LocalDate.now();
+            this.transactionTime = LocalTime.now();
             this.accountId = accountId;
             this.transactionId = DatabaseService.addTransactionEntryToDatabase(
                     account, transactionType, amount
             );
         }
-        private LocalDateTime getTransactionDateTime() {
+        private LocalDate getTransactionDate() {
             return transactionDate;
+        }
+        private LocalTime getTransactionTime() {
+            return transactionTime;
         }
         private Float getTransactionValue() {
             return amount;
@@ -55,11 +62,21 @@ public class Transactions implements HandleDateTime, DatabaseService {
         StringBuilder sb = new StringBuilder();
         sb.append("Transaction History:\n");
         for (TransactionEntry entry : transactionHistory) {
-            sb.append("Date/Time: ").append(parseDateTimeToString((entry.getTransactionDateTime()))).append(", ");
+            sb.append("Date: ").append(parseDateToString((entry.getTransactionDate()))).append(", ");
+            sb.append("Time: ").append(parseTimeToString((entry.getTransactionTime()))).append(", ");
             sb.append("Value: ").append(entry.getTransactionValue()).append(", ");
             sb.append("Type: ").append(entry.getTransactionType()).append(", ");
         }
         return sb.toString();
+    }
+    private String parseDateToString(LocalDate dateTimeNow) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return dateTimeNow.format(formatter);
+    }
+
+    private String parseTimeToString(LocalTime dateTimeNow) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        return dateTimeNow.format(formatter);
     }
 }
 

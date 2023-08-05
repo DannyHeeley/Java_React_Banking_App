@@ -6,10 +6,10 @@ import com.main.app.database.DatabaseService;
 import java.time.LocalDate;
 
 public class Person implements DatabaseService {
-    private int personId;
+    private final int personId;
     private String firstName;
     private String lastName;
-    private LocalDate dateOfBirth;
+    private final LocalDate dateOfBirth;
     private String email;
 
     public Person(
@@ -28,10 +28,6 @@ public class Person implements DatabaseService {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public void setDateOfBirth(LocalDate dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
     }
 
     public void setEmail(String email) {
@@ -58,7 +54,4 @@ public class Person implements DatabaseService {
         return personId;
     }
 
-    public void setPersonId(int personId) {
-        this.personId = personId;
-    }
 }

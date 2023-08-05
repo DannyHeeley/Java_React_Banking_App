@@ -1,5 +1,6 @@
 package com.main.test.accounts;
 
+import com.main.app.Bank;
 import com.main.app.accounts.AccountManager;
 import com.main.app.accounts.PersonalInformation;
 import com.main.app.accounts.StudentAccount;
@@ -32,6 +33,7 @@ class StudentAccountTest {
     void tearDown() {
         AccountManager.clearBankAccountList();
         customer = null;
+        Bank.getInstance().resetBank();
     }
 
     // Deposit tests:

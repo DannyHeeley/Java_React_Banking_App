@@ -1,5 +1,6 @@
-package com.main.test;
+package com.main.test.entities;
 
+import com.main.app.Bank;
 import com.main.app.accounts.AdultAccount;
 import com.main.app.accounts.PersonalInformation;
 import com.main.app.entities.Customer;
@@ -24,7 +25,7 @@ class CustomerTest {
                 "Best", "Customer", LocalDate.of(1960, 4, 28), "bestcustomer@gmail.com"
         );
         customer = new Customer(ADULT, personalInformation);
-        account1 = new AdultAccount(customer, "BestCustomer", 123456f, "gigachad123!");
+        account1 = new AdultAccount(customer, "BestCustomer", 123456f, "chad123!");
     }
 
     @AfterEach
@@ -33,6 +34,7 @@ class CustomerTest {
         customer = null;
         account1 = null;
         account2 = null;
+        Bank.getInstance().resetBank();
     }
 
     @Test
@@ -42,7 +44,7 @@ class CustomerTest {
     }
     @Test
     void addsMultipleAccountsToCustomerAccounts() {
-        account2 = new AdultAccount(customer, "BestCustomerSavings", 999999f, "gigachad123!");
+        account2 = new AdultAccount(customer, "BestCustomerSavings", 999999f, "chad123!");
         customer.addAccount(account1);
         customer.addAccount(account2);
         assertThat(customer.getAccounts()).contains(account1, account2);
