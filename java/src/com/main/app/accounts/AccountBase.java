@@ -39,7 +39,7 @@ public abstract class AccountBase implements DatabaseService {
         this.dateAccountLastUpdated = LocalDate.now();
         this.transactions = new Transactions();
         this.passwordHash = passwordHash;
-        this.accountNumber = generateAccountNumber(customer);
+        this.accountNumber = AccountManager.getInstance().generateAccountNumber(customer);
         this.accountId = DatabaseService
                 .addAccountEntryToDatabase(
                         customer,
@@ -53,7 +53,7 @@ public abstract class AccountBase implements DatabaseService {
 
     abstract void deposit(Float amount);
     public void withdraw(Float amount) {
-        handleNegativeArgument(WITHDRAWAL, amount);
+        AccountManager.getInstance().handleNegativeArgument(WITHDRAWAL, amount);
         if (amount <= getAccountBalance()) {
             AccountManager.getInstance().subtractFromAccountBalance(this, amount);
             transactions.addTransaction(this, WITHDRAWAL, amount, this.getAccountId());
@@ -86,11 +86,6 @@ public abstract class AccountBase implements DatabaseService {
         this.dateAccountLastUpdated = accountUpdated;
     }
 
-    private int generateAccountNumber(Customer customer) {
-        String customerId = String.valueOf(customer.getCustomerId());
-        String personId = String.valueOf(customer.getPersonId());
-        return parseInt(customerId + personId);
-    }
     public int getAccountNumber() {return accountNumber; }
     public String getUserName() {
         return userName;
@@ -105,26 +100,6 @@ public abstract class AccountBase implements DatabaseService {
         return transactions;
     }
 
-    public void printAccountInfo() {
-        System.out.println("ACCOUNT INFO:");
-        System.out.println("You are customer: " + getUserName());
-        System.out.println("Your account number is: " + getAccountNumber());
-        System.out.println("Account created: " + getDateTimeNowAsString());
-        System.out.println("Your Balance Is: " + getAccountBalance());
-        System.out.println("Balance last updated: " + getDateAccountLastUpdated());
-        System.out.println(getTransactions().toString());
-    }
-    public void handleNegativeArgument(TransactionType transactionType, Float amount) {
-        if (amount < 0) {
-            if (transactionType == DEPOSIT) {
-                throw new IllegalArgumentException("Deposit amount must be a positive number");
-            }
-            if (transactionType == WITHDRAWAL) {
-                throw new IllegalArgumentException("Withdrawal amount must be a positive number");
-            }
-        }
-    }
-
     public int getAccountId() {
         return accountId;
     }
@@ -133,9 +108,4 @@ public abstract class AccountBase implements DatabaseService {
         return accountType;
     }
 
-    private String getDateTimeNowAsString() {
-        LocalDateTime dateTimeNow = now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm:ss");
-        return dateTimeNow.format(formatter);
-    }
 }

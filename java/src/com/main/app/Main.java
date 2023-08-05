@@ -1,5 +1,6 @@
 package com.main.app;
 
+import com.main.app.accounts.AccountManager;
 import com.main.app.login.PasswordService;
 import com.main.app.accounts.AdultAccount;
 import com.main.app.accounts.AccountFactory;
@@ -38,7 +39,7 @@ public class Main {
         );
         testAccountAdult.deposit(500f);
         System.out.println("");
-        testAccountAdult.printAccountInfo();
+        AccountManager.getInstance().printAccountInfo(testAccountAdult);
         System.out.println("");
 
         // Demo student account
@@ -54,7 +55,7 @@ public class Main {
         );
         testAccountStudent.deposit(100f);
         System.out.println("");
-        testAccountStudent.printAccountInfo();
+        AccountManager.getInstance().printAccountInfo(testAccountStudent);
         System.out.println("");
 
         // Demo employee account

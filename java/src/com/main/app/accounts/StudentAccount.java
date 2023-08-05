@@ -29,7 +29,7 @@ public class StudentAccount extends AccountBase {
 
     @Override
     public void deposit(Float amount) {
-        handleNegativeArgument(DEPOSIT, amount);
+        AccountManager.getInstance().handleNegativeArgument(DEPOSIT, amount);
         if (getAccountBalance() + amount <= accountLimit) {
             AccountManager.getInstance().addToAccountBalance(this, amount);
             getTransactions().addTransaction(this, DEPOSIT, amount, getAccountId());
