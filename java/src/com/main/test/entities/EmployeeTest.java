@@ -1,13 +1,12 @@
-package com.main.test.transactions;
+package com.main.test.entities;
 
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class TransactionsTest {
-
+class EmployeeTest {
     @Test
-    void addTransaction() {
+    void fails() {
         assertTrue(1+1 == 10);
     }
 }

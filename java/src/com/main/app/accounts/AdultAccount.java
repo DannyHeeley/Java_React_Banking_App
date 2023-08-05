@@ -30,6 +30,7 @@ public class AdultAccount extends AccountBase {
     public void deposit(Float amount) {
         handleNegativeArgument(DEPOSIT, amount);
         addToAccountBalance(amount);
+        getTransactions().addTransaction(this, DEPOSIT, amount, getAccountId());
         setAccountUpdatedTo(LocalDate.now());
         Bank.getInstance().updateMainBankBalanceDeposit(amount);
         System.out.println("Deposit of " + amount + " was successful! Your new balance is " + getAccountBalance());

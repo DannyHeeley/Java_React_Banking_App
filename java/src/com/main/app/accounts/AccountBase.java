@@ -56,27 +56,25 @@ public abstract class AccountBase implements DatabaseService {
         handleNegativeArgument(WITHDRAWAL, amount);
         if (amount <= getAccountBalance()) {
             subtractFromAccountBalance(amount);
-            System.out.println("Withdrawal of " + amount + " Successful, your currentBalance is: " + getAccountBalance());
+            transactions.addTransaction(this, WITHDRAWAL, amount, this.getAccountId());
             setAccountUpdatedTo(LocalDate.now());
+            System.out.println("Withdrawal of " + amount + " Successful, your currentBalance is: " + getAccountBalance());
         } else {
             throw new IllegalArgumentException("Withdrawal unsuccessful, your do not have enough currentBalance to cover the requested withdrawal amount");
         }
     }
-
 
     public Float getAccountBalance() {
         return currentBalance;
     }
     public void addToAccountBalance(Float amount) {
         this.currentBalance += amount;
-        transactions.addTransaction(this, DEPOSIT, amount, accountId);
         if (amount > 0) {
             DatabaseService.updateAccountBalanceInDatabase(this, currentBalance);
         }
     }
     public void subtractFromAccountBalance(Float amount) {
         this.currentBalance -= amount;
-        transactions.addTransaction(this, WITHDRAWAL, amount, this.getAccountId());
         if (amount > 0) {
             DatabaseService.updateAccountBalanceInDatabase(this, currentBalance);
         }
@@ -106,7 +104,7 @@ public abstract class AccountBase implements DatabaseService {
     public LocalDate getDateAccountCreated() {
         return dateCreated;
     }
-    public Transactions getAccountTransactionHistory() {
+    public Transactions getTransactions() {
         return transactions;
     }
 
@@ -117,7 +115,7 @@ public abstract class AccountBase implements DatabaseService {
         System.out.println("Account created: " + getDateTimeNowAsString());
         System.out.println("Your Balance Is: " + getAccountBalance());
         System.out.println("Balance last updated: " + getDateAccountLastUpdated());
-        System.out.println(getAccountTransactionHistory().toString());
+        System.out.println(getTransactions().toString());
     }
     public void handleNegativeArgument(TransactionType transactionType, Float amount) {
         if (amount < 0) {
