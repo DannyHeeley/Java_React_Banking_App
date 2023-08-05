@@ -31,7 +31,7 @@ public class StudentAccount extends AccountBase {
     public void deposit(Float amount) {
         handleNegativeArgument(DEPOSIT, amount);
         if (getAccountBalance() + amount <= accountLimit) {
-            addToAccountBalance(amount);
+            AccountManager.getInstance().addToAccountBalance(this, amount);
             getTransactions().addTransaction(this, DEPOSIT, amount, getAccountId());
             setAccountUpdatedTo(LocalDate.now());
             Bank.getInstance().updateMainBankBalanceDeposit(amount);

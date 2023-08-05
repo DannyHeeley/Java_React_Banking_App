@@ -14,7 +14,7 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-//Should not be an interface but an abstract or concrete class
+//Should not be an interface but several DAO's responsible for only CRUD operations
 
 public interface DatabaseService {
 

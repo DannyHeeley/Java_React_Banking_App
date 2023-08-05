@@ -17,12 +17,12 @@ import static java.time.LocalDateTime.now;
 public abstract class AccountBase implements DatabaseService {
     private Float currentBalance;
     private String userName;
-    private int accountNumber;
+    private final int accountNumber;
     private final LocalDate dateCreated;
     private LocalDate dateAccountLastUpdated;
     private String passwordHash;
     private final Transactions transactions;
-    private int accountId = -1;
+    private final int accountId;
     private AccountType accountType;
 
     AccountBase(
@@ -39,7 +39,6 @@ public abstract class AccountBase implements DatabaseService {
         this.dateAccountLastUpdated = LocalDate.now();
         this.transactions = new Transactions();
         this.passwordHash = passwordHash;
-        transactions.addTransaction(this, DEPOSIT, this.currentBalance, this.accountId);
         this.accountNumber = generateAccountNumber(customer);
         this.accountId = DatabaseService
                 .addAccountEntryToDatabase(
@@ -50,14 +49,13 @@ public abstract class AccountBase implements DatabaseService {
                         LocalDate.now(),
                         passwordHash
                 );
-        AccountManager.getInstance().addAccount(this);
     }
 
     abstract void deposit(Float amount);
     public void withdraw(Float amount) {
         handleNegativeArgument(WITHDRAWAL, amount);
         if (amount <= getAccountBalance()) {
-            subtractFromAccountBalance(amount);
+            AccountManager.getInstance().subtractFromAccountBalance(this, amount);
             transactions.addTransaction(this, WITHDRAWAL, amount, this.getAccountId());
             setAccountUpdatedTo(LocalDate.now());
             System.out.println("Withdrawal of " + amount + " Successful, your currentBalance is: " + getAccountBalance());
@@ -69,17 +67,9 @@ public abstract class AccountBase implements DatabaseService {
     public Float getAccountBalance() {
         return currentBalance;
     }
-    public void addToAccountBalance(Float amount) {
-        this.currentBalance += amount;
-        if (amount > 0) {
-            DatabaseService.updateAccountBalanceInDatabase(this, currentBalance);
-        }
-    }
-    public void subtractFromAccountBalance(Float amount) {
-        this.currentBalance -= amount;
-        if (amount > 0) {
-            DatabaseService.updateAccountBalanceInDatabase(this, currentBalance);
-        }
+
+    public void setAccountBalance(Float newBalance) {
+        this.currentBalance = newBalance;
     }
 
     public String getAccountPasswordHash() {
@@ -141,10 +131,6 @@ public abstract class AccountBase implements DatabaseService {
 
     public AccountType getAccountType() {
         return accountType;
-    }
-
-    public void setAccountType(AccountType accountType) {
-        this.accountType = accountType;
     }
 
     private String getDateTimeNowAsString() {

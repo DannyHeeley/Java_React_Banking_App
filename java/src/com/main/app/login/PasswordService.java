@@ -10,6 +10,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class PasswordService {
+    private PasswordService() {
+
+    }
 
     static Pattern passwordPattern = Pattern.compile("^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?]).{8,}$");
 
@@ -31,9 +34,6 @@ public class PasswordService {
     private static boolean verifyPassword(String hashedPassword, char[] inputPassword) {
         Argon2 argon2 = Argon2Factory.create(Argon2Types.ARGON2id);
         return argon2.verify(hashedPassword, inputPassword);
-    }
-    public static void setPasswordHashForAccount(AccountBase bankAccountToUpdate, String newAccountPassword) {
-        bankAccountToUpdate.setAccountPasswordHash(hashPassword(newAccountPassword));
     }
 
     private static void enforcePasswordRules(String password) {

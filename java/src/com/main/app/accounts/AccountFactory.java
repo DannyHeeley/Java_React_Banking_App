@@ -33,6 +33,7 @@ public class AccountFactory extends FactoryBase implements DatabaseService {
         }
         try {
             customer = createNewCustomer(accountType, firstName, lastName, dateOfBirth, email);
+            customer.addAccount(account);
             account = handleCreatingAccountForType(
                     accountType,
                     userName,
@@ -40,8 +41,8 @@ public class AccountFactory extends FactoryBase implements DatabaseService {
                     passwordHash,
                     customer
             );
+            AccountManager.getInstance().addAccount(account);
             Bank.getInstance().updateMainBankBalanceDeposit(initialDeposit);
-            customer.addAccount(account);
         } catch (AccountCreationException e) {
             System.out.println("Error Creating Acccount: " + e.getMessage());
         }

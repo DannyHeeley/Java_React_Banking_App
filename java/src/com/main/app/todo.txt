@@ -6,10 +6,18 @@ Implement transfers
 Write tests for transfers
 Implement login
 Write tests for login
-Refactor DatabaseService to an abstract or concrete class
+Implement DatabaseService as separate DAOs for each entity.
+Expand testing for new DAOs.
 Write tests for database connection and service
 Create SQL table for bank/branch and implement update wiring
 Implement loans
+Implement logging throughout application.
+Consider implementing a service layer to handle business logic.
+Implement more detailed error handling.
+Adding a user interface.
+Implement an audit trail for transactions.
+Implement more advanced security features.
+
 
 Do not use arraylist
 
