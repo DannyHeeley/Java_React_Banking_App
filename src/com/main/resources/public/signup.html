@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Banking App</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+
+<body>
+<div class="container">
+
+  <!-- Top selector menu -->
+  <div class="selector-menu">
+    <a href="/home.html"><i class="fas fa-university fa-2x" title="Dashboard"></i></a>
+    <a href="/login.html"><i class="fas fa-search-dollar fa-2x" title="Transactions"></i></a>
+    <a href="/login.html"><i class="fas fa-paper-plane fa-2x" title="Transfer Money"></i></a>
+    <a href="/login.html"><i class="fas fa-user fa-2x" title="Profile"></i></a>
+  </div>
+
+  <!-- Header -->
+  <div class="header-img">
+    <div class="balance">
+      <h2>Sign Up</h2>
+    </div>
+  </div>
+
+  <!-- Account creation form -->
+  <div>
+    <form action="/signup" method="post">
+      <input type="radio" id="Adult Account" name="accountType" value="ADULT">Adult Account
+      <input type="radio" id="Student Account" name="accountType" value="STUDENT">Student Account
+      <input type="text" name="userName" placeholder="Username">
+      <input type="password" name="password" placeholder="Password">
+      <input type="text" name="initialDeposit" placeholder="Initial Deposit">
+      <input type="text" name="firstName" placeholder="First Name">
+      <input type="text" name="lastName" placeholder="Last Name">
+      <input type="date" name="dateOfBirth" placeholder="Date of Birth">
+      <input type="email" name="email" placeholder="Email">
+      <input type="submit" value="Create Account">
+    </form>
+  </div>
+</div>
+</body>
+
+</html>

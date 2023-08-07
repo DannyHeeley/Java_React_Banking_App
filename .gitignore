@@ -1,3 +1,12 @@
+/bin/
+/out/
+.gradle
+build
+.classpath
+.settings
+.project
+*.iws
+*.ipr
 .DS_Store
 *~
 .*sw[a-z]
