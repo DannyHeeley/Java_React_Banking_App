@@ -1,12 +1,11 @@
 package com.main.app.entities;
 
 import com.main.app.accounts.PersonalInformation;
-import com.main.app.database.DatabaseService;
 
 import java.time.LocalDate;
 
-public class Person implements DatabaseService {
-    private final int personId;
+public class Person {
+    private int personId;
     private String firstName;
     private String lastName;
     private final LocalDate dateOfBirth;
@@ -19,7 +18,7 @@ public class Person implements DatabaseService {
         this.lastName = personalInformation.getLastName();
         this.dateOfBirth = personalInformation.getDateOfBirth();
         this.email = personalInformation.getEmail();
-        this.personId = DatabaseService.addPersonEntryToDatabase(firstName, lastName, dateOfBirth, email);
+        this.personId = -1;
     }
 
     public void setFirstName(String firstName) {
@@ -52,6 +51,9 @@ public class Person implements DatabaseService {
 
     public int getPersonId() {
         return personId;
+    }
+    public void setPersonId(int personId) {
+        this.personId = personId;
     }
 
 }

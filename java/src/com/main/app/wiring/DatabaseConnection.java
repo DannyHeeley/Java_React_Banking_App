@@ -1,4 +1,4 @@
-package com.main.app.database;
+package com.main.app.wiring;
 
 import java.sql.*;
 
@@ -72,7 +72,7 @@ public class DatabaseConnection {
             statement = null;
         }
     }
-    private void closeConnection() {
+    static void closeConnection(Connection conn) {
         if (conn != null) {
             try {
                 conn.close();

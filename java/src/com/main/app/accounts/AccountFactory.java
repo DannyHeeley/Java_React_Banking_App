@@ -1,30 +1,35 @@
 package com.main.app.accounts;
 
-import com.main.app.Bank;
 import com.main.app.FactoryBase;
-import com.main.app.database.DatabaseService;
 import com.main.app.entities.Customer;
+import com.main.app.entities.Person;
+import com.main.app.wiring.CustomerDAO;
+import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
 import java.util.Objects;
 
-import static com.main.app.accounts.AccountType.*;
-import static com.main.app.login.PasswordService.hashPassword;
+import static com.main.app.accounts.AccountType.ADULT;
+import static com.main.app.accounts.AccountType.STUDENT;
+import static com.main.app.accounts.PasswordService.hashPassword;
+import static com.main.app.entities.EntityType.CUSTOMER;
 
-public class AccountFactory extends FactoryBase implements DatabaseService {
+public class AccountFactory extends FactoryBase {
 
     private AccountFactory() {
     }
 
-    public static AccountBase createAccount(
+    public static AccountBase createAccountNewUser(
             AccountType accountType, String userName,
             String newAccountPassword, Float initialDeposit,
             String firstName, String lastName,
             LocalDate dateOfBirth, String email
     ) {
-        AccountBase account = null;
+        PersonalInformation pi = new PersonalInformation(firstName, lastName, dateOfBirth, email);
         String passwordHash;
+        AccountBase account = null;
         Customer customer;
+        Person person;
         try {
             passwordHash = hashPassword(newAccountPassword);
         } catch (IllegalArgumentException e) {
@@ -32,62 +37,72 @@ public class AccountFactory extends FactoryBase implements DatabaseService {
             throw(e);
         }
         try {
-            customer = createNewCustomer(accountType, firstName, lastName, dateOfBirth, email);
-            customer.addAccount(account);
-            account = handleCreatingAccountForType(
-                    accountType,
-                    userName,
-                    initialDeposit,
-                    passwordHash,
-                    customer
-            );
-            AccountManager.getInstance().addAccount(account);
-            Bank.getInstance().updateMainBankBalanceDeposit(initialDeposit);
+            // Create person, set id, and save to database
+            person = createNewPerson(pi);
+            // Create a customer, set id's,  save to database
+            customer = createNewCustomer(pi, person);
+            // Create account, set id's, save to database
+            account = createNewAccount(accountType, userName, initialDeposit, passwordHash, customer, person);
         } catch (AccountCreationException e) {
             System.out.println("Error Creating Acccount: " + e.getMessage());
         }
         return account;
     }
 
-    private static Customer createNewCustomer(
-            AccountType accountType, String firstName,
-            String lastName, LocalDate dateOfBirth, String email
-    ) {
-        PersonalInformation personalInformation = new PersonalInformation(
-                firstName, lastName, dateOfBirth, email
+    @NotNull
+    private static AccountBase createNewAccount(
+            AccountType accountType, String userName, Float initialDeposit,
+            String passwordHash, Customer customer,
+            Person person) throws AccountCreationException {
+        AccountBase account = handleCreatingAccountForType(
+                accountType,
+                userName,
+                initialDeposit,
+                passwordHash
         );
-        return new Customer(accountType, personalInformation);
+        // Add account to the customer
+        customer.addAccount(account);
+        AccountManager.getInstance().addAccount(customer, account, accountType, initialDeposit, passwordHash, person);
+        return account;
+    }
+
+    private static Customer createNewCustomer(PersonalInformation pi, Person person) {
+        CustomerDAO customerDAO = new CustomerDAO();
+        Customer customer = new Customer(CUSTOMER, pi);
+        customer.setCustomerId(customerDAO.saveCustomer(CUSTOMER, person));
+        customer.setPersonId(person.getPersonId());
+        return customer;
     }
 
     private static AccountBase handleCreatingAccountForType(
             AccountType accountType, String userName, Float initialDeposit,
-            String newAccountPassword, Customer customer
+            String newAccountPassword
     ) throws AccountCreationException {
         if (Objects.equals(accountType, STUDENT)) {
-            return studentAccount(customer, userName, initialDeposit, newAccountPassword);
+            return studentAccount(userName, initialDeposit, newAccountPassword);
         } else if (Objects.equals(accountType, ADULT)) {
-            return adultAccount(customer, userName, initialDeposit, newAccountPassword);
+            return adultAccount(userName, initialDeposit, newAccountPassword);
         }
         throw new AccountCreationException("Account type must be valid");
     }
 
     private static AdultAccount adultAccount(
-            Customer customer, String userName, Float initialDeposit, String newAccountPassword
+            String userName, Float initialDeposit, String newAccountPassword
     ) throws AccountCreationException {
         throwErrorIfAccountExists(userName);
         throwErrorIfDepositIsMinus(initialDeposit);
         return new AdultAccount(
-                customer, userName, initialDeposit, newAccountPassword
+                userName, initialDeposit, newAccountPassword
         );
     }
 
     private static StudentAccount studentAccount(
-            Customer customer, String userName, Float initialDeposit, String newAccountPassword
+            String userName, Float initialDeposit, String newAccountPassword
     ) throws AccountCreationException {
         FactoryBase.throwErrorIfAccountExists(userName);
         FactoryBase.throwErrorIfDepositIsMinus(initialDeposit);
         return new StudentAccount(
-                customer, userName, initialDeposit, newAccountPassword
+                userName, initialDeposit, newAccountPassword
         );
     }
 }

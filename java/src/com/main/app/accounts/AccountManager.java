@@ -1,9 +1,12 @@
 package com.main.app.accounts;
 
-import com.main.app.database.DatabaseService;
+import com.main.app.Bank;
 import com.main.app.entities.Customer;
+import com.main.app.entities.Person;
 import com.main.app.transactions.TransactionType;
+import com.main.app.wiring.AccountDAO;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -41,25 +44,44 @@ public class AccountManager {
                 });
         // Get account from database, create a new account populated with the arguments
     }
-    public AccountBase addAccount(AccountBase account) {
-        account.getTransactions().addTransaction(account, DEPOSIT, account.getAccountBalance(), account.getAccountId());
+
+    public AccountBase addAccount(Customer customer, AccountBase account, AccountType accountType, Float initialDeposit, String passwordHash, Person person) {
+        AccountDAO accountDAO = new AccountDAO();
+        account.setPersonId(person.getPersonId());
+        account.setCustomerId(customer.getCustomerId());
+        account.setAccountNumber(AccountManager.getInstance().generateAccountNumber(customer, person));
+        account.setAccountId(accountDAO.saveNew(
+                customer,
+                account.getAccountNumber(),
+                accountType,
+                account.getAccountBalance(),
+                LocalDate.now(),
+                passwordHash
+        ));
+        account.deposit(initialDeposit);
         bankAccounts.add(account);
+        Bank.getInstance().updateMainBankBalanceDeposit(initialDeposit);
         return account;
     }
+
     public void addToAccountBalance(AccountBase account, Float amount) {
-        Float accBalance = account.getAccountBalance();
-        accBalance += amount;
-        account.setAccountBalance(accBalance);
         if (amount > 0) {
-            DatabaseService.updateAccountBalanceInDatabase(account, account.getAccountBalance());
+            Float accBalance = account.getAccountBalance();
+            accBalance += amount;
+            account.setAccountBalance(accBalance);
+            AccountDAO.updateAccountBalanceInDatabase(account, account.getAccountBalance());
+            account.getTransactions().addTransaction(DEPOSIT, amount, account.getAccountId(), account);
+            Bank.getInstance().updateMainBankBalanceDeposit(amount);
         }
     }
     public void subtractFromAccountBalance(AccountBase account, Float amount) {
+        if (amount > 0) {
         Float accBalance = account.getAccountBalance();
         accBalance -= amount;
         account.setAccountBalance(accBalance);
-        if (amount > 0) {
-            DatabaseService.updateAccountBalanceInDatabase(account, account.getAccountBalance());
+        AccountDAO.updateAccountBalanceInDatabase(account, account.getAccountBalance());
+        account.getTransactions().addTransaction(WITHDRAWAL, amount, account.getAccountId(), account);
+        Bank.getInstance().updateMainBankBalanceDeposit(amount);
         }
     }
     public boolean accountExists(String userName) {
@@ -74,9 +96,9 @@ public class AccountManager {
     private boolean userNameMatchesAccount(String userName, AccountBase account) {
         return Objects.equals(account.getUserName(), userName);
     }
-    public int generateAccountNumber(Customer customer) {
+    public int generateAccountNumber(Customer customer, Person person) {
         String customerId = String.valueOf(customer.getCustomerId());
-        String personId = String.valueOf(customer.getPersonId());
+        String personId = String.valueOf(person.getPersonId());
         return parseInt(customerId + personId);
     }
     public void handleNegativeArgument(TransactionType transactionType, Float amount) {

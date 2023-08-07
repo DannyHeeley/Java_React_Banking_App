@@ -1,7 +1,6 @@
 package com.main.app.accounts;
 
 import com.main.app.Bank;
-import com.main.app.entities.Customer;
 
 import java.time.LocalDate;
 
@@ -12,17 +11,15 @@ public class StudentAccount extends AccountBase {
     private final Integer accountLimit;
 
     public StudentAccount(
-            Customer customer, String userName,
+            String userName,
             Float initialDeposit,
             String newAccountPassword
     ) {
         super(
                 userName,
-                initialDeposit,
                 STUDENT,
-                newAccountPassword,
-                customer
-                );
+                newAccountPassword
+        );
         this.accountLimit = 5000;
         System.out.println("Bank Account created successfully for userName: " + userName + " - initial deposit of: " + initialDeposit + ".");
     }
@@ -32,7 +29,6 @@ public class StudentAccount extends AccountBase {
         AccountManager.getInstance().handleNegativeArgument(DEPOSIT, amount);
         if (getAccountBalance() + amount <= accountLimit) {
             AccountManager.getInstance().addToAccountBalance(this, amount);
-            getTransactions().addTransaction(this, DEPOSIT, amount, getAccountId());
             setAccountUpdatedTo(LocalDate.now());
             Bank.getInstance().updateMainBankBalanceDeposit(amount);
             System.out.println("Deposit of " + amount + " was successful! Your new balance is " + getAccountBalance());

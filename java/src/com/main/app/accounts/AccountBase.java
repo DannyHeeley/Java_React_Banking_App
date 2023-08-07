@@ -1,62 +1,49 @@
 package com.main.app.accounts;
 
-import com.main.app.database.DatabaseService;
-import com.main.app.entities.Customer;
 import com.main.app.transactions.Transactions;
-import com.main.app.transactions.TransactionType;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
-import static com.main.app.transactions.TransactionType.DEPOSIT;
 import static com.main.app.transactions.TransactionType.WITHDRAWAL;
-import static java.lang.Integer.parseInt;
-import static java.time.LocalDateTime.now;
 
-public abstract class AccountBase implements DatabaseService {
+public abstract class AccountBase {
+
+    private AccountType accountType;
     private Float currentBalance;
     private String userName;
-    private final int accountNumber;
     private final LocalDate dateCreated;
     private LocalDate dateAccountLastUpdated;
     private String passwordHash;
     private final Transactions transactions;
-    private final int accountId;
-    private AccountType accountType;
+    private int accountId;
+    private int customerId;
+    private int accountNumber;
+    private int personId;
+
 
     AccountBase(
             String userName,
-            Float currentBalance,
             AccountType accountType,
-            String passwordHash,
-            Customer customer
+            String passwordHash
     ) {
         this.userName = userName;
         this.accountType = accountType;
-        this.currentBalance = currentBalance;
+        this.currentBalance = 0f;
         this.dateCreated = LocalDate.now();
         this.dateAccountLastUpdated = LocalDate.now();
         this.transactions = new Transactions();
         this.passwordHash = passwordHash;
-        this.accountNumber = AccountManager.getInstance().generateAccountNumber(customer);
-        this.accountId = DatabaseService
-                .addAccountEntryToDatabase(
-                        customer,
-                        accountNumber,
-                        accountType,
-                        currentBalance,
-                        LocalDate.now(),
-                        passwordHash
-                );
+        this.accountNumber = -1;
+        this.customerId = -1;
+        this.accountId = -1;
+        this.personId = -1;
     }
 
-    abstract void deposit(Float amount);
+    public abstract void deposit(Float amount);
     public void withdraw(Float amount) {
         AccountManager.getInstance().handleNegativeArgument(WITHDRAWAL, amount);
         if (amount <= getAccountBalance()) {
             AccountManager.getInstance().subtractFromAccountBalance(this, amount);
-            transactions.addTransaction(this, WITHDRAWAL, amount, this.getAccountId());
             setAccountUpdatedTo(LocalDate.now());
             System.out.println("Withdrawal of " + amount + " Successful, your currentBalance is: " + getAccountBalance());
         } else {
@@ -108,4 +95,22 @@ public abstract class AccountBase implements DatabaseService {
         return accountType;
     }
 
+    public int getCustomerId() {
+        return customerId;
+    }
+    public void setCustomerId(int newCustomerId) {
+        this.customerId = newCustomerId;
+    }
+
+    public void setAccountId(int newAccountId) {
+        this.accountId = newAccountId;
+    }
+
+    public void setAccountNumber(int newAccountNumber) {
+        this.accountNumber = newAccountNumber;
+    }
+
+    public void setPersonId(int newPersonId) {
+        this.personId = newPersonId;
+    }
 }

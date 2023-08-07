@@ -1,11 +1,9 @@
-package com.main.app.login;
+package com.main.app.accounts;
 
-import com.main.app.accounts.AccountBase;
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
 import de.mkammerer.argon2.Argon2Factory.Argon2Types;
 
-import java.util.concurrent.RejectedExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

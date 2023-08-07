@@ -1,30 +1,31 @@
 package com.main.app.entities;
 
 import com.main.app.accounts.AccountBase;
-import com.main.app.accounts.AccountType;
 import com.main.app.accounts.PersonalInformation;
-import com.main.app.database.DatabaseService;
 
 import java.util.ArrayList;
 
 public class Customer extends Person {
     private ArrayList<AccountBase> accounts;
-    private AccountType accountType;
-    private final int customerId;
+    private EntityType customerType;
+    private int customerId;
 
-    public Customer(AccountType accountType, PersonalInformation personalInformation) {
+    private int personId;
+
+    public Customer(EntityType customerType, PersonalInformation personalInformation) {
         super(personalInformation);
-        this.accountType = accountType;
+        this.customerType = customerType;
         this.accounts = new ArrayList<>();
-        this.customerId = DatabaseService.addCustomerEntryToDatabase(accountType, this);
+        this.customerId = -1;
+        this.personId = -1;
     }
 
-    public AccountType getAccountType() {
-        return accountType;
+    public EntityType getAccountType() {
+        return customerType;
     }
 
-    public void setAccountType(AccountType accountType) {
-        this.accountType = accountType;
+    public void setAccountType(EntityType accountType) {
+        this.customerType = accountType;
     }
 
     public ArrayList<AccountBase> getAccounts() {
@@ -38,5 +39,17 @@ public class Customer extends Person {
     public int getCustomerId() {
         return customerId;
     }
+    public void setCustomerId(int newCustomerId) {
+        this.customerId = newCustomerId;
+    }
 
+    @Override
+    public int getPersonId() {
+        return personId;
+    }
+
+    @Override
+    public void setPersonId(int personId) {
+        this.personId = personId;
+    }
 }

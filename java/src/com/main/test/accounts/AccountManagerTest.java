@@ -1,7 +1,10 @@
 package com.main.test.accounts;
 
 import com.main.app.Bank;
-import com.main.app.accounts.*;
+import com.main.app.accounts.AccountBase;
+import com.main.app.accounts.AccountFactory;
+import com.main.app.accounts.AccountManager;
+import com.main.app.accounts.AdultAccount;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,17 +52,17 @@ public class AccountManagerTest {
     void getsAllBankAccounts() {
         ArrayList<AccountBase> theseBankAccounts = AccountManager.getInstance().getBankAccounts();
 
-        AccountBase account1 = AccountFactory.createAccount(
+        AccountBase account1 = AccountFactory.createAccountNewUser(
                 ADULT, userNameAdult, CORRECT_PASSWORD, initialDeposit, firstName, lastName, dateOfBirth, email
         );
         assertThat(theseBankAccounts).containsExactly(account1);
 
-        AccountBase account2 = AccountFactory.createAccount(
+        AccountBase account2 = AccountFactory.createAccountNewUser(
                 STUDENT, userNameStudent, CORRECT_PASSWORD, 0f, firstName, lastName, dateOfBirth, email
         );
         assertThat(theseBankAccounts).containsExactly(account1, account2);
 
-        AccountBase account3 = AccountFactory.createAccount(
+        AccountBase account3 = AccountFactory.createAccountNewUser(
                 STUDENT, "Another Student", CORRECT_PASSWORD, 0f, firstName, lastName, dateOfBirth, email
         );
         assertThat(theseBankAccounts).containsExactly(account1, account2, account3);
@@ -67,7 +70,7 @@ public class AccountManagerTest {
 
     @Test
     void accountsHasOneAdultAccount() {
-        AdultAccount account = (AdultAccount) AccountFactory.createAccount(
+        AdultAccount account = (AdultAccount) AccountFactory.createAccountNewUser(
                 ADULT, userNameAdult, CORRECT_PASSWORD, initialDeposit, firstName, lastName, dateOfBirth, email
         );
         assertThat(bankAccounts).containsOnlyOnce(account);
@@ -75,10 +78,10 @@ public class AccountManagerTest {
 
     @Test
     void duplicateAdultAccountIsNotAddedToAccounts() {
-        AdultAccount account1 = (AdultAccount) AccountFactory.createAccount(
+        AdultAccount account1 = (AdultAccount) AccountFactory.createAccountNewUser(
                 ADULT, userNameAdult, CORRECT_PASSWORD, initialDeposit, firstName, lastName, dateOfBirth, email
         );
-        AccountFactory.createAccount(
+        AccountFactory.createAccountNewUser(
                 ADULT, userNameAdult, CORRECT_PASSWORD, initialDeposit, firstName, lastName, dateOfBirth, email
         );
         assertThat(bankAccounts).containsOnly(account1);
@@ -86,7 +89,7 @@ public class AccountManagerTest {
 
     @Test
     void accountsHasOneStudentAccount() {
-        AccountBase account = AccountFactory.createAccount(
+        AccountBase account = AccountFactory.createAccountNewUser(
                 STUDENT, userNameStudent, CORRECT_PASSWORD, initialDeposit, firstName, lastName, dateOfBirth, email
         );
         assertThat(bankAccounts).containsOnlyOnce(account);
@@ -94,10 +97,10 @@ public class AccountManagerTest {
 
     @Test
     void duplicateStudentAccountIsNotAddedToAccounts() {
-        AccountBase account1 = AccountFactory.createAccount(
+        AccountBase account1 = AccountFactory.createAccountNewUser(
                 STUDENT, userNameStudent, CORRECT_PASSWORD, initialDeposit, firstName, lastName, dateOfBirth, email
         );
-        AccountFactory.createAccount(
+        AccountFactory.createAccountNewUser(
                 STUDENT, userNameStudent, CORRECT_PASSWORD, initialDeposit, firstName, lastName, dateOfBirth, email
         );
         assertThat(bankAccounts).containsOnly(account1);
@@ -105,10 +108,10 @@ public class AccountManagerTest {
 
     @Test
     void returnsCorrectAccount() {
-        AccountBase account1 = AccountFactory.createAccount(
+        AccountBase account1 = AccountFactory.createAccountNewUser(
                 ADULT, userNameAdult, CORRECT_PASSWORD, initialDeposit, firstName, lastName, dateOfBirth, email
         );
-        AccountBase account2 = AccountFactory.createAccount(
+        AccountBase account2 = AccountFactory.createAccountNewUser(
                 STUDENT, userNameStudent, CORRECT_PASSWORD, 150f, firstName, lastName, dateOfBirth, email
         );
         assertThat(bankAccounts).containsOnlyOnce(account1);
@@ -118,10 +121,10 @@ public class AccountManagerTest {
 
     @Test
     void trueIfAccountExists() {
-        AccountFactory.createAccount(
+        AccountFactory.createAccountNewUser(
                 ADULT, userNameAdult, CORRECT_PASSWORD, initialDeposit, firstName, lastName, dateOfBirth, email
         );
-        AccountFactory.createAccount(
+        AccountFactory.createAccountNewUser(
                 STUDENT, userNameStudent, CORRECT_PASSWORD, initialDeposit, firstName, lastName, dateOfBirth, email
         );
         assertTrue(AccountManager.getInstance().accountExists(userNameAdult));
@@ -130,10 +133,10 @@ public class AccountManagerTest {
 
     @Test
     void falseIfAccountExists() {
-        AccountFactory.createAccount(
+        AccountFactory.createAccountNewUser(
                 ADULT, userNameAdult, CORRECT_PASSWORD, initialDeposit, firstName, lastName, dateOfBirth, email
         );
-        AccountFactory.createAccount(
+        AccountFactory.createAccountNewUser(
                 STUDENT, userNameStudent, CORRECT_PASSWORD, initialDeposit, firstName, lastName, dateOfBirth, email
         );
         assertFalse(AccountManager.getInstance().accountExists("Fizz Bar"));

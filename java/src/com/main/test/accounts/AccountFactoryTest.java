@@ -2,8 +2,8 @@ package com.main.test.accounts;
 
 import com.main.app.Bank;
 import com.main.app.accounts.AccountBase;
-import com.main.app.accounts.AccountManager;
 import com.main.app.accounts.AccountFactory;
+import com.main.app.accounts.AccountManager;
 import com.main.app.accounts.AccountType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,7 +40,7 @@ public class AccountFactoryTest {
     // Test cases for update to bank:
     @Test
     void increaseBankBalanceWithPositiveInitialDeposit() {
-        AccountFactory.createAccount(
+        AccountFactory.createAccountNewUser(
                 ADULT, userNameAdult, CORRECT_PASSWORD, 100f, firstName, lastName, dateOfBirth, email
         );
         assertThat(bank.getMainBankBalance()).isEqualTo(100f);
@@ -48,7 +48,7 @@ public class AccountFactoryTest {
 
     @Test
     void bankBalanceSameWithZeroInitialDeposit() {
-        AccountFactory.createAccount(
+        AccountFactory.createAccountNewUser(
                 ADULT, userNameAdult, CORRECT_PASSWORD, 0f, firstName, lastName, dateOfBirth, email
         );
         assertThat(bank.getMainBankBalance()).isEqualTo(0f);
@@ -56,10 +56,10 @@ public class AccountFactoryTest {
 
     @Test
     void bankBalanceSameWithNullAccount() {
-        AccountFactory.createAccount(
+        AccountFactory.createAccountNewUser(
                 ADULT, userNameAdult, CORRECT_PASSWORD, 0f, firstName, lastName, dateOfBirth, email
         );
-        AccountFactory.createAccount(
+        AccountFactory.createAccountNewUser(
                 ADULT, userNameAdult, CORRECT_PASSWORD,  1000f, firstName, lastName, dateOfBirth, email
         );
         assertThat(bank.getMainBankBalance()).isEqualTo(0f);
@@ -68,7 +68,7 @@ public class AccountFactoryTest {
     // Test cases for createNewAdultAccount:
     @Test
     void createsAdultAccount() {
-        AccountBase account = AccountFactory.createAccount(
+        AccountBase account = AccountFactory.createAccountNewUser(
                 ADULT, userNameAdult, CORRECT_PASSWORD, 0f, firstName, lastName, dateOfBirth, email
         );
         assertThat(account).isNotNull();
@@ -76,7 +76,7 @@ public class AccountFactoryTest {
     @Test
     void doesNotCreateAccountIfCreatingPasswordThrowsException() {
         assertThrows(IllegalArgumentException.class, () ->
-                AccountFactory.createAccount(
+                AccountFactory.createAccountNewUser(
                 AccountType.ADULT, "NotCreated", "password",
                 0f, firstName, lastName, dateOfBirth, email
                 ));
@@ -86,7 +86,7 @@ public class AccountFactoryTest {
     @Test
     void adultAccountWithDepositHasBalance() {
         Float initialDeposit = 100f;
-        AccountBase account = AccountFactory.createAccount(
+        AccountBase account = AccountFactory.createAccountNewUser(
                 ADULT, userNameAdult, CORRECT_PASSWORD, initialDeposit, firstName, lastName, dateOfBirth, email
         );
         assertThat(account.getAccountBalance()).isEqualTo(initialDeposit);
@@ -95,7 +95,7 @@ public class AccountFactoryTest {
     @Test
     void adultAccountWithZeroDepositHasZeroBalance() {
         Float initialDeposit = 0f;
-        AccountBase account = AccountFactory.createAccount(
+        AccountBase account = AccountFactory.createAccountNewUser(
                 ADULT, userNameAdult, CORRECT_PASSWORD, initialDeposit, firstName, lastName, dateOfBirth, email
         );
         assertThat(account.getAccountBalance()).isEqualTo(initialDeposit);
@@ -104,7 +104,7 @@ public class AccountFactoryTest {
     @Test
     void cannotCreateAdultAccountWithNegativeInitialDeposit() {
         Float initialDeposit = -1000f;
-        AccountBase account = AccountFactory.createAccount(
+        AccountBase account = AccountFactory.createAccountNewUser(
                 ADULT, userNameAdult, CORRECT_PASSWORD, initialDeposit, firstName, lastName, dateOfBirth, email
         );
         assertThat(account).isNull();
@@ -112,30 +112,30 @@ public class AccountFactoryTest {
 
     @Test
     void exceptionHandledIfAdultAccountExistsWithSameUserName() {
-        AccountFactory.createAccount(
+        AccountFactory.createAccountNewUser(
                 ADULT, userNameAdult, CORRECT_PASSWORD, 0f, firstName, lastName, dateOfBirth, email
         );
-        assertDoesNotThrow(() -> AccountFactory.createAccount(
+        assertDoesNotThrow(() -> AccountFactory.createAccountNewUser(
                 ADULT, userNameAdult, CORRECT_PASSWORD, 0f, firstName, lastName, dateOfBirth, email
         ));
     }
 
     @Test
     void doesNotAllowDuplicateAdultAccount() {
-        AccountBase account1 = AccountFactory.createAccount(
+        AccountBase account1 = AccountFactory.createAccountNewUser(
                 ADULT, userNameAdult, CORRECT_PASSWORD, 0f, firstName, lastName, dateOfBirth, email
         );
-        AccountFactory.createAccount(
+        AccountFactory.createAccountNewUser(
                 ADULT, userNameAdult, CORRECT_PASSWORD, 0f, firstName, lastName, dateOfBirth, email
         );
         assertThat(AccountManager.getInstance().getBankAccounts()).containsOnlyOnce(account1);
     }
     @Test
     void doesNotThrowExceptionIfAdultAccountsHaveUniqueUserNames() {
-        assertDoesNotThrow(() -> AccountFactory.createAccount(
+        assertDoesNotThrow(() -> AccountFactory.createAccountNewUser(
                 ADULT, userNameAdult, CORRECT_PASSWORD, 0f, firstName, lastName, dateOfBirth, email
         ));
-        assertDoesNotThrow(() -> AccountFactory.createAccount(
+        assertDoesNotThrow(() -> AccountFactory.createAccountNewUser(
                 ADULT, "Another Adult", CORRECT_PASSWORD, 0f, firstName, lastName, dateOfBirth, email
         ));
     }
@@ -143,7 +143,7 @@ public class AccountFactoryTest {
     // Test cases for createNewStudentAccount:
     @Test
     void createsStudentAccount() {
-        AccountBase account = AccountFactory.createAccount(
+        AccountBase account = AccountFactory.createAccountNewUser(
                 STUDENT, userNameStudent, CORRECT_PASSWORD, 0f, firstName, lastName, dateOfBirth, email
         );
         assertThat(account).isNotNull();
@@ -152,7 +152,7 @@ public class AccountFactoryTest {
     @Test
     void studentAccountWithDepositHasBalance() {
         Float initialDeposit = 100f;
-        AccountBase account = AccountFactory.createAccount(
+        AccountBase account = AccountFactory.createAccountNewUser(
                 STUDENT, userNameStudent, CORRECT_PASSWORD, initialDeposit, firstName, lastName, dateOfBirth, email
         );
         assertThat(account.getAccountBalance()).isEqualTo(initialDeposit);
@@ -161,7 +161,7 @@ public class AccountFactoryTest {
     @Test
     void studentAccountWithZeroDepositHasZeroBalance() {
         Float initialDeposit = 0f;
-        AccountBase account = AccountFactory.createAccount(
+        AccountBase account = AccountFactory.createAccountNewUser(
                 STUDENT, userNameStudent, CORRECT_PASSWORD, initialDeposit, firstName, lastName, dateOfBirth, email
         );
         assertThat(account.getAccountBalance()).isEqualTo(initialDeposit);
@@ -170,7 +170,7 @@ public class AccountFactoryTest {
     @Test
     void studentAccountNegativeInitialDepositThrowsException() {
         Float initialDeposit = -1000f;
-        AccountBase account = AccountFactory.createAccount(
+        AccountBase account = AccountFactory.createAccountNewUser(
                 STUDENT, userNameStudent, CORRECT_PASSWORD, initialDeposit, firstName, lastName, dateOfBirth, email
         );
         assertThat(account).isNull();
@@ -178,19 +178,19 @@ public class AccountFactoryTest {
 
     @Test
     void exceptionHandledIfStudentAccountExistsWithSameUserName() {
-        AccountFactory.createAccount(
+        AccountFactory.createAccountNewUser(
                 STUDENT, userNameStudent, CORRECT_PASSWORD, 0f, firstName, lastName, dateOfBirth, email
         );
-        assertDoesNotThrow(() -> AccountFactory.createAccount(
+        assertDoesNotThrow(() -> AccountFactory.createAccountNewUser(
                 STUDENT, userNameStudent, CORRECT_PASSWORD, 0f, firstName, lastName, dateOfBirth, email
         ));
     }
     @Test
     void doesNotAllowDuplicateStudentAccount() {
-        AccountBase account1 = AccountFactory.createAccount(
+        AccountBase account1 = AccountFactory.createAccountNewUser(
                 STUDENT, userNameStudent, CORRECT_PASSWORD, 0f, firstName, lastName, dateOfBirth, email
         );
-        AccountFactory.createAccount(
+        AccountFactory.createAccountNewUser(
                 STUDENT, userNameStudent, CORRECT_PASSWORD, 0f, firstName, lastName, dateOfBirth, email
         );
         assertThat(AccountManager.getInstance().getBankAccounts()).containsOnlyOnce(account1);
@@ -198,10 +198,10 @@ public class AccountFactoryTest {
 
     @Test
     void doesNotThrowExceptionIfStudentAccountsHaveUniqueUserNames() {
-        assertDoesNotThrow(() -> AccountFactory.createAccount(
+        assertDoesNotThrow(() -> AccountFactory.createAccountNewUser(
                 STUDENT, userNameStudent, CORRECT_PASSWORD, 0f, firstName, lastName, dateOfBirth, email
         ));
-        assertDoesNotThrow(() -> AccountFactory.createAccount(
+        assertDoesNotThrow(() -> AccountFactory.createAccountNewUser(
                 STUDENT, "Another Student", CORRECT_PASSWORD, 0f, firstName, lastName, dateOfBirth, email
         ));
     }

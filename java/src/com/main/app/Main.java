@@ -1,15 +1,12 @@
 package com.main.app;
 
-import com.main.app.accounts.AccountManager;
-import com.main.app.login.PasswordService;
-import com.main.app.accounts.AdultAccount;
-import com.main.app.accounts.AccountFactory;
-import com.main.app.accounts.StudentAccount;
+import com.main.app.accounts.*;
 import com.main.app.entities.EntityFactory;
 
 import java.time.LocalDate;
 
-import static com.main.app.accounts.AccountType.*;
+import static com.main.app.accounts.AccountType.ADULT;
+import static com.main.app.accounts.AccountType.STUDENT;
 import static com.main.app.entities.EntityType.ADMINISTRATOR;
 import static com.main.app.entities.EntityType.EMPLOYEE;
 
@@ -27,7 +24,7 @@ public class Main {
         String emailEmployee = "jordanbelfort@gmail.com";
 
         // Demo adult account
-        AdultAccount testAccountAdult = (AdultAccount) AccountFactory.createAccount(
+        AccountBase testAccountAdult = AccountFactory.createAccountNewUser(
                 ADULT,
                 userNameAdult,
                 "Password123!",
@@ -43,7 +40,7 @@ public class Main {
         System.out.println("");
 
         // Demo student account
-        StudentAccount testAccountStudent = (StudentAccount) AccountFactory.createAccount(
+        AccountBase testAccountStudent = AccountFactory.createAccountNewUser(
                 STUDENT,
                 userNameStudent,
                 password,

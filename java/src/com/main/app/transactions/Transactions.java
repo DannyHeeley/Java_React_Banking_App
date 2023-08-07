@@ -1,7 +1,7 @@
 package com.main.app.transactions;
 
 import com.main.app.accounts.AccountBase;
-import com.main.app.database.DatabaseService;
+import com.main.app.wiring.TransactionDAO;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -10,31 +10,35 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Transactions implements DatabaseService {
+public class Transactions {
     private final List<TransactionEntry> transactionHistory;
     public Transactions() {
         this.transactionHistory = new ArrayList<>();
     }
-    public void addTransaction(AccountBase account, TransactionType transactionType, float amount, int accountId) {
-        TransactionEntry entry = new TransactionEntry(account, transactionType, amount, accountId);
+    public void addTransaction(TransactionType transactionType, float amount, int accountId, AccountBase account) {
+        TransactionDAO transactionDAO = new TransactionDAO();
+        TransactionEntry entry = new TransactionEntry(transactionType, amount, accountId);
+        entry.setTransactionId(transactionDAO.saveNew(account.getAccountId(), transactionType, amount));
         transactionHistory.add(entry);
     }
-    private class TransactionEntry {
+
+    public List<TransactionEntry> getTransactions() {
+        return transactionHistory;
+    }
+    public class TransactionEntry {
         private final TransactionType transactionType;
         private final float amount;
         private final LocalDate transactionDate;
         private final LocalTime transactionTime;
         private final int accountId;
-        private final int transactionId;
-        private TransactionEntry(AccountBase account, TransactionType transactionType, float amount, int accountId) {
+        private int transactionId;
+        private TransactionEntry(TransactionType transactionType, float amount, int accountId) {
             this.transactionType = transactionType;
             this.amount = amount;
             this.transactionDate = LocalDate.now();
             this.transactionTime = LocalTime.now();
             this.accountId = accountId;
-            this.transactionId = DatabaseService.addTransactionEntryToDatabase(
-                    account, transactionType, amount
-            );
+            this.transactionId = -1;
         }
         private LocalDate getTransactionDate() {
             return transactionDate;
@@ -55,6 +59,9 @@ public class Transactions implements DatabaseService {
 
         public int getAccountId() {
             return accountId;
+        }
+        public void setTransactionId(int newTransactionId) {
+            this.transactionId = newTransactionId;
         }
     }
     @Override

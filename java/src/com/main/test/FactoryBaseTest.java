@@ -2,7 +2,6 @@ package com.main.test;
 
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.FactoryBasedNavigableListAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FactoryBaseTest {

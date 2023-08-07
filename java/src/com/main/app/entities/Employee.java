@@ -1,12 +1,11 @@
 package com.main.app.entities;
 
 import com.main.app.accounts.PersonalInformation;
-import com.main.app.database.DatabaseService;
-
 
 public class Employee extends Person {
     private EntityType entityType;
-    private final int employeeId;
+    private int employeeId;
+    private int personId;
 
     public Employee(
             EntityType entityType, PersonalInformation personalInformation
@@ -15,10 +14,8 @@ public class Employee extends Person {
                 personalInformation
         );
         this.entityType = entityType;
-        this.employeeId = DatabaseService.addEmployeeEntryToDatabase(
-                entityType,
-                this
-        );
+        this.employeeId = -1;
+        this.personId = -1;
     }
 
     public EntityType getPosition() {
@@ -31,5 +28,12 @@ public class Employee extends Person {
 
     public int getEmployeeId() {
         return employeeId;
+    }
+    public void setEmployeeId(int employeeId) {
+        this.employeeId = employeeId;
+    }
+
+    public void setPersonid(int newPersonId) {
+        this.personId = personId;
     }
 }
