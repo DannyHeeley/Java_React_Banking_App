@@ -14,9 +14,11 @@ public class AdultAccount extends AccountBase {
             Float initialDeposit,
             String newAccountPassword
     ) {
-        super(userName,
-              ADULT,
-              newAccountPassword
+        super(
+                userName,
+                ADULT,
+                initialDeposit,
+                newAccountPassword
               );
         System.out.println("Bank Account created successfully for customer: " + userName + " - initial deposit of: " + initialDeposit + ".");
     }
@@ -26,7 +28,7 @@ public class AdultAccount extends AccountBase {
         AccountManager.getInstance().handleNegativeArgument(DEPOSIT, amount);
         AccountManager.getInstance().addToAccountBalance(this, amount);
         setAccountUpdatedTo(LocalDate.now());
-        Bank.getInstance().updateMainBankBalanceDeposit(amount);
+        Bank.getInstance().updateBankDeposit(amount);
         System.out.println("Deposit of " + amount + " was successful! Your new balance is " + getAccountBalance());
     }
 }

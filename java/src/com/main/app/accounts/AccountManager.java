@@ -58,9 +58,10 @@ public class AccountManager {
                 LocalDate.now(),
                 passwordHash
         ));
-        account.deposit(initialDeposit);
+        customer.addAccount(account);
+        AccountDAO.updateAccountBalanceInDatabase(account, initialDeposit);
+        account.getTransactions().addTransaction(DEPOSIT, initialDeposit, account.getAccountId(), account);
         bankAccounts.add(account);
-        Bank.getInstance().updateMainBankBalanceDeposit(initialDeposit);
         return account;
     }
 
@@ -69,21 +70,22 @@ public class AccountManager {
             Float accBalance = account.getAccountBalance();
             accBalance += amount;
             account.setAccountBalance(accBalance);
-            AccountDAO.updateAccountBalanceInDatabase(account, account.getAccountBalance());
+            AccountDAO.updateAccountBalanceInDatabase(account, accBalance);
             account.getTransactions().addTransaction(DEPOSIT, amount, account.getAccountId(), account);
-            Bank.getInstance().updateMainBankBalanceDeposit(amount);
         }
     }
+
     public void subtractFromAccountBalance(AccountBase account, Float amount) {
         if (amount > 0) {
         Float accBalance = account.getAccountBalance();
         accBalance -= amount;
         account.setAccountBalance(accBalance);
-        AccountDAO.updateAccountBalanceInDatabase(account, account.getAccountBalance());
+        AccountDAO.updateAccountBalanceInDatabase(account, accBalance);
         account.getTransactions().addTransaction(WITHDRAWAL, amount, account.getAccountId(), account);
-        Bank.getInstance().updateMainBankBalanceDeposit(amount);
         }
     }
+
+
     public boolean accountExists(String userName) {
         return bankAccounts.stream().anyMatch(account -> Objects.equals(account.getUserName(), userName));
     }

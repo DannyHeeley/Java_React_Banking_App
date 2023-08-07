@@ -38,46 +38,46 @@ class BankTest {
 
     @Test
     void resetsBankBalance() {
-        bank.updateMainBankBalanceDeposit(1000f);
+        bank.updateBankDeposit(1000f);
         bank.resetBank();
         assertThat(bank.getMainBankBalance()).isEqualTo(0f);
     }
 
     @Test
     void depositIncreasesBankBalance() {
-        bank.updateMainBankBalanceDeposit(100f);
+        bank.updateBankDeposit(100f);
         assertThat(bank.getMainBankBalance()).isEqualTo(100f);
     }
 
     @Test
     void zeroDepositDoesNotChangeBankBalance() {
-        bank.updateMainBankBalanceDeposit(0f);
+        bank.updateBankDeposit(0f);
         assertThat(bank.getMainBankBalance()).isEqualTo(0f);
     }
 
     @Test
     void minusDepositThrowsException() {
-        assertThrows(RuntimeException.class, () -> bank.updateMainBankBalanceDeposit(-100f));
+        assertThrows(RuntimeException.class, () -> bank.updateBankDeposit(-100f));
     }
 
     @Test
     void withdrawalDecreasesBankBalance() {
-        bank.updateMainBankBalanceDeposit(100f);
-        bank.updateMainBankBalanceWithdrawal(50f);
+        bank.updateBankDeposit(100f);
+        bank.updateBankWithdrawal(50f);
         assertThat(bank.getMainBankBalance()).isEqualTo(50f);
     }
 
     @Test
     void zer0WithdrawalDoesNotChangeBankBalance() {
-        bank.updateMainBankBalanceDeposit(100f);
-        bank.updateMainBankBalanceWithdrawal(0f);
+        bank.updateBankDeposit(100f);
+        bank.updateBankWithdrawal(0f);
         assertThat(bank.getMainBankBalance()).isEqualTo(100f);
     }
 
     @Test
     void minusWithdrawalThrowsException() {
-        bank.updateMainBankBalanceDeposit(100f);
-        assertThrows(RuntimeException.class, () -> bank.updateMainBankBalanceWithdrawal(-100f));
+        bank.updateBankDeposit(100f);
+        assertThrows(RuntimeException.class, () -> bank.updateBankWithdrawal(-100f));
     }
 
 

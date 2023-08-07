@@ -18,6 +18,7 @@ public class StudentAccount extends AccountBase {
         super(
                 userName,
                 STUDENT,
+                initialDeposit,
                 newAccountPassword
         );
         this.accountLimit = 5000;
@@ -30,7 +31,7 @@ public class StudentAccount extends AccountBase {
         if (getAccountBalance() + amount <= accountLimit) {
             AccountManager.getInstance().addToAccountBalance(this, amount);
             setAccountUpdatedTo(LocalDate.now());
-            Bank.getInstance().updateMainBankBalanceDeposit(amount);
+            Bank.getInstance().updateBankDeposit(amount);
             System.out.println("Deposit of " + amount + " was successful! Your new balance is " + getAccountBalance());
         } else {
             throw new IllegalArgumentException("Deposit failed. Your deposit of " + amount + " would take you over your account limit of " + accountLimit);

@@ -1,5 +1,6 @@
 package com.main.app.accounts;
 
+import com.main.app.Bank;
 import com.main.app.transactions.Transactions;
 
 import java.time.LocalDate;
@@ -24,11 +25,13 @@ public abstract class AccountBase {
     AccountBase(
             String userName,
             AccountType accountType,
+            Float initialDeposit,
             String passwordHash
     ) {
         this.userName = userName;
         this.accountType = accountType;
-        this.currentBalance = 0f;
+        this.currentBalance = initialDeposit;
+        Bank.getInstance().updateBankDeposit(initialDeposit);
         this.dateCreated = LocalDate.now();
         this.dateAccountLastUpdated = LocalDate.now();
         this.transactions = new Transactions();
@@ -45,6 +48,7 @@ public abstract class AccountBase {
         if (amount <= getAccountBalance()) {
             AccountManager.getInstance().subtractFromAccountBalance(this, amount);
             setAccountUpdatedTo(LocalDate.now());
+            Bank.getInstance().updateBankWithdrawal(amount);
             System.out.println("Withdrawal of " + amount + " Successful, your currentBalance is: " + getAccountBalance());
         } else {
             throw new IllegalArgumentException("Withdrawal unsuccessful, your do not have enough currentBalance to cover the requested withdrawal amount");

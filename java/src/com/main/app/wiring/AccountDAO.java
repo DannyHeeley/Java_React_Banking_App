@@ -34,7 +34,6 @@ public class AccountDAO extends BaseDAO {
             preparedStatement.setInt(8, customer.getCustomerId());
             affectedRows = databaseConnection.handleUpdate(preparedStatement);
             sqlGeneratedAccountId = getIdFromDatabase(preparedStatement, affectedRows);
-            System.out.println(sqlGeneratedAccountId);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }

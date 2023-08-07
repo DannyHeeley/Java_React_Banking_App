@@ -37,11 +37,9 @@ public class AccountFactory extends FactoryBase {
             throw(e);
         }
         try {
-            // Create person, set id, and save to database
+            // Create person, customer, account, set id's, and save to database
             person = createNewPerson(pi);
-            // Create a customer, set id's,  save to database
             customer = createNewCustomer(pi, person);
-            // Create account, set id's, save to database
             account = createNewAccount(accountType, userName, initialDeposit, passwordHash, customer, person);
         } catch (AccountCreationException e) {
             System.out.println("Error Creating Acccount: " + e.getMessage());
@@ -60,8 +58,6 @@ public class AccountFactory extends FactoryBase {
                 initialDeposit,
                 passwordHash
         );
-        // Add account to the customer
-        customer.addAccount(account);
         AccountManager.getInstance().addAccount(customer, account, accountType, initialDeposit, passwordHash, person);
         return account;
     }

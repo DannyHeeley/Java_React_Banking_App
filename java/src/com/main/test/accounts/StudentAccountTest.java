@@ -98,13 +98,13 @@ class StudentAccountTest {
     // Password tests:
     // --not written due to changing to DB for account data
     @Test
-    void returnsAccountPasswordHash() {
+    void FAILSreturnsAccountPasswordHash() {
         assertTrue(1+1 == 10);
 
     }
 
     @Test
-    void setsAccountPasswordHash() {
+    void FAILSsetsAccountPasswordHash() {
         assertTrue(1+1 == 10);
     }
 

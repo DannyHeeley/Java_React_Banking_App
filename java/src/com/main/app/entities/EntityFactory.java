@@ -3,7 +3,6 @@ package com.main.app.entities;
 import com.main.app.FactoryBase;
 import com.main.app.accounts.PersonalInformation;
 import com.main.app.wiring.EmployeeDAO;
-import com.main.app.wiring.PersonDAO;
 
 import java.time.LocalDate;
 

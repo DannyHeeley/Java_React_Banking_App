@@ -27,12 +27,12 @@ public class Bank {
             return bankTotalBalance;
     }
 
-    public void updateMainBankBalanceDeposit(Float amount) {
+    public void updateBankDeposit(Float amount) {
         handleNegativeArgument(DEPOSIT, amount);
         bankTotalBalance += amount;
     }
 
-    public void updateMainBankBalanceWithdrawal(Float amount) {
+    public void updateBankWithdrawal(Float amount) {
         handleNegativeArgument(WITHDRAWAL, amount);
         if (bankTotalBalance >= amount) {
             bankTotalBalance -= amount;
