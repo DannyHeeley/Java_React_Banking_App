@@ -62,17 +62,22 @@ public class AccountDAO extends BaseDAO {
                 String passwordHash = resultSet.getString("PasswordHash");
                 Float balance = resultSet.getFloat("CurrentBalance");
                 String userName = resultSet.getString("UserName");
-                if ("STUDENT".equals(accountType)) {
+                if (Objects.equals(accountType, "STUDENT")) {
                     account = new StudentAccount(userName, balance, passwordHash);
                 }
-                if ("ADULT".equals(accountType)) {
+                if (Objects.equals(accountType, "ADULT")) {
                     account = new AdultAccount(userName, balance, passwordHash);
                 }
-                assert account != null;
+                if (account == null) {
+                    throw new SQLException("Account not found for ID: " + accountId);
+                }
                 account.setCustomerId(resultSet.getInt("CustomerID"));
                 account.setPersonId(resultSet.getInt("CustomerID"));
                 account.setAccountNumber(resultSet.getInt("AccountNumber"));
                 account.setAccountId(resultSet.getInt("AccountID"));
+                account.setDateCreated(resultSet.getDate("DateCreated").toLocalDate());
+                account.setAccountUpdated(resultSet.getDate("DateLastUpdated").toLocalDate());
+                account.setTimeLastUpdated(resultSet.getTime("TimeLastUpdated").toLocalTime());
             }
         } catch(SQLException e){
             System.out.println("Error in account DAO: getAccount");
@@ -108,7 +113,7 @@ public class AccountDAO extends BaseDAO {
             preparedStatement.setInt(1, customerId);
             ResultSet resultSet = databaseConnection.handleQuery(preparedStatement);
             if (resultSet.next()) {
-                accountId = resultSet.getInt("AccountId");
+                accountId = resultSet.getInt("AccountID");
             }
         } catch(SQLException e){
             System.out.println("Error in account DAO: getAccountIdForCustomerId");

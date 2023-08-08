@@ -1,6 +1,7 @@
 package com.main.app.core;
 
 import com.main.app.accounts.*;
+import com.main.app.database.AccountDAO;
 import com.main.app.services.PasswordService;
 
 import java.time.LocalDate;
@@ -22,7 +23,6 @@ public class Main {
         String emailAdult = "fizzbuzz@gmail.com";
         String emailStudent = "foobar@gmail.com";
         String emailEmployee = "jordanbelfort@gmail.com";
-
         // Demo adult account
         AccountBase testAccountAdult = AccountFactory.newAdultAccount(
                 ADULT,

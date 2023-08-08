@@ -40,14 +40,14 @@ class CustomerTest {
 
     @Test
     void addsAccountToCustomerAccounts() {
-        customer.addAccount(account1);
+        customer.addBankAccountToAccounts(account1);
         assertThat(customer.getAccounts()).containsOnlyOnce(account1);
     }
     @Test
     void addsMultipleAccountsToCustomerAccounts() {
         account2 = new AdultAccount("BestCustomerSavings", 999999f, PasswordService.hashPassword("$$Giga_chad123!"));
-        customer.addAccount(account1);
-        customer.addAccount(account2);
+        customer.addBankAccountToAccounts(account1);
+        customer.addBankAccountToAccounts(account2);
         assertThat(customer.getAccounts()).contains(account1, account2);
     }
 }

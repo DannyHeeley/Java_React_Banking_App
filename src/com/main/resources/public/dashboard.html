@@ -13,45 +13,25 @@
 <div class="container">
   <!-- Top selector menu -->
   <div class="selector-menu">
-    <a href=""><i class="fas fa-university fa-2x" title="Dashboard"></i></a>
-    <a href="#"><i class="fas fa-search-dollar fa-2x" title="Transactions"></i></a>
-    <a href="#"><i class="fas fa-paper-plane fa-2x" title="Transfer Money"></i></a>
-    <a href="#"><i class="fas fa-user fa-2x" title="Profile"></i></a>
+    <a href="/dashboard.html"><i class="fas fa-university fa-2x" title="Dashboard"></i></a>
+    <a href="/transactions.html"><i class="fas fa-search-dollar fa-2x" title="Transactions"></i></a>
+    <a href="/transfers.html"><i class="fas fa-paper-plane fa-2x" title="Transfer Money"></i></a>
+    <a href="/profile.html"><i class="fas fa-user fa-2x" title="Profile"></i></a>
   </div>
 
   <!-- Balance -->
   <div class="header-img">
     <div class="balance">
-      <h2>Hello {{userName}}</h2>
+      <h4>Current Balance:</h4>
+      <p>{{currentBalance}}</p>
+      <h4>CustomerID:</h4>
+      <p>{{customerId}}</p>
     </div>
   </div>
 
   <!-- Account details -->
   <div class="list">
     <div class="item">
-      <h4>Current Balance:</h4>
-      <p>{{currentBalance}}</p>
-    </div>
-    <div class="item">
-      <h4>AccountID:</h4>
-      <p>{{accountId}}</p>
-    </div>
-    <div class="item">
-      <h4>CustomerID:</h4>
-      <p>{{customerId}}</p>
-    </div>
-    <div class="item">
-      <h4>Account Number:</h4>
-      <p>{{accountNumber}}</p>
-    </div>
-    <div class="item">
-      <h4>Account Type:</h4>
-      <p>{{accountType}}</p>
-    </div>
-    <div class="item">
-      <h4>Created:</h4>
-      <p>{{dateCreated}}</p>
-    </div>
     <div class="item">
       <h4>Last Updated:</h4>
       <p>{{lastUpdated}}</p>

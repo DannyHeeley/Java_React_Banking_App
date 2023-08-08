@@ -11,11 +11,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.Random;
 
 import static com.main.app.transactions.TransactionType.DEPOSIT;
 import static com.main.app.transactions.TransactionType.WITHDRAWAL;
-import static java.lang.Integer.parseInt;
 import static java.time.LocalDateTime.now;
 
 public class AccountManager {
@@ -29,7 +27,6 @@ public class AccountManager {
             instance = new AccountManager();
         } return instance;
     }
-
     public AccountBase getAccount(int accountId) {
         return bankAccounts.stream()
                 .filter(account -> Objects.equals(account.getAccountId(), accountId))
@@ -53,7 +50,7 @@ public class AccountManager {
                 LocalDate.now(),
                 passwordHash
         ));
-        customer.addAccount(account);
+        customer.addBankAccountToAccounts(account);
         accountDAO.updateAccountBalance(account, initialDeposit);
         account.getTransactions().addTransaction(DEPOSIT, initialDeposit, account.getAccountId(), account);
         bankAccounts.add(account);

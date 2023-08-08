@@ -1,7 +1,5 @@
 package com.main.app.users;
 
-import com.main.app.database.PersonDAO;
-
 import java.time.LocalDate;
 
 public class Person {

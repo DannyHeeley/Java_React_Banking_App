@@ -16,9 +16,5 @@ T
 $src/com/main/test/core/BankTest.java,4\4\444af05b51ca262b46c47e7c3c0ea8740ea2085d
 [
 +src/com/main/test/core/FactoryBaseTest.java,7\1\71e0c92c1abea1b21ae1a1f978500a97732b6d6e
-O
-src/com/main/app/core/Main.java,c\4\c4d00a59fb508b37b0c2fde42729628520ba6209
-Y
-)src/com/main/app/services/WebService.java,7\9\7954f7c1bdbb223944a5d82413218d9d1a4afbcc
 d
 4src/com/main/test/transactions/TransactionsTest.java,7\d\7d4671e921076012e0a585e1d89f568cb1d53a8e

@@ -5,14 +5,16 @@ import com.main.app.core.FactoryBase;
 import com.main.app.transactions.Transactions;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 import static com.main.app.transactions.TransactionType.WITHDRAWAL;
 
 public abstract class AccountBase {
     private FactoryBase.AccountType accountType;
     private Float currentBalance;
-    private final LocalDate dateCreated;
-    private LocalDate dateAccountLastUpdated;
+    private LocalDate dateCreated;
+    private LocalDate dateLastUpdated;
+    private LocalTime timeLastUpdated;
     private String passwordHash;
     private final Transactions transactions;
     private int accountId;
@@ -31,7 +33,8 @@ public abstract class AccountBase {
         this.currentBalance = initialDeposit;
         Bank.getInstance().updateBankDeposit(initialDeposit);
         this.dateCreated = LocalDate.now();
-        this.dateAccountLastUpdated = LocalDate.now();
+        this.dateLastUpdated = LocalDate.now();
+        this.timeLastUpdated = LocalTime.now();
         this.transactions = new Transactions();
         this.passwordHash = passwordHash;
         this.accountId = -1;
@@ -84,13 +87,16 @@ public abstract class AccountBase {
         this.accountNumber = newAccountNumber;
     }
     public LocalDate getAccountUpdated() {
-        return dateAccountLastUpdated;
+        return dateLastUpdated;
     }
     public void setAccountUpdated(LocalDate accountUpdated) {
-        this.dateAccountLastUpdated = accountUpdated;
+        this.dateLastUpdated = accountUpdated;
     }
     public LocalDate getDateAccountCreated() {
         return dateCreated;
+    }
+    public void setDateCreated(LocalDate dateCreated) {
+        this.dateCreated = dateCreated;
     }
     public int getPersonId() {
         return personId;
@@ -98,12 +104,16 @@ public abstract class AccountBase {
     public void setPersonId(int personId) {
         this.personId = personId;
     }
-
     public String getUserName() {
         return userName;
     }
-
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+    public LocalTime getTimeLastUpdated() {
+        return timeLastUpdated;
+    }
+    public void setTimeLastUpdated(LocalTime timeLastUpdated) {
+        this.timeLastUpdated = timeLastUpdated;
     }
 }

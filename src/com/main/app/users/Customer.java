@@ -21,7 +21,7 @@ public class Customer extends Person {
     public ArrayList<AccountBase> getAccounts() {
         return accounts;
     }
-    public void addAccount(AccountBase anAccount) {
+    public void addBankAccountToAccounts(AccountBase anAccount) {
         this.accounts.add(anAccount);
     }
     public int getCustomerId() {
