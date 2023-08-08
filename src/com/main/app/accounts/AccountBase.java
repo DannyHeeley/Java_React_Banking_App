@@ -1,7 +1,7 @@
 package com.main.app.accounts;
 
-import com.main.app.Bank;
-import com.main.app.FactoryBase;
+import com.main.app.core.Bank;
+import com.main.app.core.FactoryBase;
 import com.main.app.transactions.Transactions;
 
 import java.time.LocalDate;
@@ -19,6 +19,8 @@ public abstract class AccountBase {
     private int customerId;
     private int accountNumber;
 
+    private int personId;
+
     AccountBase(
             FactoryBase.AccountType accountType,
             Float initialDeposit, String passwordHash
@@ -30,6 +32,10 @@ public abstract class AccountBase {
         this.dateAccountLastUpdated = LocalDate.now();
         this.transactions = new Transactions();
         this.passwordHash = passwordHash;
+        this.accountId = -1;
+        this.customerId = -1;
+        this.accountNumber = -1;
+        this.personId = -1;
     }
 
     public abstract void deposit(Float amount);
@@ -83,5 +89,11 @@ public abstract class AccountBase {
     }
     public LocalDate getDateAccountCreated() {
         return dateCreated;
+    }
+    public int getPersonId() {
+        return personId;
+    }
+    public void setPersonId(int personId) {
+        this.personId = personId;
     }
 }

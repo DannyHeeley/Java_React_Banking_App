@@ -1,6 +1,6 @@
-package com.main.app.entities;
+package com.main.app.users;
 
-import com.main.app.accounts.PersonalInformation;
+import com.main.app.database.PersonDAO;
 
 import java.time.LocalDate;
 
@@ -12,12 +12,12 @@ public class Person {
     private String email;
 
     public Person(
-            PersonalInformation personalInformation
+            PersonalInformation pi
     ) {
-        this.firstName = personalInformation.getFirstName();
-        this.lastName = personalInformation.getLastName();
-        this.dateOfBirth = personalInformation.getDateOfBirth();
-        this.email = personalInformation.getEmail();
+        this.firstName = pi.getFirstName();
+        this.lastName = pi.getLastName();
+        this.dateOfBirth = pi.getDateOfBirth();
+        this.email = pi.getEmail();
         this.personId = -1;
     }
 

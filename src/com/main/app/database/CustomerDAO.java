@@ -1,9 +1,8 @@
-package com.main.app.wiring;
+package com.main.app.database;
 
-import com.main.app.FactoryBase;
-import com.main.app.accounts.PersonalInformation;
-import com.main.app.entities.Customer;
-import com.main.app.entities.Person;
+import com.main.app.core.FactoryBase;
+import com.main.app.users.PersonalInformation;
+import com.main.app.users.Customer;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,14 +12,14 @@ import java.time.LocalDate;
 
 public class CustomerDAO extends BaseDAO {
 
-    public int saveNew(FactoryBase.EntityType customerType, Customer customer, Person person) {
+    public int saveNew(FactoryBase.UserType customerType, Customer customer) {
         DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
         String sql = "INSERT INTO customers(CustomerType, PersonID, UserName) VALUES(?, ?, ?)";
         int sqlGeneratedCustomerId = -1;
         int affectedRows = -1;
         try (PreparedStatement preparedStatement = databaseConnection.getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, customerType.toString());
-            preparedStatement.setInt(2, person.getPersonId());
+            preparedStatement.setInt(2, customer.getPersonId());
             preparedStatement.setString(3, customer.getUserName());
             affectedRows = databaseConnection.handleUpdate(preparedStatement);
             sqlGeneratedCustomerId = getIdFromDatabase(preparedStatement, affectedRows);
@@ -48,7 +47,7 @@ public class CustomerDAO extends BaseDAO {
                 String email = resultSet.getString("Email");
                 int personId = resultSet.getInt("PersonID");
                 PersonalInformation pi = new PersonalInformation(firstName, lastName, dateOfBirth, email);
-                customer = new Customer(FactoryBase.EntityType.valueOf(customerType), pi, userName);
+                customer = new Customer(FactoryBase.UserType.valueOf(customerType), pi, userName);
                 customer.setPersonId(personId);
                 customer.setCustomerId(customerId);
             }

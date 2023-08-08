@@ -1,4 +1,4 @@
-package com.main.test.accounts;
+package services;
 
 import com.main.app.accounts.AccountBase;
 import com.main.app.accounts.AccountFactory;
@@ -9,10 +9,10 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 
-import static com.main.app.FactoryBase.AccountType.ADULT;
-import static com.main.app.FactoryBase.AccountType.STUDENT;
-import static com.main.app.accounts.PasswordService.authenticateUserPassword;
-import static com.main.app.accounts.PasswordService.hashPassword;
+import static com.main.app.core.FactoryBase.AccountType.ADULT;
+import static com.main.app.core.FactoryBase.AccountType.STUDENT;
+import static com.main.app.services.PasswordService.authenticateUserPassword;
+import static com.main.app.services.PasswordService.hashPassword;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PasswordServiceTest {
@@ -30,10 +30,10 @@ class PasswordServiceTest {
 
     @BeforeEach
     void setUp() {
-        testAccountAdult = AccountFactory.newAccount(
+        testAccountAdult = AccountFactory.newAdultAccount(
                 ADULT, userNameAdult, CORRECT_PASSWORD,0f, firstName, lastName, dateOfBirth, email
         );
-        testAccountStudent = AccountFactory.newAccount(
+        testAccountStudent = AccountFactory.newStudentAccount(
                 STUDENT, userNameStudent, CORRECT_PASSWORD,0f, firstName, lastName, dateOfBirth, email
         );
     }
@@ -119,25 +119,25 @@ class PasswordServiceTest {
                 ),
 
                 () -> assertThrows(IllegalArgumentException.class, () ->
-                        AccountFactory.newAccount(
+                        AccountFactory.newAdultAccount(
                         ADULT, "User 2", "password",
                                 0f, firstName, lastName, dateOfBirth, email
                 )),
 
                 () -> assertThrows(IllegalArgumentException.class, () ->
-                        AccountFactory.newAccount(
+                        AccountFactory.newAdultAccount(
                         ADULT, "User 3", "p@ssw0rd",
                                 0f, firstName, lastName, dateOfBirth, email
                 )),
 
                 () -> assertThrows(IllegalArgumentException.class, () ->
-                        AccountFactory.newAccount(
+                        AccountFactory.newAdultAccount(
                         ADULT, "User 4", "UPPERCASE",
                                 0f, firstName, lastName, dateOfBirth, email
                 )),
 
                 () -> assertThrows(IllegalArgumentException.class, () ->
-                        AccountFactory.newAccount(
+                        AccountFactory.newAdultAccount(
                         ADULT, "User 5", "12345678",
                                 0f, firstName, lastName, dateOfBirth, email
                 ))
@@ -146,23 +146,23 @@ class PasswordServiceTest {
 
     @Test
     void doesNotThrowIfAuthenticatingAdultPassWithCorrectFormat() {
-        AccountBase testAccount2 = AccountFactory.newAccount(
+        AccountBase testAccount2 = AccountFactory.newAdultAccount(
                 ADULT, "User 2", "Pa$$w0rd",
                 0f, firstName, lastName, dateOfBirth, email
         );
-        AccountBase testAccount3 = AccountFactory.newAccount(
+        AccountBase testAccount3 = AccountFactory.newAdultAccount(
                 ADULT, "User 3", "123abcABC!",
                 0f, firstName, lastName, dateOfBirth, email
         );
-        AccountBase testAccount4 = AccountFactory.newAccount(
+        AccountBase testAccount4 = AccountFactory.newAdultAccount(
                 ADULT, "User 4", "aBcD123!",
                 0f, firstName, lastName, dateOfBirth, email
         );
-        AccountBase testAccount5 = AccountFactory.newAccount(
+        AccountBase testAccount5 = AccountFactory.newAdultAccount(
                 ADULT, "User 5", "P@ssw0rd",
                 0f, firstName, lastName, dateOfBirth, email
         );
-        AccountBase testAccount6 = AccountFactory.newAccount(
+        AccountBase testAccount6 = AccountFactory.newAdultAccount(
                 ADULT, "User 6", "P@$$W0RD!",
                 0f, firstName, lastName, dateOfBirth, email
         );
@@ -184,23 +184,23 @@ class PasswordServiceTest {
                 ),
 
                 () -> assertThrows(IllegalArgumentException.class, () ->
-                        AccountFactory.newAccount(
+                        AccountFactory.newStudentAccount(
                         STUDENT, "User 2", "password",
                                 0f, firstName, lastName, dateOfBirth, email
                 )),
 
                 () -> assertThrows(IllegalArgumentException.class, () ->
-                        AccountFactory.newAccount(
+                        AccountFactory.newStudentAccount(
                         STUDENT, "User 3", "p@ssw0rd",
                                 0f, firstName, lastName, dateOfBirth, email
                 )),
 
-                () -> assertThrows(IllegalArgumentException.class, () -> AccountFactory.newAccount(
+                () -> assertThrows(IllegalArgumentException.class, () -> AccountFactory.newStudentAccount(
                         STUDENT, "User 4", "UPPERCASE",
                         0f, firstName, lastName, dateOfBirth, email
                 )),
 
-                () -> assertThrows(IllegalArgumentException.class, () -> AccountFactory.newAccount(
+                () -> assertThrows(IllegalArgumentException.class, () -> AccountFactory.newStudentAccount(
                         STUDENT, "User 5", "12345678",
                         0f, firstName, lastName, dateOfBirth, email
                 ))
@@ -209,23 +209,23 @@ class PasswordServiceTest {
 
     @Test
     void doesNotThrowIfAuthenticatingPasswordWithCorrectFormatStudent() {
-        AccountBase testAccount2 = AccountFactory.newAccount(
+        AccountBase testAccount2 = AccountFactory.newStudentAccount(
                 STUDENT, "User 2", "Pa$$w0rd",
                 0f, firstName, lastName, dateOfBirth, email
         );
-        AccountBase testAccount3 = AccountFactory.newAccount(
+        AccountBase testAccount3 = AccountFactory.newStudentAccount(
                 STUDENT, "User 3", "123abcABC!",
                 0f, firstName, lastName, dateOfBirth, email
         );
-        AccountBase testAccount4 = AccountFactory.newAccount(
+        AccountBase testAccount4 = AccountFactory.newStudentAccount(
                 STUDENT, "User 4", "aBcD123!",
                 0f, firstName, lastName, dateOfBirth, email
         );
-        AccountBase testAccount5 = AccountFactory.newAccount(
+        AccountBase testAccount5 = AccountFactory.newStudentAccount(
                 STUDENT, "User 5", "P@ssw0rd",
                 0f, firstName, lastName, dateOfBirth, email
         );
-        AccountBase testAccount6 = AccountFactory.newAccount(
+        AccountBase testAccount6 = AccountFactory.newStudentAccount(
                 STUDENT, "User 6", "P@$$W0RD!",
                 0f, firstName, lastName, dateOfBirth, email
         );

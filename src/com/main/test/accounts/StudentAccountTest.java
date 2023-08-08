@@ -1,11 +1,11 @@
 package com.main.test.accounts;
 
-import com.main.app.Bank;
-import com.main.app.FactoryBase;
+import com.main.app.core.Bank;
+import com.main.app.core.FactoryBase;
 import com.main.app.accounts.AccountManager;
-import com.main.app.accounts.PersonalInformation;
+import com.main.app.users.PersonalInformation;
 import com.main.app.accounts.StudentAccount;
-import com.main.app.entities.Customer;
+import com.main.app.users.Customer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,7 +26,7 @@ class StudentAccountTest {
 
     @BeforeEach
     void setUp() {
-        customer = new Customer(FactoryBase.EntityType.CUSTOMER, personalInformation, "Foo_Bar");
+        customer = new Customer(FactoryBase.UserType.CUSTOMER, personalInformation, "Foo_Bar");
     }
 
 

@@ -1,8 +1,8 @@
-package com.main.app.wiring;
+package com.main.app.database;
 
-import com.main.app.FactoryBase;
+import com.main.app.core.FactoryBase;
 import com.main.app.accounts.*;
-import com.main.app.entities.Customer;
+import com.main.app.users.Customer;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,13 +15,18 @@ import java.util.Objects;
 public class AccountDAO extends BaseDAO {
 
     public int saveNew(
-            Customer customer, int accountNumber, FactoryBase.AccountType accountType, Float currentBalance, LocalDate dateCreated, String passwordHash
+            Customer customer, int accountNumber, FactoryBase.AccountType accountType,
+            Float currentBalance, LocalDate dateCreated, String passwordHash
     ) {
         DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
-        String sql = "INSERT INTO accounts(AccountNumber, AccountType, CurrentBalance, DateCreated, PasswordHash, DateLastUpdated, TimeLastUpdated, CustomerID) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO accounts(" +
+                "AccountNumber, AccountType, CurrentBalance, DateCreated, " +
+                "PasswordHash, DateLastUpdated, TimeLastUpdated, CustomerID, PersonID) " +
+                "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
         int sqlGeneratedAccountId = -1;
         int affectedRows = -1;
-        try (PreparedStatement preparedStatement = databaseConnection.getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement preparedStatement = databaseConnection.getConnection()
+                .prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setInt(1, accountNumber);
             preparedStatement.setString(2, accountType.toString());
             preparedStatement.setFloat(3, currentBalance);
@@ -33,6 +38,7 @@ public class AccountDAO extends BaseDAO {
             java.sql.Time sqlTimeLastUpdated = java.sql.Time.valueOf(LocalTime.now());
             preparedStatement.setTime(7, sqlTimeLastUpdated);
             preparedStatement.setInt(8, customer.getCustomerId());
+            preparedStatement.setInt(9, customer.getPersonId());
             affectedRows = databaseConnection.handleUpdate(preparedStatement);
             sqlGeneratedAccountId = getIdFromDatabase(preparedStatement, affectedRows);
         } catch (SQLException e) {
@@ -56,7 +62,7 @@ public class AccountDAO extends BaseDAO {
                 String passwordHash = resultSet.getString("PasswordHash");
                 Float balance = resultSet.getFloat("CurrentBalance");
                 String userName = resultSet.getString("UserName");
-                if (Objects.equals(accountType, "STUDENT")) {
+                if ("STUDENT".equals(accountType)) {
                     account = new StudentAccount(userName, balance, passwordHash);
                 }
                 if ("ADULT".equals(accountType)) {
@@ -64,6 +70,9 @@ public class AccountDAO extends BaseDAO {
                 }
                 assert account != null;
                 account.setCustomerId(resultSet.getInt("CustomerID"));
+                account.setPersonId(resultSet.getInt("CustomerID"));
+                account.setAccountNumber(resultSet.getInt("AccountNumber"));
+                account.setAccountId(resultSet.getInt("AccountID"));
             }
         } catch(SQLException e){
             System.out.println("Error in account DAO: getAccount");

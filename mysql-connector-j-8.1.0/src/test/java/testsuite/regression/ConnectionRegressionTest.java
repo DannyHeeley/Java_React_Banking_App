@@ -3032,7 +3032,7 @@ public class ConnectionRegressionTest extends BaseTestCase {
             Connection con = getConnectionWithProps(props);
 
             this.rs = this.stmt.executeQuery("show databases like '" + databaseName + "'");
-            assertTrue(this.rs.next(), "Database " + databaseName + " is not found.");
+            assertTrue(this.rs.next(), "database " + databaseName + " is not found.");
             assertEquals(databaseName, this.rs.getString(1));
 
             ((com.mysql.cj.jdbc.JdbcConnection) con).changeUser(props.getProperty(PropertyKey.USER.getKeyName()),
@@ -11512,7 +11512,7 @@ public class ConnectionRegressionTest extends BaseTestCase {
             Connection con = getConnectionWithProps(props);
 
             this.rs = this.stmt.executeQuery("SHOW DATABASES LIKE '" + databaseName + "'");
-            assertTrue(this.rs.next(), "Database " + databaseName + " was not found.");
+            assertTrue(this.rs.next(), "database " + databaseName + " was not found.");
             assertEquals(databaseName, this.rs.getString(1));
 
             con.close();

@@ -1,9 +1,11 @@
-package com.main.app.wiring;
+package com.main.app.services;
 
-import com.main.app.FactoryBase;
+import com.main.app.core.FactoryBase;
 import com.main.app.accounts.*;
-import com.main.app.entities.Customer;
-import com.main.app.entities.EntityFactory;
+import com.main.app.database.AccountDAO;
+import com.main.app.database.CustomerDAO;
+import com.main.app.users.Customer;
+import com.main.app.core.EntityFactory;
 import io.javalin.Javalin;
 
 import java.io.FileNotFoundException;
@@ -40,20 +42,37 @@ public class WebService {
             String userName = ctx.formParam("userName");
             String firstName = ctx.formParam("firstName");
             String lastName = ctx.formParam("lastName");
+            String accountType = ctx.formParam("accountType");
             LocalDate dateOfBirth = LocalDate.parse(Objects.requireNonNull(ctx.formParam("dateOfBirth")));
             String email = ctx.formParam("email");
             Customer customer = EntityFactory.newCustomer(userName, firstName, lastName, dateOfBirth, email);
-            AccountBase account = AccountFactory.newAccount(
-                    FactoryBase.AccountType.valueOf(ctx.formParam("accountType")),
-                    userName,
-                    ctx.formParam("password"),
-                    Float.parseFloat(Objects.requireNonNull(ctx.formParam("initialDeposit"))),
-                    firstName,
-                    lastName,
-                    dateOfBirth,
-                    ctx.formParam("email")
-            );
+            AccountBase account = null;
+            if (accountType == "ADULT") {
+                account = AccountFactory.newAdultAccount(
+                        FactoryBase.AccountType.valueOf(ctx.formParam("accountType")),
+                        userName,
+                        ctx.formParam("password"),
+                        Float.parseFloat(Objects.requireNonNull(ctx.formParam("initialDeposit"))),
+                        firstName,
+                        lastName,
+                        dateOfBirth,
+                        ctx.formParam("email")
+                );
+            }
+            if (accountType == "STUDENT") {
+                account = AccountFactory.newStudentAccount(
+                        FactoryBase.AccountType.valueOf(ctx.formParam("accountType")),
+                        userName,
+                        ctx.formParam("password"),
+                        Float.parseFloat(Objects.requireNonNull(ctx.formParam("initialDeposit"))),
+                        firstName,
+                        lastName,
+                        dateOfBirth,
+                        ctx.formParam("email")
+                );
+            }
             // Redirect to the profile page
+            assert account != null;
             ctx.redirect("/profile?accountId=" + account.getAccountId() + "&userName=" + customer.getUserName());
         });
 

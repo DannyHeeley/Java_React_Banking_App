@@ -1,10 +1,10 @@
 package com.main.app.accounts;
 
-import com.main.app.Bank;
+import com.main.app.core.Bank;
 
 import java.time.LocalDate;
 
-import static com.main.app.FactoryBase.AccountType.ADULT;
+import static com.main.app.core.FactoryBase.AccountType.ADULT;
 import static com.main.app.transactions.TransactionType.DEPOSIT;
 
 public class AdultAccount extends AccountBase {

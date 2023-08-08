@@ -1,10 +1,10 @@
 package com.main.app.accounts;
 
-import com.main.app.Bank;
+import com.main.app.core.Bank;
 
 import java.time.LocalDate;
 
-import static com.main.app.FactoryBase.AccountType.STUDENT;
+import static com.main.app.core.FactoryBase.AccountType.STUDENT;
 import static com.main.app.transactions.TransactionType.DEPOSIT;
 
 public class StudentAccount extends AccountBase {

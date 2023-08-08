@@ -1,4 +1,4 @@
-package com.main.test.entities;
+package core;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +17,7 @@ class EntityFactoryTest {
     }
 
     @Test
-    void createEntityForType() {
+    void FAILScreateEntityForType() {
         assertTrue(1+1 == 10);
     }
 }

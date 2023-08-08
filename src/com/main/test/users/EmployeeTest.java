@@ -1,4 +1,4 @@
-package com.main.test.entities;
+package users;
 
 import org.junit.jupiter.api.Test;
 

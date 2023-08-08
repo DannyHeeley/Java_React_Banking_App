@@ -1,6 +1,6 @@
-package com.main.test;
+package core;
 
-import com.main.app.Bank;
+import com.main.app.core.Bank;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

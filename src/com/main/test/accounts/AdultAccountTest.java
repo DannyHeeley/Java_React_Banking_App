@@ -1,9 +1,9 @@
 package com.main.test.accounts;
 
-import com.main.app.Bank;
+import com.main.app.core.Bank;
 import com.main.app.accounts.AccountManager;
 import com.main.app.accounts.AdultAccount;
-import com.main.app.accounts.PersonalInformation;
+import com.main.app.users.PersonalInformation;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

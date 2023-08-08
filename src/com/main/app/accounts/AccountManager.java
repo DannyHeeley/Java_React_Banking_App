@@ -1,17 +1,18 @@
 package com.main.app.accounts;
 
-import com.main.app.FactoryBase;
-import com.main.app.entities.Customer;
-import com.main.app.entities.Person;
+import com.main.app.core.FactoryBase;
+import com.main.app.users.Customer;
+import com.main.app.users.Person;
 import com.main.app.transactions.TransactionType;
-import com.main.app.wiring.AccountDAO;
-import com.main.app.wiring.CustomerDAO;
+import com.main.app.database.AccountDAO;
+import com.main.app.database.CustomerDAO;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Random;
 
 import static com.main.app.transactions.TransactionType.DEPOSIT;
 import static com.main.app.transactions.TransactionType.WITHDRAWAL;
@@ -46,10 +47,11 @@ public class AccountManager {
         // Get account from database, create a new account populated with the arguments
     }
 
-    public AccountBase addAccount(Customer customer, AccountBase account, FactoryBase.AccountType accountType, Float initialDeposit, String passwordHash, Person person) {
+    public AccountBase addAccount(Customer customer, AccountBase account, FactoryBase.AccountType accountType, Float initialDeposit, String passwordHash) {
         AccountDAO accountDAO = new AccountDAO();
         account.setCustomerId(customer.getCustomerId());
-        account.setAccountNumber(AccountManager.getInstance().generateAccountNumber(customer, person));
+        account.setAccountNumber(AccountManager.getInstance().generateAccountNumber(customer));
+        account.setPersonId(customer.getPersonId());
         account.setAccountId(accountDAO.saveNew(
                 customer,
                 account.getAccountNumber(),
@@ -88,7 +90,7 @@ public class AccountManager {
     }
 
     public boolean accountExists(int accountId) {
-        return bankAccounts.stream().anyMatch(account -> Objects.equals(account.getAccountId(), accountId));
+        return bankAccounts.stream().anyMatch(existingAccount -> Objects.equals(existingAccount.getAccountId(), accountId));
     }
     public ArrayList<AccountBase> getBankAccounts() {
         return bankAccounts;
@@ -99,10 +101,14 @@ public class AccountManager {
     private boolean userNameMatchesAccount(String userName, AccountBase account) {
         return Objects.equals(account.getAccountId(), userName);
     }
-    public int generateAccountNumber(Customer customer, Person person) {
+    public int generateAccountNumber(Customer customer) {
         String customerId = String.valueOf(customer.getCustomerId());
-        String personId = String.valueOf(person.getPersonId());
-        return parseInt(customerId + personId);
+        Random random = new Random();
+        int randomNumber = -1;
+        for (int i = 0; i < 5; i++) {
+            randomNumber = random.nextInt(9999);
+        }
+        return parseInt(customerId + randomNumber);
     }
     public void handleNegativeArgument(TransactionType transactionType, Float amount) {
         if (amount < 0) {

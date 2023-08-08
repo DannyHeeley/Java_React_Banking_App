@@ -1,14 +1,14 @@
-package com.main.app;
+package com.main.app.core;
 
 import com.main.app.accounts.*;
-import com.main.app.entities.EntityFactory;
+import com.main.app.services.PasswordService;
 
 import java.time.LocalDate;
 
-import static com.main.app.FactoryBase.AccountType.ADULT;
-import static com.main.app.FactoryBase.AccountType.STUDENT;
-import static com.main.app.FactoryBase.EntityType.ADMINISTRATOR;
-import static com.main.app.FactoryBase.EntityType.EMPLOYEE;
+import static com.main.app.core.FactoryBase.AccountType.ADULT;
+import static com.main.app.core.FactoryBase.AccountType.STUDENT;
+import static com.main.app.core.FactoryBase.UserType.ADMINISTRATOR;
+import static com.main.app.core.FactoryBase.UserType.EMPLOYEE;
 
 public class Main {
     public static void main(String[] args) {
@@ -24,7 +24,7 @@ public class Main {
         String emailEmployee = "jordanbelfort@gmail.com";
 
         // Demo adult account
-        AccountBase testAccountAdult = AccountFactory.newAccount(
+        AccountBase testAccountAdult = AccountFactory.newAdultAccount(
                 ADULT,
                 userNameAdult,
                 "Password123!",
@@ -40,7 +40,7 @@ public class Main {
         System.out.println("");
 
         // Demo student account
-        AccountBase testAccountStudent = AccountFactory.newAccount(
+        AccountBase testAccountStudent = AccountFactory.newStudentAccount(
                 STUDENT,
                 userNameStudent,
                 password,

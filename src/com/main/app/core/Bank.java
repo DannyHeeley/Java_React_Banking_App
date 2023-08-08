@@ -1,4 +1,4 @@
-package com.main.app;
+package com.main.app.core;
 
 import com.main.app.accounts.AccountManager;
 import com.main.app.transactions.TransactionType;

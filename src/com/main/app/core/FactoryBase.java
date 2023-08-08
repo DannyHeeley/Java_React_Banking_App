@@ -1,19 +1,13 @@
-package com.main.app;
+package com.main.app.core;
 
 import com.main.app.accounts.AccountManager;
-import com.main.app.accounts.PersonalInformation;
-import com.main.app.entities.Person;
-import com.main.app.wiring.PersonDAO;
+import com.main.app.database.PersonDAO;
+import com.main.app.users.Person;
+import com.main.app.users.PersonalInformation;
+
+import static com.main.app.services.PasswordService.hashPassword;
 
 public class FactoryBase {
-
-    public static Person createNewPerson(PersonalInformation pi) {
-        PersonDAO personDAO = new PersonDAO();
-        Person person = new Person(pi);
-        person.setPersonId(personDAO.saveNew(pi.getFirstName(), pi.getLastName(), pi.getDateOfBirth(), pi.getEmail()));
-        return person;
-    }
-
     public static void throwErrorIfAccountExists(int accountId)
             throws AccountCreationException {
         if (AccountManager.getInstance().accountExists(accountId)) {
@@ -27,6 +21,16 @@ public class FactoryBase {
             throw new AccountCreationException("Cannot create account with a negative deposit");
         }
     }
+    public static String checkPasswordForErrors(String newAccountPassword) {
+        String passwordHash;
+        try {
+            passwordHash = hashPassword(newAccountPassword);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e);
+            throw(e);
+        }
+        return passwordHash;
+    }
 
     public static class AccountCreationException extends Exception {
         public AccountCreationException(String message) {
@@ -34,7 +38,7 @@ public class FactoryBase {
         }
     }
 
-    public enum EntityType {
+    public enum UserType {
         CUSTOMER,
         EMPLOYEE,
         ADMINISTRATOR,

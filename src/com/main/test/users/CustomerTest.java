@@ -1,11 +1,11 @@
-package entities;
+package users;
 
-import com.main.app.Bank;
-import com.main.app.FactoryBase;
+import com.main.app.core.Bank;
+import com.main.app.core.FactoryBase;
 import com.main.app.accounts.AdultAccount;
-import com.main.app.accounts.PasswordService;
-import com.main.app.accounts.PersonalInformation;
-import com.main.app.entities.Customer;
+import com.main.app.services.PasswordService;
+import com.main.app.users.PersonalInformation;
+import com.main.app.users.Customer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ class CustomerTest {
         personalInformation = new PersonalInformation(
                 "Best", "Customer", LocalDate.of(1960, 4, 28), "bestcustomer@gmail.com"
         );
-        customer = new Customer(FactoryBase.EntityType.CUSTOMER, personalInformation, "BestCustomer");
+        customer = new Customer(FactoryBase.UserType.CUSTOMER, personalInformation, "BestCustomer");
         account1 = new AdultAccount("BestCustomer", 123456f, PasswordService.hashPassword("$$Giga_chad123!"));
     }
 

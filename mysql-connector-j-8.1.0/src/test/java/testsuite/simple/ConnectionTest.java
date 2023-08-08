@@ -817,7 +817,7 @@ public class ConnectionTest extends BaseTestCase {
         Connection con = getConnectionWithProps(props);
 
         this.rs = this.stmt.executeQuery("show databases like '" + databaseName + "'");
-        assertTrue(this.rs.next(), "Database " + databaseName + " is not found.");
+        assertTrue(this.rs.next(), "database " + databaseName + " is not found.");
         assertEquals(databaseName, this.rs.getString(1));
 
         con.createStatement().executeUpdate("DROP DATABASE IF EXISTS " + databaseName);

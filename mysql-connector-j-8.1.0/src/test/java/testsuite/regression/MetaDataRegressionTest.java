@@ -3245,7 +3245,7 @@ public class MetaDataRegressionTest extends BaseTestCase {
             st1.executeUpdate("DROP DATABASE IF EXISTS " + quotedDbName);
             st1.executeUpdate("CREATE DATABASE " + quotedDbName);
             this.rs = st1.executeQuery("show databases like '" + unquotedDbName + "'");
-            assertTrue(this.rs.next(), "Database " + unquotedDbName + " (quoted " + quotedDbName + ") not found.");
+            assertTrue(this.rs.next(), "database " + unquotedDbName + " (quoted " + quotedDbName + ") not found.");
             assertEquals(unquotedDbName, this.rs.getString(1));
 
             boolean pedantic = ((MysqlConnection) conn1).getPropertySet().getBooleanProperty(PropertyKey.pedantic).getValue();

@@ -1,7 +1,7 @@
 package com.main.app.transactions;
 
 import com.main.app.accounts.AccountBase;
-import com.main.app.wiring.TransactionDAO;
+import com.main.app.database.TransactionDAO;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

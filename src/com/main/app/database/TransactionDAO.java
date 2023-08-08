@@ -1,4 +1,4 @@
-package com.main.app.wiring;
+package com.main.app.database;
 
 import com.main.app.transactions.TransactionType;
 
