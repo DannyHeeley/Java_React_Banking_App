@@ -6,8 +6,6 @@ import com.main.app.core.EntityFactory;
 
 import java.time.LocalDate;
 
-import static com.main.app.services.PasswordService.hashPassword;
-
 public class AccountFactory extends FactoryBase {
 
     private AccountFactory() {
@@ -23,10 +21,10 @@ public class AccountFactory extends FactoryBase {
         Customer customer;
         String passwordHash;
         try {
-            FactoryBase.throwErrorIfDepositIsMinus(initialDeposit);
-            passwordHash = checkPasswordForErrors(newAccountPassword);
+            throwExceptionIfDepositIsMinus(initialDeposit);
+            throwExceptionIfAccountExists(userName);
+            passwordHash = throwExceptionIfPasswordFormatWrong(newAccountPassword);
             adultAccount = new AdultAccount(userName, initialDeposit, passwordHash);
-            FactoryBase.throwErrorIfAccountExists(adultAccount.getAccountId());
             // Creates person here too
             customer = EntityFactory.newCustomer(userName, firstName, lastName, dateOfBirth, email);
             // Set id's and add account to db and account list
@@ -48,10 +46,10 @@ public class AccountFactory extends FactoryBase {
         Customer customer;
         String passwordHash;
         try {
-            FactoryBase.throwErrorIfDepositIsMinus(initialDeposit);
-            passwordHash = checkPasswordForErrors(newAccountPassword);
+            throwExceptionIfDepositIsMinus(initialDeposit);
+            throwExceptionIfAccountExists(userName);
+            passwordHash = throwExceptionIfPasswordFormatWrong(newAccountPassword);
             studentAccount = new StudentAccount(userName, initialDeposit, passwordHash);
-            FactoryBase.throwErrorIfAccountExists(studentAccount.getAccountId());
             // Creates person here too
             customer = EntityFactory.newCustomer(userName, firstName, lastName, dateOfBirth, email);
             // Set id's and add account to db and account list

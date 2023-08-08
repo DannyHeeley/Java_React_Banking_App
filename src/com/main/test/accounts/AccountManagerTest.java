@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class AccountManagerTest {
+class AccountManagerTest {
 
     private static final String CORRECT_PASSWORD = "Password123!";
     ArrayList<AccountBase> bankAccounts;
@@ -114,9 +114,8 @@ public class AccountManagerTest {
         AccountBase account2 = AccountFactory.newStudentAccount(
                 STUDENT, userNameStudent, CORRECT_PASSWORD, 150f, firstName, lastName, dateOfBirth, email
         );
-        assertThat(bankAccounts).containsOnlyOnce(account1);
-        assertThat(AccountManager.getInstance().getAccount(userNameAdult)).isEqualTo(account1);
-        assertThat(AccountManager.getInstance().getAccount(userNameAdult)).isNotEqualTo(account2);
+        assertThat(AccountManager.getInstance().getAccount(account1.getAccountId())).isEqualTo(account1);
+        assertThat(AccountManager.getInstance().getAccount(account1.getAccountId())).isNotEqualTo(account2);
     }
 
     @Test
@@ -127,7 +126,7 @@ public class AccountManagerTest {
         AccountBase studentAccount = AccountFactory.newStudentAccount(
                 STUDENT, userNameStudent, CORRECT_PASSWORD, initialDeposit, firstName, lastName, dateOfBirth, email
         );
-        assertTrue(AccountManager.getInstance().accountExists(adultAccount.getAccountId()));
-        assertTrue(AccountManager.getInstance().accountExists(studentAccount.getAccountId()));
+        assertTrue(AccountManager.getInstance().accountExists(adultAccount.getUserName()));
+        assertTrue(AccountManager.getInstance().accountExists(studentAccount.getUserName()));
     }
 }

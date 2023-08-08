@@ -11,7 +11,7 @@ public class StudentAccount extends AccountBase {
     private final Integer accountLimit;
 
     public StudentAccount(String userName, Float balance, String passwordHash) {
-        super(STUDENT, balance, passwordHash);
+        super(STUDENT, balance, passwordHash, userName);
         this.accountLimit = 5000;
         System.out.println(
                 "Bank Account created successfully for userName: "

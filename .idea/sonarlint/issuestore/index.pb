@@ -6,10 +6,6 @@ _
 .gitignore,a\5\a5cc2925ca8258af241be7e5b0381edf30266302
 7
 pom.xml,4\4\442292b8a7efeabbe4cc176709b833b1792140ec
-[
-+src/com/main/app/accounts/AdultAccount.java,4\6\46950af8b63622059113e0b4abfaca2decf03d0f
-]
--src/com/main/app/accounts/StudentAccount.java,8\4\84d64a1bd77ae531c762aa01b45b481766dbfcc8
 _
 /src/com/main/app/users/PersonalInformation.java,7\5\75a1602f78a75a4cc55d31bfe5dc9f5d3c2e9e70
 `

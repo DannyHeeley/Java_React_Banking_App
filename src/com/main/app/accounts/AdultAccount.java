@@ -10,7 +10,7 @@ import static com.main.app.transactions.TransactionType.DEPOSIT;
 public class AdultAccount extends AccountBase {
 
     public AdultAccount(String userName, Float balance, String passwordHash) {
-        super(ADULT, balance, passwordHash);
+        super(ADULT, balance, passwordHash, userName);
         System.out.println(
                 "Bank Account created successfully for customer: "
                         + userName + " - initial deposit of: " + balance + "."

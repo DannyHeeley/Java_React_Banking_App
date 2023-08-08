@@ -2,7 +2,6 @@ package com.main.app.accounts;
 
 import com.main.app.core.FactoryBase;
 import com.main.app.users.Customer;
-import com.main.app.users.Person;
 import com.main.app.transactions.TransactionType;
 import com.main.app.database.AccountDAO;
 import com.main.app.database.CustomerDAO;
@@ -20,12 +19,6 @@ import static java.lang.Integer.parseInt;
 import static java.time.LocalDateTime.now;
 
 public class AccountManager {
-
-    //    responsible for managing various operations related to accounts,
-    //    such as interacting with the database to
-    //    update account information, handle transactions,
-    //    and manage account state.
-
     private ArrayList<AccountBase> bankAccounts = new ArrayList<>();
     private static AccountManager instance;
     private AccountManager() {
@@ -36,38 +29,35 @@ public class AccountManager {
             instance = new AccountManager();
         } return instance;
     }
-    public AccountBase getAccount(String userName) {
+
+    public AccountBase getAccount(int accountId) {
         return bankAccounts.stream()
-                .filter(account -> userNameMatchesAccount(userName, account))
+                .filter(account -> Objects.equals(account.getAccountId(), accountId))
                 .findFirst()
                 .orElseGet(() -> {
                     System.out.println("Account does not exist");
                     return null;
                 });
-        // Get account from database, create a new account populated with the arguments
     }
-
     public void addAccount(Customer customer, AccountBase account, FactoryBase.AccountType accountType, Float initialDeposit, String passwordHash) {
-        if (!accountExists(account.getAccountId())) {
-            AccountDAO accountDAO = new AccountDAO();
-            account.setCustomerId(customer.getCustomerId());
-            account.setAccountNumber(AccountManager.getInstance().generateAccountNumber(customer));
-            account.setPersonId(customer.getPersonId());
-            account.setAccountId(accountDAO.saveNew(
-                    customer,
-                    account.getAccountNumber(),
-                    accountType,
-                    account.getAccountBalance(),
-                    LocalDate.now(),
-                    passwordHash
-            ));
-            customer.addAccount(account);
-            accountDAO.updateAccountBalance(account, initialDeposit);
-            account.getTransactions().addTransaction(DEPOSIT, initialDeposit, account.getAccountId(), account);
-            bankAccounts.add(account);
-        }
+        int generatedAccountNumber = generateAccountNumber(customer);
+        AccountDAO accountDAO = new AccountDAO();
+        account.setAccountNumber(generatedAccountNumber);
+        account.setCustomerId(customer.getCustomerId());
+        account.setPersonId(customer.getPersonId());
+        account.setAccountId(accountDAO.saveNew(
+                customer,
+                generatedAccountNumber,
+                accountType,
+                account.getAccountBalance(),
+                LocalDate.now(),
+                passwordHash
+        ));
+        customer.addAccount(account);
+        accountDAO.updateAccountBalance(account, initialDeposit);
+        account.getTransactions().addTransaction(DEPOSIT, initialDeposit, account.getAccountId(), account);
+        bankAccounts.add(account);
     }
-
     public void addToAccountBalance(AccountBase account, Float amount) {
         if (amount > 0) {
             AccountDAO accountDAO = new AccountDAO();
@@ -78,7 +68,6 @@ public class AccountManager {
             account.getTransactions().addTransaction(DEPOSIT, amount, account.getAccountId(), account);
         }
     }
-
     public void subtractFromAccountBalance(AccountBase account, Float amount) {
         if (amount > 0) {
             AccountDAO accountDAO = new AccountDAO();
@@ -89,9 +78,9 @@ public class AccountManager {
         account.getTransactions().addTransaction(WITHDRAWAL, amount, account.getAccountId(), account);
         }
     }
-
-    public boolean accountExists(int accountId) {
-        return bankAccounts.stream().anyMatch(existingAccount -> Objects.equals(existingAccount.getAccountId(), accountId));
+    public boolean accountExists(String userName) {
+        return bankAccounts.stream().anyMatch(existingAccount -> Objects.equals(existingAccount.getUserName(), userName));
+        // TODO: Check in the database directly if the list might not have the most recent data
     }
     public ArrayList<AccountBase> getBankAccounts() {
         return bankAccounts;
@@ -99,17 +88,10 @@ public class AccountManager {
     public void clearBankAccountList() {
         bankAccounts = new ArrayList<>();
     }
-    private boolean userNameMatchesAccount(String userName, AccountBase account) {
-        return Objects.equals(account.getAccountId(), userName);
-    }
     public int generateAccountNumber(Customer customer) {
         String customerId = String.valueOf(customer.getCustomerId());
-        Random random = new Random();
-        int randomNumber = -1;
-        for (int i = 0; i < 5; i++) {
-            randomNumber = random.nextInt(9999);
-        }
-        return parseInt(customerId + randomNumber);
+        String personId = String.valueOf(customer.getPersonId());
+        return Integer.parseInt(customerId + personId);
     }
     public void handleNegativeArgument(TransactionType transactionType, Float amount) {
         if (amount < 0) {

@@ -18,13 +18,15 @@ public abstract class AccountBase {
     private int accountId;
     private int customerId;
     private int accountNumber;
-
+    private String userName;
     private int personId;
 
     AccountBase(
             FactoryBase.AccountType accountType,
-            Float initialDeposit, String passwordHash
+            Float initialDeposit, String passwordHash,
+            String userName
     ) {
+        this.userName = userName;
         this.accountType = accountType;
         this.currentBalance = initialDeposit;
         Bank.getInstance().updateBankDeposit(initialDeposit);
@@ -95,5 +97,13 @@ public abstract class AccountBase {
     }
     public void setPersonId(int personId) {
         this.personId = personId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }
