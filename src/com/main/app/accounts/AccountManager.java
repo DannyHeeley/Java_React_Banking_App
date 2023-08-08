@@ -47,24 +47,25 @@ public class AccountManager {
         // Get account from database, create a new account populated with the arguments
     }
 
-    public AccountBase addAccount(Customer customer, AccountBase account, FactoryBase.AccountType accountType, Float initialDeposit, String passwordHash) {
-        AccountDAO accountDAO = new AccountDAO();
-        account.setCustomerId(customer.getCustomerId());
-        account.setAccountNumber(AccountManager.getInstance().generateAccountNumber(customer));
-        account.setPersonId(customer.getPersonId());
-        account.setAccountId(accountDAO.saveNew(
-                customer,
-                account.getAccountNumber(),
-                accountType,
-                account.getAccountBalance(),
-                LocalDate.now(),
-                passwordHash
-        ));
-        customer.addAccount(account);
-        accountDAO.updateAccountBalance(account, initialDeposit);
-        account.getTransactions().addTransaction(DEPOSIT, initialDeposit, account.getAccountId(), account);
-        bankAccounts.add(account);
-        return account;
+    public void addAccount(Customer customer, AccountBase account, FactoryBase.AccountType accountType, Float initialDeposit, String passwordHash) {
+        if (!accountExists(account.getAccountId())) {
+            AccountDAO accountDAO = new AccountDAO();
+            account.setCustomerId(customer.getCustomerId());
+            account.setAccountNumber(AccountManager.getInstance().generateAccountNumber(customer));
+            account.setPersonId(customer.getPersonId());
+            account.setAccountId(accountDAO.saveNew(
+                    customer,
+                    account.getAccountNumber(),
+                    accountType,
+                    account.getAccountBalance(),
+                    LocalDate.now(),
+                    passwordHash
+            ));
+            customer.addAccount(account);
+            accountDAO.updateAccountBalance(account, initialDeposit);
+            account.getTransactions().addTransaction(DEPOSIT, initialDeposit, account.getAccountId(), account);
+            bankAccounts.add(account);
+        }
     }
 
     public void addToAccountBalance(AccountBase account, Float amount) {

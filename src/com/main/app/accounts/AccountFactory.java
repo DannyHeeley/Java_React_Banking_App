@@ -25,7 +25,7 @@ public class AccountFactory extends FactoryBase {
         try {
             FactoryBase.throwErrorIfDepositIsMinus(initialDeposit);
             passwordHash = checkPasswordForErrors(newAccountPassword);
-            adultAccount = new AdultAccount(userName, initialDeposit, newAccountPassword);
+            adultAccount = new AdultAccount(userName, initialDeposit, passwordHash);
             FactoryBase.throwErrorIfAccountExists(adultAccount.getAccountId());
             // Creates person here too
             customer = EntityFactory.newCustomer(userName, firstName, lastName, dateOfBirth, email);
@@ -50,7 +50,7 @@ public class AccountFactory extends FactoryBase {
         try {
             FactoryBase.throwErrorIfDepositIsMinus(initialDeposit);
             passwordHash = checkPasswordForErrors(newAccountPassword);
-            studentAccount = new StudentAccount(userName, initialDeposit, newAccountPassword);
+            studentAccount = new StudentAccount(userName, initialDeposit, passwordHash);
             FactoryBase.throwErrorIfAccountExists(studentAccount.getAccountId());
             // Creates person here too
             customer = EntityFactory.newCustomer(userName, firstName, lastName, dateOfBirth, email);
