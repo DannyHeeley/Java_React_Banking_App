@@ -1,10 +1,10 @@
-/bin/
-/out/
+backend/bin/
+backend/out/
 .gradle
-build
+backend/build/
 .classpath
-.settings
-.project
+backend/.settings/
+backend/.project
 *.iws
 *.ipr
 .DS_Store
@@ -12,62 +12,16 @@ build
 .*sw[a-z]
 *.pyc
 *.bundle
-.idea/
-.idea_modules/
+backend/.idea/
+*.idea_modules/
 *.iml
-target/
-/js/**/node_modules
-csharp/dotnet/Kata/.vs
-csharp/dotnet/Kata/packages
-csharp/dotnet/Kata/**/bin
-csharp/dotnet/Kata/**/obj
-/csharp/dotnet/Kata/**/*.user
-fsharp/**/[Dd]ebug/
-fsharp/**/[Dd]ebugPublic/
-fsharp/**/[Rr]elease/
-fsharp/**/[Rr]eleases/
-fsharp/**/x64/
-fsharp/**/x86/
-fsharp/**/bld/
-fsharp/**/[Bb]in/
-fsharp/**/[Oo]bj/
-fsharp/**/[Ll]og/
-clojure/**/pom.xml
-clojure/**/pom.xml.asc
-clojure/**/*.jar
-clojure/**/*.class
-clojure/**/lib/
-clojure/**/classes/
-clojure/**/target/
-clojure/**/checkouts/
-clojure/**/.lein-deps-sum
-clojure/**/.lein-repl-history
-clojure/**/.lein-plugins/
-clojure/**/.lein-failures
-clojure/**/.nrepl-port
-python/pytest/.pytest_cache
-python/pytest/__pycache__
-
-#frontend
+backend/target/
 
 # dependencies
-/node_modules
-/.pnp
-.pnp.js
+frontend/node_modules
 
-# testing
-/coverage
+frontend/coverage
 
 # production
-/build
+frontend/build
 
-# misc
-.DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
