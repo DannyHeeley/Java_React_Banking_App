@@ -1,0 +1,350 @@
+:root {
+  --background-color: grey;
+  --accent-color: purple;
+  --text-color: #333;
+  --light-text-color: #aaa;
+}
+
+body {
+  background-color: rgb(55, 0, 55);
+  min-width: 500px;
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.container {
+  width: 400px;
+  min-height: 700px;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+a {
+  text-decoration: none;
+}
+
+h2 {
+  margin: 0;
+  text-align: center;
+  font-weight: bold;
+}
+
+.selector-menu {
+  color: purple;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.selector-menu a {
+  color: purple;
+  flex: 1;
+  text-align: center;
+  padding: 5px 0;
+  transition: background-color 0.3s;
+  border-radius: 8px;
+}
+
+.selector-menu a:hover {
+  background-color: var(--accent-color);
+  color: #fff;
+}
+
+.header-img {
+  background: url('https://images.pexels.com/photos/6613956/pexels-photo-6613956.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2') no-repeat center/cover;
+  height: 125px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  position: relative;
+  margin-bottom: 30px;
+  color: purple;
+}
+
+.balance {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  color: #fff;
+}
+
+.list {
+  border-top: 1px solid var(--light-text-color);
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--light-text-color);
+}
+
+.item a {
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+.item p {
+  color: var(--text-color);
+}
+.transaction-section, .login-section, .transfer-section {
+  margin-top: 20px;
+  border-top: 1px solid var(--light-text-color);
+  padding-top: 10px;
+}
+
+.transaction-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.btn-group {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+.transaction-btn, .login-btn, .sign-up-btn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  background-color: var(--accent-color);
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+  border-radius: 8px;
+  outline: none;
+  margin-top: 10px;
+}
+
+.transaction-btn:not(.active) {
+  background-color: #fff;
+  border: 1px solid var(--accent-color);
+  color: var(--accent-color);
+}
+
+.transaction-btn:active, .login-btn, .sign-up-btn {
+  transform: scale(0.98);
+}
+
+.transaction-input {
+  width: 94%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid var(--light-text-color);
+  border-radius: 8px;
+  outline: none;
+}
+
+.submit-btn {
+  margin-bottom: 20px;
+  margin-top: 5px;
+  width: 100%;
+  padding: 10px;
+  background-color: var(--accent-color);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+  outline: none;
+}
+
+.submit-btn:hover {
+  background-color: darken(var(--accent-color), 10%);
+}
+
+.submit-btn:active {
+  transform: scale(0.98);
+}
+
+.sign-up-form {
+  display: flex;
+  flex-flow: column wrap;
+  margin: 0 auto;
+  align-items: center;
+}
+
+.form-item {
+  width: 50%;
+  margin: 5px;
+  width: 50%;
+  margin-left: 90px;
+  margin-top: 10px;
+  margin-right: auto;
+  padding: 10px;
+  margin-bottom: 5px;
+  border: 1px solid var(--light-text-color);
+  border-radius: 8px;
+  outline: none;
+}
+
+.input-radio{
+  margin-top: 20px;
+  background-color: white;
+  cursor: pointer;
+  border-radius: 8px;
+  width: 70%
+}
+
+.input-radio:hover {
+  background-color: purple;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.input-radio:checked {
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+input[type=radio] {
+  display: none;
+  cursor: pointer;
+}
+
+input[type=radio]:checked + label{
+  width: 20%;
+  color:white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+input[type=radio] + label {
+  width: 20%;
+  color:black;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.deposit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: 0 10px;
+  border: 1px solid var(--accent-color);
+  font-size: 90%;
+}
+
+.deposit-btn:hover {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: 0 10px;
+  border: 1px solid var(--accent-color);
+  font-size: 90%;
+}
+
+
+input[type="radio"]:checked + .deposit-btn {
+  background-color: var(--accent-color);
+  color: #fff;
+}
+
+.signup-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: 0 10px;
+  border: 1px solid var(--accent-color);
+  font-size: 90%;
+}
+
+.signup-btn:hover {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: 0 10px;
+  border: 1px solid var(--accent-color);
+  font-size: 90%;
+}
+
+
+input[type="radio"]:checked + .signup-btn {
+  background-color: var(--accent-color);
+  color: #fff;
+}
+
+.home-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;  
+  text-align: center;  
+  padding: 10px 20px; 
+  background-color: purple;  
+  color: white;
+  border-radius: 8px;
+  cursor: pointer; 
+  margin: 20px;
+}
+
+.home-btn:hover {
+  background-color: white;
+  color: purple;
+}
+
+.sign-up-form .btn-group .deposit-btn {
+    padding: 10px 40px;
+    white-space: nowrap; 
+  }
+
+.login-input {
+  width: 50%;
+  margin-left: 90px;
+  margin-top: 10px;
+  margin-right: auto;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid var(--light-text-color);
+  border-radius: 8px;
+  outline: none;
+}
+
+.login-btn {
+  margin-left: 165px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  background-color: var(--accent-color);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.login-form {
+  border-top: 1px solid var(--light-text-color);
+  margin-top: 10px;
+  padding-top: 20px;
+}
+
+.transfer-tag {
+  width:120px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 20px;
+  margin-left: 40px;
+}
+.transfer-input {
+  width: 180px;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid var(--light-text-color);
+  border-radius: 8px;
+  outline: none;
+  display: inline-block;
+  vertical-align: middle;
+  
+}
+
